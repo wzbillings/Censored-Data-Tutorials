@@ -23,7 +23,20 @@ title: "Current packages for censored data analysis"
 box::use(
 	censReg,
 	VGAM,
-	AER
+	AER,
+	survival,
+	lqr,
+	GLMMadaptive,
+	ARpLMEC,
+	crch,
+	tramME,
+	nlmixr2,
+	MCMCpack,
+	MCMCglmm,
+	rstan,
+	cmdstanr,
+	lme4,
+	nlme
 )
 ```
 
