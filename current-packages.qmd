@@ -1,0 +1,29 @@
+---
+title: "Current packages for censored data analysis"
+---
+
+(notes for this section)
+* https://cran.r-project.org/web/packages/MCMCpack/index.html
+* https://cran.r-project.org/web/packages/MCMCglmm/index.html
+* maybe discuss lack of SAS routines for this despite good GLMM/NLME routines
+* machine learning packages for censored data? Or regression-type parametric models only?
+* https://cran.r-project.org/web/packages/MLEcens/index.html
+* check if VGAM has survival model only
+* survreg for non-survival outcomes, AER tobit wrapper, how arethese same/different to censReg?
+* what about crch package models, what kinds of GLMM does this correspond to?
+* https://search.r-project.org/CRAN/refmans/tramME/html/SurvregME.html
+* survreg supports SOME gee and mixed effects models, need to figure out which ones are relevant to us. "frailty" is survival's notion of a random effect but has been superseded by a package that only supports cox models. Can it be used for non-cox models in a way thatmakes sense in survival?
+* See "censored" section on the MixedModels task view: see below for notable frequentist implementations
+* https://cran.r-project.org/web/packages/nlmixr2/index.html
+* https://cran.r-project.org/web/packages/ARpLMEC/index.html
+* https://cran.r-project.org/web/packages/GLMMadaptive/index.html
+* https://cran.r-project.org/web/packages/lqr/index.html
+
+```{r}
+box::use(
+	censReg,
+	VGAM,
+	AER
+)
+```
+
