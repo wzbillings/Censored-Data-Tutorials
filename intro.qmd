@@ -1,3 +1,59 @@
-# Introduction
+# What are censored data?
 
-This is the intro.
+Censoring is a selection phenomenon on data which occurs when we can only
+obtain precise measurements for certain measurement values. The classical
+example is a scale which can only measure weights up to a certain threshold,
+say $y_{\mathrm{max}}$. A scale that can measure any weight would produce the
+set of measurements $\{y_1^*, y_2^*, \ldots, y_n^*\}$ where $n$ is the sample
+size. We call these the **latent values** or **true values**. Our imperfect
+scale would then produce the **observed values**,
+$$
+y_i = \begin{cases}
+y_i^*, & y_i^* \leq y_{\mathrm{max}} \\
+y_{\mathrm{max}}, & y_i^* > y_{\mathrm{max}}
+\end{cases}; \quad i = 1, \ldots, n.
+$$
+Specifically, this is an example of **right censoring**, where there is an
+**upper limit of detection**, or maximum value that we can observe with
+precision.
+
+We can also have the opposite case, where we can detect any theoretical
+measurement above a certain value. In this case, the data are said to have a
+**lower limit of detection** and this phenomenon is called **left censoring**.
+For example, imagine we are testing the concentration of lead in the tap water
+of several buildings. Our test cannot detect lead levels below 5 parts per
+billion (ppb), but can detect any larger amount of lead. In that case, our
+observed values would instead look like this:
+$$
+y_i = \begin{cases}
+y_i^*, & y_i^* \geq y_{\mathrm{min}} \\
+y_{\mathrm{min}}, & y_i^* < y_{\mathrm{min}}
+\end{cases}; \quad i = 1, \ldots, n,
+$$
+where $y_{\mathrm{min}}$ is the lower limit of detection.
+
+$$
+y_i = \begin{cases}
+y_i^*, & y_i^* \geq y_{\mathrm{min}} \\
+y_{\mathrm{min}}, & y_i^* < y_{\mathrm{min}}
+\end{cases}; \quad i = 1, \ldots, n,
+$$
+
+Finally, we can have interval censoring, where we know a data value is within
+some interval, but we do not know precisely where the value lies within that
+interval. An example of this is antibody titer dilutions: for flu HAI titer,
+the values are typically reported as 10, 20, 40, etc., but a value of 10 does
+not mean the precise value of the measurement should be 10, it means the true
+value is between 10 and 20. If we assume our titer is measured on the log
+scale and has no limits of detection, we could write
+$$
+y_i = \lfloor y_i^* \rfloor; \quad i = 1, \ldots, n,
+$$
+because we only perform a discrete number of dilutions. This gives us the
+interval value for $y_i$ as
+$$y_i \in \left[\lfloor y_i^* \rfloor, \lfloor y_i^* + 1 \rfloor\right).$$
+
+We can also have values which are subject to both a lower and an upper
+limit of detection.
+
+<!-- END OF FILE -->

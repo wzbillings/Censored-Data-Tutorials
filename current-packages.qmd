@@ -2,6 +2,9 @@
 title: "Current packages for censored data analysis"
 ---
 
+We could pull this section of the grant, put text here, and then expand
+more as needed.
+
 (notes for this section)
 * https://cran.r-project.org/web/packages/MCMCpack/index.html
 * https://cran.r-project.org/web/packages/MCMCglmm/index.html

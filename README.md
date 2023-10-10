@@ -14,7 +14,7 @@ we could potentially make this website available with some edits.
 
 Here is my initial draft of a TODO list.
 
-- [ ] Basic description of censored data problems
+- [ ] Basic description of censored data problems [intro.qmd](intro.qmd)
 - [ ] Make a glossary of terminology so we can all be on the same page
   with language.
 - [ ] Potentially a (brief?) description of how censored data is dealt
@@ -28,11 +28,6 @@ Here is my initial draft of a TODO list.
   start with a question and a dataset that motivate the use of a
   Bayesian model with censored data. E.g. some examples similar to our
   CIVIC and norovirus examples.
-
-### Chores
-- [ ] add `.gitattributes` for linguist parsing
-- [ ] MAYBE `renv` so we're all using the same version of cmdstan or whatever
-- [ ] fix the readme link in the book intro
 - [ ] Add the little github link to the top corner
 
 ## Guide to collaborative work

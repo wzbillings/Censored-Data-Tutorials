@@ -17,7 +17,7 @@ website available with some edits.
 
 Here is my initial draft of a TODO list.
 
-- [ ] Basic description of censored data problems
+- [ ] Basic description of censored data problems ([intro.qmd](intro.qmd))
 - [ ] Make a glossary of terminology so we can all be on the same page with
 language.
 - [ ] Potentially a (brief?) description of how censored data is dealt with
