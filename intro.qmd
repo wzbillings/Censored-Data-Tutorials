@@ -53,7 +53,62 @@ because we only perform a discrete number of dilutions. This gives us the
 interval value for $y_i$ as
 $$y_i \in \left[\lfloor y_i^* \rfloor, \lfloor y_i^* + 1 \rfloor\right).$$
 
-We can also have values which are subject to both a lower and an upper
-limit of detection.
+A given variable can be subject to all of these types of censoring simultaneously:
+for example, HAI titers are interval censored in this way, but they also have
+lower limits of detection and upper limits of detection as well (though the
+upper limits are rarely important in practice because they can be arbitrarily
+increased during the assay). However, a particular observation of this variable
+can only be subject to one type of censoring at a time: e.g., if an observation
+is below the detection limit, that value is left censored, it cannot simultaneously
+be right censored or interval censored.
+
+Notably, the distinction between "types" of censoring in this way is useful for
+several analytic methods, but is not strictly necessary. All censored values can
+be implicitly treated as interval censored data, where the lower endpoint for
+a left censored value is negative infinity, and the upper endpoint for a
+right censored value is positive infinity. Thus, we could write the data
+generating process for HAI titers with LOD as
+$$
+y_i = \begin{cases}
+y_{\text{min}}, \ y_i^* < y_{\text{min}}\\
+\lfloor y_i^* \rfloor, \ y_{\text{min}} \leq y_i^* < y_{\text{max}} \\
+y_{\text{max}}, y \leq y_{\text{max}}
+\end{cases},
+$$
+where $y_{\text{min}}$ is the lower limit of detection and $y_{\text{max}}$
+is the upper limit of detection. To express the DGP in interval
+notation, we would write
+$$
+y_i \in \begin{cases}
+\left(-\infty, y_{\text{min}}\right), \ y_i^* < y_{\text{min}}\\
+\left[\lfloor y_i^* \rfloor, \lfloor y_i^* + 1 \rfloor\right), \ y_{\text{min}} \leq y_i^* < y_{\text{max}} \\
+\left[y_{\text{max}}, \infty\right), \ y \leq y_{\text{max}}
+\end{cases}.
+$$
+Note also that assuming $y^*_i$ is drawn from an absolutely continuous distribution
+(e.g. normal or lognormal, etc.), the final likelihood model will be equivalent
+regardless of which intervals are open or closed. This model would allow
+us to put all of the censored observations into the likelihood function in the same
+framework without having to worry about sorting the observations into buckets
+w.r.t. the type of censoring.
+
+The probability of each observation $y_i$ can then be expressed as the
+probability that the random variable $Y$ takes on a realization inside the
+given interval. If $F$ is the CDF for some parametric distribution which we
+assume the latent variable $y_i^*$ is drawn from, with parameter $\theta$,
+the contribution of $y_i$ to the likelihood is then
+$$\mathcal{L}(\theta \mid Y_i) = F(\text{upper limit of interval}) - F(\text{lower limit of interval}).$$
+If we call the lower limit of the interval for $y_i$ $L_i$ and the corresponding
+upper limit $U_i$, we can write the likelihood of the sample as
+$$
+\mathcal{L}(\theta \mid \mathbf{Y}) = \prod_{i=1}^n \left(
+F(y_i \mid \theta)\bigg\rvert_{y_i = L_i}^{U_i}
+\right)^{C_i}\bigg(f(y_i\mid \theta) \bigg)^{C_i},
+$$
+where $C_i$ is the indicator variable for $y_i$ being censored. Notably, for an uncensored observation the likelihood is equal to the density. However, for the typical
+types of HAI data that we see, all of the assay values are subject to the
+same censoring process, and thus we could neglect the density component.
+
+So now the remaining issue is to specify $F$, the CDF of the latent variables.
 
 <!-- END OF FILE -->
