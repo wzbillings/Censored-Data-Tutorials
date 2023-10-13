@@ -13,8 +13,8 @@
 //
 data {
 	int<lower=0> N;
-	int<lower=0> N_obs;
-	array[N] int<lower=0> id;
+	int<lower=0, upper=N> N_obs;
+	int<lower=0, upper=N> N_cens;
 	vector[N] y;
 	vector[N_obs] x_obs;
 	real DL;
@@ -29,12 +29,12 @@ data {
 	// sampled x_cens values to the end of the observed x_obs data vector.
 //
 parameters {
-	int<lower=0> N_cens = N - N_obs;
 	array[N_cens] real<upper=DL> x_cens;
-	array real x[N];
 	real a;
 	real b;
 	real<lower=0> s;
+	real mu_x;
+	real<lower=0> sigma_x;
 }
 
 // The model to be estimated.
@@ -50,9 +50,10 @@ parameters {
 //
 model {
 	// Censored predictor
-	x_obs ~ normal(mu, sigma);
-	x_cens ~ normal(mu, sigma);
-	x = append_array(x_obs, x_cens);
+	array[N] real x;
+	x_obs ~ normal(mu_x, sigma_x);
+	x_cens ~ normal(mu_x, sigma_x);
+	x = append_array(to_array_1d(x_obs), x_cens);
 
 	// Mu calculation and priors
 	vector[N] mu;

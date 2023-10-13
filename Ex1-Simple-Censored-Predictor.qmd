@@ -57,10 +57,11 @@ So if we want to correctly model $y$, we will need to take the left censoring
 of $x$ into account.
 
 ```{r}
-generate_data <- function(n = 100, xmin = 3, beta0 = 1, beta1 = 2, sigma = 3,
+lod <- 0
+generate_data <- function(n = 1000, xmin = 2, beta0 = 1, beta1 = 2, sigma = 5,
 													seed = 83719273) {
 	l <- tibble::tibble(
-		x_star = runif(n, 0, 10),
+		x_star = rnorm(n, 5, 3),
 		x = ifelse(x_star <= xmin, xmin, x_star),
 		mu = beta0 + beta1 * x_star,
 		y = rnorm(n, mu, sigma)
@@ -71,7 +72,7 @@ generate_data <- function(n = 100, xmin = 3, beta0 = 1, beta1 = 2, sigma = 3,
 	out <- list("latent" = l, "observed" = o)
 }
 
-dat <- generate_data()
+dat <- generate_data(xmin = lod)
 dat_l <- dat$latent
 dat_o <- dat$observed
 ```
@@ -82,7 +83,7 @@ like when x is censored or not.
 ```{r}
 dat_l |>
 	ggplot() +
-	geom_vline(xintercept = 3, linetype = "dashed", color = "gray") +
+	geom_vline(xintercept = lod, linetype = "dashed", color = "gray") +
 	geom_line(
 		aes(x = x_star, y = 1 + 2 * x_star), color = "red", linetype = "dashed",
 		linewidth = 1
@@ -100,17 +101,39 @@ For a Bayesian model, before we can fit anything to the data we need to choose
 suitable priors.
 
 ```{r}
-dat_o |>
+df_stan <-
+	dat_o |>
 	dplyr::mutate(
-		cens = factor(x <= 3, levels = c(FALSE, TRUE), labels = c('obs', 'cens'))
+		cens = factor(x <= lod, levels = c(FALSE, TRUE), labels = c('obs', 'cens'))
 	) |>
-	tidyr::pivot_wider(
-		names_from = cens,
-		values_from = x,
-		names_glue = "x_{cens}"
-	)
+	# Arrange by whether or not the data is censored. Getting the right format
+	# for Stan is kind of annoying.
+	dplyr::arrange(cens)
+
+dat_stan <- list()
+dat_stan$y <- df_stan$y
+dat_stan$x_obs <- subset(df_stan, cens == 'obs')$x
+dat_stan$N <- length(dat_stan$y)
+dat_stan$N_obs <- length(dat_stan$x_obs)
+dat_stan$N_cens <- dat_stan$N - dat_stan$N_obs
+dat_stan$DL <- lod
 ```
 
+Load and compile the stan program
+
+```{r}
+library(cmdstanr)
+mod <- cmdstanr::cmdstan_model(stan_file = here::here('Ex1.stan'))
+```
+
+
+```{r}
+fit <- mod$sample(dat_stan, seed = 100, parallel_chains = 4)
+```
+
+```{r}
+fit$summary() |> print(n = Inf)
+```
 
 
 <!-- END OF FILE -->
