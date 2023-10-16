@@ -14,7 +14,8 @@ we could potentially make this website available with some edits.
 
 Here is my initial draft of a TODO list.
 
-- [ ] Basic description of censored data problems [intro.qmd](intro.qmd)
+- [ ] Basic description of censored data problems
+  ([intro.qmd](intro.qmd))
 - [ ] Make a glossary of terminology so we can all be on the same page
   with language.
 - [ ] Potentially a (brief?) description of how censored data is dealt
@@ -47,8 +48,8 @@ Here is my initial draft of a TODO list.
   [StackExchange
   post](https://stats.stackexchange.com/questions/482079/how-best-to-deal-with-a-left-censored-predictor-because-of-detection-limits-in),
   specifically trying to extend the answer by Tom Minka.
-  - [ ] fix this code and make data so we can run this example.
+  - [x] fix this code and make data so we can run this example.
   - [ ] write up an explanation of the motivation and what’s going on
     here.
-  - [ ] download an HTML backup of this web page and embed it somewhere
+  - [x] download an HTML backup of this web page and embed it somewhere
     here in case anything ever happens to it or for when SE is down.

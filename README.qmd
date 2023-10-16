@@ -47,9 +47,9 @@ conflicts that are very annoying to fix.
 * [Zane's stan example](demo.Stan) extending the first example from that
 [StackExchange post](https://stats.stackexchange.com/questions/482079/how-best-to-deal-with-a-left-censored-predictor-because-of-detection-limits-in), specifically
 trying to extend the answer by Tom Minka.
-  - [ ] fix this code and make data so we can run this example.
+  - [x] fix this code and make data so we can run this example.
   - [ ] write up an explanation of the motivation and what's going on here.
-  - [ ] download an HTML backup of this web page and embed it somewhere here
+  - [x] download an HTML backup of this web page and embed it somewhere here
   in case anything ever happens to it or for when SE is down.
 
 
