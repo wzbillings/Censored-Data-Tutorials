@@ -135,5 +135,34 @@ fit <- mod$sample(dat_stan, seed = 100, parallel_chains = 4)
 fit$summary() |> print(n = Inf)
 ```
 
+## The other method (Bjorn method)
+
+```{r}
+mod2 <- cmdstanr::cmdstan_model(stan_file = here::here('Ex1b.stan'))
+```
+
+```{r}
+dat2 <- list()
+dat2$y <- df_stan$y
+dat2$x <- df_stan$x
+dat2$x_cens <- df_stan$cens
+dat2$N <- length(dat2$y)
+dat2$DL <- lod
+```
+
+```{r}
+fit2 <- mod2$sample(dat2, seed = 100, parallel_chains = 4)
+```
+
+```{r}
+fit2$summary() |>
+	dplyr::filter(!startsWith(variable, "x")) |>
+	print(n = Inf)
+```
+
+```{r}
+post <- posterior::as_draws_array(fit2)
+```
+
 
 <!-- END OF FILE -->

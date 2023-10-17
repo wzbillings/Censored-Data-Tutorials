@@ -51,5 +51,7 @@ trying to extend the answer by Tom Minka.
   - [ ] write up an explanation of the motivation and what's going on here.
   - [x] download an HTML backup of this web page and embed it somewhere here
   in case anything ever happens to it or for when SE is down.
+  - [ ] frank harrell comment method?
+- [ ] above post, getting the method by Bjorn running
 
 
