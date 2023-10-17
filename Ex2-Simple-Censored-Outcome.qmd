@@ -1,0 +1,82 @@
+# Example Model 2: One censored outcome
+
+```{r setup, include = FALSE}
+# ggplot2 theme setup
+library(ggplot2)
+ggplot2::theme_set(
+	ggplot2::theme_minimal() +
+		ggplot2::theme(
+			plot.background = ggplot2::element_rect(
+				fill = "white", color = "white"
+			),
+			axis.text = ggplot2::element_text(size = 12, color = "black"),
+			axis.title = ggplot2::element_text(size = 22),
+			plot.subtitle = ggplot2::element_text(
+				size = 16, hjust = 0, margin = ggplot2::margin(b = 2)
+			),
+			plot.title = ggplot2::element_text(
+				size = 19, hjust = 0, margin = ggplot2::margin(b = 2, l = 2)
+			),
+			plot.caption = ggplot2::element_text(size = 14),
+			strip.text = ggplot2::element_text(
+				size = 16, hjust = 0.5, margin = ggplot2::margin(b = 2, t = 2)
+			),
+			panel.spacing = ggplot2::unit(2, "lines"),
+			legend.position = "bottom",
+			legend.text = ggplot2::element_text(size = 16, color = "black"),
+			legend.title = ggplot2::element_text(size = 18, color = "black"),
+			plot.margin = ggplot2::margin(t = 6, r = 6, b = 6, l = 6)
+		)
+)
+```
+
+For the second example model, we'll work on a case where there is one predictor
+(the models generalize easily to the multivariable case) and the outcome is
+censored. 
+
+## Lower limit of detection
+
+For the first example, we'll work with an outcome that has a lower limit of
+detection. First we need to simulate the data, which means we need to write
+out a generative model for the data. We'll randomly sample `x` for the purposes
+of generating data, but for the purposes of our model we'll assume `x_i` is
+a completely observed covariate and thus is known and does not need a random
+component in the model.
+
+$$
+\begin{align*}
+y_i &= \begin{cases}
+\mathrm{DL}, & y^*_i \leq \mathrm{DL} \\
+y^*_i, & y^*_i > \mathrm{DL}
+\end{cases} \\
+y^*_i &\sim \mathrm{Normal}\left(\mu_i, \sigma^2\right) \\
+\mu_i &= \alpha + \beta x_i \\
+\end{align*}
+$$
+Here, DL is the [D]{.underline}etection [L]{.underline}imit, aka the lower limit
+of detection for the variable. Of course in our generative model, we have
+set $\alpha$, $\beta$, and $\sigma^2$ to be fixed population parameters, but
+for Bayesian inference we would need to assign suitable priors. Let's set the
+values and simulate our data.
+
+```{r}
+set.seed(578189)
+N <- 271
+alpha <- 72
+beta <- 3
+sigma <- 5
+x <- runif(N)
+y_star <- rnorm(N, alpha + beta * x, sigma)
+DL <- 70
+y <- ifelse(y_star <= DL, DL, y_star)
+```
+
+
+
+### Imputation-type method
+
+### Integration-type method
+
+
+
+<!-- END OF FILE -->
