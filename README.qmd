@@ -15,25 +15,38 @@ website available with some edits.
 
 ## TODO
 
-Here is my initial draft of a TODO list.
-
 - [ ] Basic description of censored data problems ([intro.qmd](intro.qmd))
 - [ ] Make a glossary of terminology so we can all be on the same page with
 language.
-- [ ] Potentially a (brief?) description of how censored data is dealt with
-in the frequentist paradigm and why this can be difficult
+- [ ] Description of how censored data is dealt with
+in the frequentist paradigm and why this can be difficult. Maybe a walkthrough
+of methods with certain packages like `survReg`, `survival`, `NADA2`, `AER`.
 - [ ] Description of how Bayesian models can handle censoring and a brief
 conceptual introduction to our examples, maybe a brief description of the
 two different methods. This could be expanded if we learn enough to compare
 them.
 - [ ] A few worked examples using Stan and potentially `brms` to show how these
-models are set up and executed. Ideally I think these would start with a
-question and a dataset that motivate the use of a Bayesian model with censored
-data. E.g. some examples similar to our CIVIC and norovirus examples.
+models are set up and executed. **don't check this off until a FULL FIRST DRAFT
+OF THAT PAGE IS DONE!**
+  - [ ] Basic examples that explain concepts
+    - [ ] Censored predictor
+    - [ ] Censored outcome
+    - [ ] Both
+    - [ ] Mix of censored and uncensored / multiple predictors
+    - [ ] Interval censoring separately because I think it's harder
+  - [ ] Data-motivated examples
+    - [ ] Binary outcome with censored predictor (norovirus project)
+    - [ ] Interval censored outcome with LoD (all HAI projects)
+  - [ ] `brms` censored outcome formula tutorial, extract stan code, and explain
+  what the stan code is doing
 - [ ] Add the little github link to the top corner
+- [x] Create a zotero group library and add the link to this page
 
 ## Guide to collaborative work
 
+- The Zotero group library containing the references for this project is
+[here](https://www.zotero.org/groups/5240281/bayesian-censoring). Please
+request membership (and email/IM Zane) if you want to add/edit references.
 - At some point we probably need to use GH actions to automate building, because
 that is the main step of the process where conflicts occur.
 - For now, we should try to work in separate documents to prevent conflicts.
@@ -44,7 +57,7 @@ conflicts that are very annoying to fix.
 
 ## Current contents
 
-* [Zane's stan example](demo.Stan) extending the first example from that
+* [Zane's stan example](Ex1.Stan) extending the first example from that
 [StackExchange post](https://stats.stackexchange.com/questions/482079/how-best-to-deal-with-a-left-censored-predictor-because-of-detection-limits-in), specifically
 trying to extend the answer by Tom Minka.
   - [x] fix this code and make data so we can run this example.
@@ -52,6 +65,8 @@ trying to extend the answer by Tom Minka.
   - [x] download an HTML backup of this web page and embed it somewhere here
   in case anything ever happens to it or for when SE is down.
   - [ ] frank harrell comment method?
-- [ ] above post, getting the method by Bjorn running
+- [x] above post, getting the method by Bjorn running
+- [ ] Tom method for censored outcome (first method in Stan docs)
+- [ ] Bjorn method for censored outcome (2nd method in Stan docs)
 
 
