@@ -383,6 +383,62 @@ TODO make this relative error instead to make it easier to understand.
 
 ### Integration-type method
 
+The second method relies on calculating the direct contribution of the
+censored data measurements to the likelihood by integrating the density over
+the region where censored data can occur. That is, if the $i$th observation is
+below the detection limit, we know that the contribution of that observation
+to the sample likelihood is
+$$
+\mathcal{L}(\theta \mid y_i) = P(Y_i \leq \mathrm{DL}) = \int_{-\infty}^{\mathrm{DL}}f(y_i \mid \theta) \ dy = \lim_{a \to -\infty} \left[F(y_i \mid \theta)\right]_{a}^{\mathrm{DL}},
+$$
+which is why we refer to this method as "integrating out" the censored values.
 
+By adapting the Stan code from the manual [@StanManual, cp. 4] to include
+$x$ values in the calculation of the mean, we can implement this method for
+dealing with our censored $y$ values.
+
+```{r}
+mod_2b <- cmdstanr::cmdstan_model(here::here("Ex2b.stan"), compile = FALSE)
+mod_2b$compile(pedantic = TRUE, force_recompile = TRUE)
+```
+
+```{r}
+writeLines(readLines(here::here("Ex2b.stan")))
+```
+
+We need to get the data into the correct form again to pass into the Stan
+program. The form we need this time is thankfully much closer to the
+typical data frame format in R.
+
+```{r}
+dat_2b <- list()
+dat_2b$N <- nrow(sim_data)
+dat_2b$N_cens <- sum(sim_data$cens)
+dat_2b$y <- sim_data$y
+dat_2b$cens <- as.integer(sim_data$cens)
+dat_2b$x <- sim_data$x
+dat_2b$DL <- as.integer(sim_parms$DL)
+
+str(dat_2b)
+```
+
+```{r}
+fit_2b <- mod_2b$sample(
+	dat_2b, seed = 100, parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 5000
+)
+
+# Extract the posterior samples in a nicer format for later
+post_2b <- posterior::as_draws_df(fit_2b)
+```
+
+```{r}
+fit_2b$cmdstan_diagnose()
+```
+
+```{r}
+bayesplot::mcmc_combo(post_2b, pars = c('alpha', 'beta', 'sigma'))
+```
 
 <!-- END OF FILE -->
