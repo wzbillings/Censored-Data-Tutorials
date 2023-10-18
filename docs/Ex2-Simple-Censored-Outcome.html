@@ -223,6 +223,7 @@ div.csl-indent {
   <li><a href="#imputation-type-method" id="toc-imputation-type-method" class="nav-link" data-scroll-target="#imputation-type-method"><span class="header-section-number">3.1.1</span> Imputation-type method</a></li>
   <li><a href="#integration-type-method" id="toc-integration-type-method" class="nav-link" data-scroll-target="#integration-type-method"><span class="header-section-number">3.1.2</span> Integration-type method</a></li>
   </ul></li>
+  <li><a href="#appendix-tobit-model-check" id="toc-appendix-tobit-model-check" class="nav-link" data-scroll-target="#appendix-tobit-model-check">Appendix: tobit model check</a></li>
   </ul>
 </nav>
     </div>
@@ -347,13 +348,13 @@ i &amp;= 1, 2, \ldots, n
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mod_2a <span class="ot">&lt;-</span> cmdstanr<span class="sc">::</span><span class="fu">cmdstan_model</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"Ex2a.stan"</span>), <span class="at">compile =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mod_2a<span class="sc">$</span><span class="fu">compile</span>(<span class="at">pedantic =</span> <span class="cn">TRUE</span>, <span class="at">force_recompile =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning in 'C:/Users/Zane/AppData/Local/Temp/RtmpMNlOx5/model-3bd42607a40.stan', line 56, column 21: Argument
+<pre><code>Warning in 'C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/model-a106bee6050.stan', line 56, column 21: Argument
     0.01 suggests there may be parameters that are not unit scale; consider
     rescaling with a multiplier (see manual section 22.12).
-Warning in 'C:/Users/Zane/AppData/Local/Temp/RtmpMNlOx5/model-3bd42607a40.stan', line 55, column 18: Argument
+Warning in 'C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/model-a106bee6050.stan', line 55, column 18: Argument
     100 suggests there may be parameters that are not unit scale; consider
     rescaling with a multiplier (see manual section 22.12).
-Warning in 'C:/Users/Zane/AppData/Local/Temp/RtmpMNlOx5/model-3bd42607a40.stan', line 54, column 19: Argument
+Warning in 'C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/model-a106bee6050.stan', line 54, column 19: Argument
     100 suggests there may be parameters that are not unit scale; consider
     rescaling with a multiplier (see manual section 22.12).
 Warning: The parameter y_cens has no priors. This means either no prior is
@@ -368,7 +369,7 @@ Warning: The parameter y_cens has no priors. This means either no prior is
                  from stan/lib/stan_math/stan/math/rev.hpp:14,
                  from stan/lib/stan_math/stan/math.hpp:19,
                  from stan/src/stan/model/model_header.hpp:4,
-                 from C:/Users/Zane/AppData/Local/Temp/RtmpMNlOx5/model-3bd42607a40.hpp:2:
+                 from C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/model-a106bee6050.hpp:2:
 stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp: In function 'stan::return_type_t&lt;T_x, T_sigma, T_l&gt; stan::math::von_mises_cdf(const T_x&amp;, const T_mu&amp;, const T_k&amp;)':
 stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: '-Wmisleading-indentation' is disabled from this point onwards, since column-tracking was disabled due to the size of the code/headers
   194 |       if (cdf_n &lt; 0.0)
@@ -402,6 +403,7 @@ Chain 2 Iteration:  300 / 5500 [  5%]  (Warmup)
 Chain 3 Iteration:  100 / 5500 [  1%]  (Warmup) 
 Chain 3 Iteration:  200 / 5500 [  3%]  (Warmup) 
 Chain 3 Iteration:  300 / 5500 [  5%]  (Warmup) 
+Chain 3 Iteration:  400 / 5500 [  7%]  (Warmup) 
 Chain 4 Iteration:  100 / 5500 [  1%]  (Warmup) 
 Chain 4 Iteration:  200 / 5500 [  3%]  (Warmup) 
 Chain 4 Iteration:  300 / 5500 [  5%]  (Warmup) 
@@ -413,203 +415,202 @@ Chain 1 Iteration:  700 / 5500 [ 12%]  (Sampling)
 Chain 2 Iteration:  400 / 5500 [  7%]  (Warmup) 
 Chain 2 Iteration:  500 / 5500 [  9%]  (Warmup) 
 Chain 2 Iteration:  501 / 5500 [  9%]  (Sampling) 
-Chain 3 Iteration:  400 / 5500 [  7%]  (Warmup) 
 Chain 3 Iteration:  500 / 5500 [  9%]  (Warmup) 
 Chain 3 Iteration:  501 / 5500 [  9%]  (Sampling) 
 Chain 3 Iteration:  600 / 5500 [ 10%]  (Sampling) 
 Chain 4 Iteration:  500 / 5500 [  9%]  (Warmup) 
 Chain 4 Iteration:  501 / 5500 [  9%]  (Sampling) 
 Chain 4 Iteration:  600 / 5500 [ 10%]  (Sampling) 
-Chain 4 Iteration:  700 / 5500 [ 12%]  (Sampling) 
 Chain 1 Iteration:  800 / 5500 [ 14%]  (Sampling) 
 Chain 1 Iteration:  900 / 5500 [ 16%]  (Sampling) 
 Chain 2 Iteration:  600 / 5500 [ 10%]  (Sampling) 
 Chain 2 Iteration:  700 / 5500 [ 12%]  (Sampling) 
 Chain 3 Iteration:  700 / 5500 [ 12%]  (Sampling) 
+Chain 3 Iteration:  800 / 5500 [ 14%]  (Sampling) 
+Chain 4 Iteration:  700 / 5500 [ 12%]  (Sampling) 
 Chain 4 Iteration:  800 / 5500 [ 14%]  (Sampling) 
 Chain 4 Iteration:  900 / 5500 [ 16%]  (Sampling) 
-Chain 4 Iteration: 1000 / 5500 [ 18%]  (Sampling) 
 Chain 1 Iteration: 1000 / 5500 [ 18%]  (Sampling) 
 Chain 1 Iteration: 1100 / 5500 [ 20%]  (Sampling) 
 Chain 2 Iteration:  800 / 5500 [ 14%]  (Sampling) 
 Chain 2 Iteration:  900 / 5500 [ 16%]  (Sampling) 
-Chain 3 Iteration:  800 / 5500 [ 14%]  (Sampling) 
 Chain 3 Iteration:  900 / 5500 [ 16%]  (Sampling) 
 Chain 3 Iteration: 1000 / 5500 [ 18%]  (Sampling) 
+Chain 4 Iteration: 1000 / 5500 [ 18%]  (Sampling) 
 Chain 4 Iteration: 1100 / 5500 [ 20%]  (Sampling) 
 Chain 4 Iteration: 1200 / 5500 [ 21%]  (Sampling) 
-Chain 4 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
 Chain 1 Iteration: 1200 / 5500 [ 21%]  (Sampling) 
 Chain 1 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
 Chain 2 Iteration: 1000 / 5500 [ 18%]  (Sampling) 
+Chain 2 Iteration: 1100 / 5500 [ 20%]  (Sampling) 
 Chain 3 Iteration: 1100 / 5500 [ 20%]  (Sampling) 
 Chain 3 Iteration: 1200 / 5500 [ 21%]  (Sampling) 
+Chain 3 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
+Chain 4 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
 Chain 4 Iteration: 1400 / 5500 [ 25%]  (Sampling) 
-Chain 4 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
 Chain 1 Iteration: 1400 / 5500 [ 25%]  (Sampling) 
 Chain 1 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
-Chain 2 Iteration: 1100 / 5500 [ 20%]  (Sampling) 
 Chain 2 Iteration: 1200 / 5500 [ 21%]  (Sampling) 
-Chain 3 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
 Chain 3 Iteration: 1400 / 5500 [ 25%]  (Sampling) 
+Chain 3 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
+Chain 4 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
 Chain 4 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
 Chain 4 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
-Chain 4 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
 Chain 1 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
 Chain 1 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
 Chain 2 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
 Chain 2 Iteration: 1400 / 5500 [ 25%]  (Sampling) 
-Chain 3 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
 Chain 3 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
+Chain 3 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
+Chain 4 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
 Chain 4 Iteration: 1900 / 5500 [ 34%]  (Sampling) 
 Chain 4 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
-Chain 4 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
 Chain 1 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
 Chain 1 Iteration: 1900 / 5500 [ 34%]  (Sampling) 
 Chain 2 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
-Chain 2 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
-Chain 3 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
 Chain 3 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
+Chain 3 Iteration: 1900 / 5500 [ 34%]  (Sampling) 
+Chain 4 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
 Chain 4 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
-Chain 4 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
-Chain 4 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
 Chain 1 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
 Chain 1 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
+Chain 2 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
 Chain 2 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
-Chain 3 Iteration: 1900 / 5500 [ 34%]  (Sampling) 
 Chain 3 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
+Chain 4 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
+Chain 4 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
 Chain 4 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
-Chain 4 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
-Chain 4 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
 Chain 1 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
 Chain 1 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
 Chain 2 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
 Chain 2 Iteration: 1900 / 5500 [ 34%]  (Sampling) 
 Chain 3 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
 Chain 3 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
+Chain 3 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
+Chain 4 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
+Chain 4 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
 Chain 4 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
-Chain 4 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
 Chain 1 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
 Chain 1 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
 Chain 2 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
-Chain 2 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
-Chain 3 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
 Chain 3 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
-Chain 3 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
+Chain 4 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
 Chain 4 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
+Chain 1 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
+Chain 2 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
+Chain 2 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
+Chain 3 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
+Chain 3 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
 Chain 4 Iteration: 3100 / 5500 [ 56%]  (Sampling) 
 Chain 4 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
-Chain 1 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
 Chain 1 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
-Chain 2 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
-Chain 3 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
-Chain 4 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
-Chain 4 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
-Chain 4 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
 Chain 1 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
-Chain 1 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
 Chain 2 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
 Chain 2 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
 Chain 3 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
 Chain 3 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
+Chain 4 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
+Chain 4 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
+Chain 4 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
+Chain 1 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
+Chain 1 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
+Chain 2 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
+Chain 3 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
+Chain 3 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
 Chain 4 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
 Chain 4 Iteration: 3700 / 5500 [ 67%]  (Sampling) 
 Chain 4 Iteration: 3800 / 5500 [ 69%]  (Sampling) 
-Chain 1 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
 Chain 1 Iteration: 3100 / 5500 [ 56%]  (Sampling) 
-Chain 2 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
-Chain 2 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
-Chain 3 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
-Chain 3 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
-Chain 4 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
-Chain 4 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
-Chain 4 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
 Chain 1 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
-Chain 1 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
+Chain 2 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
 Chain 2 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
-Chain 2 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
 Chain 3 Iteration: 3100 / 5500 [ 56%]  (Sampling) 
 Chain 3 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
+Chain 4 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
+Chain 4 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
+Chain 1 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
+Chain 1 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
+Chain 2 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
+Chain 2 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
 Chain 3 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
+Chain 3 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
+Chain 4 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
 Chain 4 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
 Chain 4 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
-Chain 1 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
 Chain 1 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
-Chain 2 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
-Chain 3 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
+Chain 1 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
+Chain 2 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
 Chain 3 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
+Chain 3 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
 Chain 4 Iteration: 4400 / 5500 [ 80%]  (Sampling) 
 Chain 4 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
-Chain 4 Iteration: 4600 / 5500 [ 83%]  (Sampling) 
-Chain 1 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
 Chain 1 Iteration: 3700 / 5500 [ 67%]  (Sampling) 
-Chain 2 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
-Chain 2 Iteration: 3100 / 5500 [ 56%]  (Sampling) 
-Chain 3 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
-Chain 3 Iteration: 3700 / 5500 [ 67%]  (Sampling) 
-Chain 4 Iteration: 4700 / 5500 [ 85%]  (Sampling) 
-Chain 4 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
 Chain 1 Iteration: 3800 / 5500 [ 69%]  (Sampling) 
-Chain 1 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
+Chain 2 Iteration: 3100 / 5500 [ 56%]  (Sampling) 
 Chain 2 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
-Chain 2 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
+Chain 3 Iteration: 3700 / 5500 [ 67%]  (Sampling) 
 Chain 3 Iteration: 3800 / 5500 [ 69%]  (Sampling) 
 Chain 3 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
-Chain 4 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
-Chain 4 Iteration: 5000 / 5500 [ 90%]  (Sampling) 
-Chain 4 Iteration: 5100 / 5500 [ 92%]  (Sampling) 
+Chain 4 Iteration: 4600 / 5500 [ 83%]  (Sampling) 
+Chain 4 Iteration: 4700 / 5500 [ 85%]  (Sampling) 
+Chain 4 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
+Chain 1 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
 Chain 1 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
-Chain 1 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
+Chain 2 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
 Chain 2 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
 Chain 3 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
 Chain 3 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
+Chain 4 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
+Chain 4 Iteration: 5000 / 5500 [ 90%]  (Sampling) 
+Chain 4 Iteration: 5100 / 5500 [ 92%]  (Sampling) 
+Chain 1 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
+Chain 1 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
+Chain 2 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
+Chain 3 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
+Chain 3 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
 Chain 4 Iteration: 5200 / 5500 [ 94%]  (Sampling) 
 Chain 4 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
 Chain 4 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
-Chain 1 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
 Chain 1 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
-Chain 2 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
-Chain 2 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
-Chain 3 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
-Chain 3 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
-Chain 4 Iteration: 5500 / 5500 [100%]  (Sampling) 
-Chain 4 finished in 2.4 seconds.
 Chain 1 Iteration: 4400 / 5500 [ 80%]  (Sampling) 
-Chain 1 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
+Chain 2 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
 Chain 2 Iteration: 3700 / 5500 [ 67%]  (Sampling) 
-Chain 2 Iteration: 3800 / 5500 [ 69%]  (Sampling) 
 Chain 3 Iteration: 4400 / 5500 [ 80%]  (Sampling) 
 Chain 3 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
+Chain 4 Iteration: 5500 / 5500 [100%]  (Sampling) 
+Chain 4 finished in 2.5 seconds.
+Chain 1 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
 Chain 1 Iteration: 4600 / 5500 [ 83%]  (Sampling) 
-Chain 1 Iteration: 4700 / 5500 [ 85%]  (Sampling) 
-Chain 1 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
+Chain 2 Iteration: 3800 / 5500 [ 69%]  (Sampling) 
 Chain 2 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
-Chain 2 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
 Chain 3 Iteration: 4600 / 5500 [ 83%]  (Sampling) 
 Chain 3 Iteration: 4700 / 5500 [ 85%]  (Sampling) 
+Chain 1 Iteration: 4700 / 5500 [ 85%]  (Sampling) 
+Chain 1 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
+Chain 2 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
+Chain 3 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
+Chain 3 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
 Chain 1 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
 Chain 1 Iteration: 5000 / 5500 [ 90%]  (Sampling) 
 Chain 2 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
-Chain 3 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
-Chain 3 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
-Chain 1 Iteration: 5100 / 5500 [ 92%]  (Sampling) 
-Chain 1 Iteration: 5200 / 5500 [ 94%]  (Sampling) 
 Chain 2 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
-Chain 2 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
 Chain 3 Iteration: 5000 / 5500 [ 90%]  (Sampling) 
 Chain 3 Iteration: 5100 / 5500 [ 92%]  (Sampling) 
-Chain 1 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
-Chain 1 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
+Chain 1 Iteration: 5100 / 5500 [ 92%]  (Sampling) 
+Chain 1 Iteration: 5200 / 5500 [ 94%]  (Sampling) 
+Chain 2 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
 Chain 2 Iteration: 4400 / 5500 [ 80%]  (Sampling) 
-Chain 2 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
 Chain 3 Iteration: 5200 / 5500 [ 94%]  (Sampling) 
 Chain 3 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
-Chain 1 Iteration: 5500 / 5500 [100%]  (Sampling) 
-Chain 2 Iteration: 4600 / 5500 [ 83%]  (Sampling) 
 Chain 3 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
+Chain 1 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
+Chain 1 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
+Chain 1 Iteration: 5500 / 5500 [100%]  (Sampling) 
+Chain 2 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
 Chain 3 Iteration: 5500 / 5500 [100%]  (Sampling) 
-Chain 1 finished in 3.1 seconds.
+Chain 1 finished in 3.2 seconds.
 Chain 3 finished in 3.1 seconds.
+Chain 2 Iteration: 4600 / 5500 [ 83%]  (Sampling) 
 Chain 2 Iteration: 4700 / 5500 [ 85%]  (Sampling) 
 Chain 2 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
 Chain 2 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
@@ -619,11 +620,11 @@ Chain 2 Iteration: 5200 / 5500 [ 94%]  (Sampling)
 Chain 2 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
 Chain 2 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
 Chain 2 Iteration: 5500 / 5500 [100%]  (Sampling) 
-Chain 2 finished in 3.6 seconds.
+Chain 2 finished in 3.7 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 3.0 seconds.
-Total execution time: 3.9 seconds.</code></pre>
+Mean chain execution time: 3.1 seconds.
+Total execution time: 4.0 seconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the posterior samples in a nicer format for later</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>post_2a <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_df</span>(fit_2a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -632,7 +633,7 @@ Total execution time: 3.9 seconds.</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit_2a<span class="sc">$</span><span class="fu">cmdstan_diagnose</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Processing csv files: C:/Users/Zane/AppData/Local/Temp/RtmpMNlOx5/Ex2a-202310180013-1-5f477a.csv, C:/Users/Zane/AppData/Local/Temp/RtmpMNlOx5/Ex2a-202310180013-2-5f477a.csv, C:/Users/Zane/AppData/Local/Temp/RtmpMNlOx5/Ex2a-202310180013-3-5f477a.csv, C:/Users/Zane/AppData/Local/Temp/RtmpMNlOx5/Ex2a-202310180013-4-5f477a.csv
+<pre><code>Processing csv files: C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2a-202310181723-1-5f15b6.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2a-202310181723-2-5f15b6.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2a-202310181723-3-5f15b6.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2a-202310181723-4-5f15b6.csv
 
 Checking sampler transitions treedepth.
 Treedepth satisfactory for all transitions.
@@ -837,6 +838,257 @@ Processing complete, no problems detected.</code></pre>
 </section>
 <section id="integration-type-method" class="level3" data-number="3.1.2">
 <h3 data-number="3.1.2" class="anchored" data-anchor-id="integration-type-method"><span class="header-section-number">3.1.2</span> Integration-type method</h3>
+<p>The second method relies on calculating the direct contribution of the censored data measurements to the likelihood by integrating the density over the region where censored data can occur. That is, if the <span class="math inline">\(i\)</span>th observation is below the detection limit, we know that the contribution of that observation to the sample likelihood is <span class="math display">\[
+\mathcal{L}(\theta \mid y_i) = P(Y_i \leq \mathrm{DL}) = \int_{-\infty}^{\mathrm{DL}}f(y_i \mid \theta) \ dy = \lim_{a \to -\infty} \left[F(y_i \mid \theta)\right]_{a}^{\mathrm{DL}},
+\]</span> which is why we refer to this method as “integrating out” the censored values.</p>
+<p>By adapting the Stan code from the manual <span class="citation" data-cites="StanManual">(<a href="references.html#ref-StanManual" role="doc-biblioref">Stan Development Team 2023</a>, cp.&nbsp;4)</span> to include <span class="math inline">\(x\)</span> values in the calculation of the mean, we can implement this method for dealing with our censored <span class="math inline">\(y\)</span> values. First we’ll load and compile the Stan model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mod_2b <span class="ot">&lt;-</span> cmdstanr<span class="sc">::</span><span class="fu">cmdstan_model</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"Ex2b.stan"</span>), <span class="at">compile =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mod_2b<span class="sc">$</span><span class="fu">compile</span>(<span class="at">force_recompile =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">//</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Ex2a: One censored predictor using the imputation method</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">// has one lower limit of detection only</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">// See: https://mc-stan.org/docs/stan-users-guide/censored-data.html</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Zane Billings</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">// 2023-10-17</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">//</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">// The input data consists of:</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">// - N: </span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">// - N_cens: an integer, the number of data points where the outcome was below</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">//   the DL and thus censored.</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">// - y: real array of observed outcome variable</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">// - cens: int array; indicator which is 1 if the corresponding measurement of</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">//   y is censored and 0 otherwise.</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">// - x: real array of observed predictor variable</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">// - DL: int, the detection limit of the assay (right now it has to be</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co">//   identical for all observations but we want to change that in future)</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>	<span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N;</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>	<span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=N&gt; N_cens;</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>	<span class="dt">array</span>[N] <span class="dt">real</span> y;</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>	<span class="dt">array</span>[N] <span class="dt">int</span> cens;</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>	<span class="dt">array</span>[N] <span class="dt">real</span> x;</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>	<span class="dt">int</span>&lt;<span class="kw">upper</span>=to_int(min(y))&gt; DL;</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co">// transformed data are values we can calculate directly from the inputted data.</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co">// - N_cens is an integer equal to N_cens + N_obs.</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co">// transformed data {</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co">// 	int&lt;lower=0 upper=N&gt; N_obs;</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="co">// 	N_obs = N_cens - N;</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="co">// }</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="co">// The parameters accepted by the model. Our model</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="co">// accepts the real-valued parameters alpha, beta, (the regression coefs) and</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="co">// the positive real-valued parameter sigma (the variance of the outcome</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a><span class="co">// distribution).</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>	<span class="co">// Regression parameters</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>	<span class="dt">real</span> alpha;</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>	<span class="dt">real</span> beta;</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>	<span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a><span class="co">// The model to be estimated.</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>	<span class="co">// Priors for parameters</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>	alpha ~ normal(<span class="dv">0</span>, <span class="dv">100</span>);</span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>	beta ~ normal(<span class="dv">0</span>, <span class="dv">100</span>);</span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>	sigma ~ exponential(<span class="fl">0.01</span>);</span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>	</span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>	<span class="co">// Loop through each observation and calculate the mean. If the current</span></span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>	<span class="co">// y value is observed, treat it like normal. If it is censored, we need to</span></span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>	<span class="co">// update the likelihood by integrating out the value.</span></span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>	<span class="dt">array</span>[N] <span class="dt">real</span> mu;</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>	<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>		mu[i] = alpha + beta * x[i];</span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a>		<span class="cf">if</span> (cens[i] == <span class="dv">0</span>) {</span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>			y[i] ~ normal(mu[i], sigma);</span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a>		} <span class="cf">else</span> <span class="cf">if</span> (cens[i] == <span class="dv">1</span>) {</span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>			<span class="kw">target +=</span> normal_lcdf(DL | mu[i], sigma);</span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a>		}</span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a>	}</span>
+<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>As you can see from the above program, the data needs to be in a different format for this method. Actually, it’s much easier to set up the data in the way this program specifies, and it’s very similar to the data frame we already have. We just need a list and a few other components.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dat_2b <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dat_2b<span class="sc">$</span>N <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sim_data)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>dat_2b<span class="sc">$</span>N_cens <span class="ot">&lt;-</span> <span class="fu">sum</span>(sim_data<span class="sc">$</span>cens)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>dat_2b<span class="sc">$</span>y <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>y</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>dat_2b<span class="sc">$</span>cens <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(sim_data<span class="sc">$</span>cens)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>dat_2b<span class="sc">$</span>x <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>x</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>dat_2b<span class="sc">$</span>DL <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(sim_parms<span class="sc">$</span>DL)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat_2b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 6
+ $ N     : int 271
+ $ N_cens: int 62
+ $ y     : num [1:271] 92.6 104.2 86.2 88.7 94.9 ...
+ $ cens  : int [1:271] 0 0 0 0 0 0 0 0 0 0 ...
+ $ x     : num [1:271] 8.98 9.31 3.42 8.5 8.14 ...
+ $ DL    : int 80</code></pre>
+</div>
+</div>
+<p>Now that we have the program ready and the data set up, we can give the data to the program and do some MCMC sampling. We’ll use a similar setup that we did for the previous example, namely 4 parallel chains which each run 500 warmup iterations and 1000 sampling iterations (no need for overkill like we did before).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fit_2b <span class="ot">&lt;-</span> mod_2b<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    dat_2b, <span class="at">seed =</span> <span class="dv">100</span>, <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_warmup =</span> <span class="dv">500</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_sampling =</span> <span class="dv">1000</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">show_messages =</span> <span class="cn">FALSE</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the posterior samples in a nicer format for later</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>post_2b <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_df</span>(fit_2b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We didn’t get any warnings or errors, which means that the model finished the sampling procedure without any major errors, and we should next check the diagnostics.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fit_2b<span class="sc">$</span><span class="fu">cmdstan_diagnose</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Processing csv files: C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2b-202310181723-1-695d33.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2b-202310181723-2-695d33.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2b-202310181723-3-695d33.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2b-202310181723-4-695d33.csv
+
+Checking sampler transitions treedepth.
+Treedepth satisfactory for all transitions.
+
+Checking sampler transitions for divergences.
+No divergent transitions found.
+
+Checking E-BFMI - sampler transitions HMC potential energy.
+E-BFMI satisfactory.
+
+Effective sample size satisfactory.
+
+Split R-hat values satisfactory all parameters.
+
+Processing complete, no problems detected.</code></pre>
+</div>
+</div>
+<p>Everything looks good here, but let’s again look at the traceplots.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_combo</span>(post_2b, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">'alpha'</span>, <span class="st">'beta'</span>, <span class="st">'sigma'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Ex2-Simple-Censored-Outcome_files/figure-html/model 2b traceplot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We got some nice, healthy looking fuzzy caterpillars, so now we can be confident in our summary results. So now let’s finally look at the parameter estimates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fit_2b<span class="sc">$</span><span class="fu">summary</span>(<span class="at">variables =</span> <span class="fu">c</span>(<span class="st">'alpha'</span>, <span class="st">'beta'</span>, <span class="st">'sigma'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 10
+  variable  mean median    sd   mad    q5   q95  rhat ess_bulk ess_tail
+  &lt;chr&gt;    &lt;num&gt;  &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
+1 alpha    73.1   73.1  0.767 0.803 71.8  74.3   1.00    1324.    1250.
+2 beta      2.82   2.81 0.122 0.126  2.62  3.02  1.00    1285.    1479.
+3 sigma     4.90   4.90 0.243 0.244  4.52  5.32  1.00    2114.    2269.</code></pre>
+</div>
+</div>
+<p>These estimates are pretty similar to the estimates from the other method, which is good in a way because it means both methods are similar. The frequentist tobit model estimate is also similar (see the appendix).</p>
+<p>Unfortunately, none of the three models to estimate the regression value while taking the censoring into account produce estimates that are exactly the same as the true simulation parameters. However, unlike the much worse naive model estimates, at least our uncertainty intervals correctly contain the true values this time. So we cannot fully erase the effect of the flawed observation process on our data, but we can do a lot better by taking the censored data into consideration.</p>
+</section>
+</section>
+<section id="appendix-tobit-model-check" class="level1 appendix unnumbered">
+<h1 class="appendix unnumbered">Appendix: tobit model check</h1>
+<p>Since we’re dealing with one censored outcome with a known limit of detection, there are actually some well-developed frequentist methods for this problem. Namely, we can use a <strong>tobit model</strong>, which specificies the likelihood model in the same way we did for the bayesian estimation method, and works very similarly to the second method where we integrate out the censored data points. However, instead of specifying priors to get a posterior distribution via Bayes’ theorem, we instead estimate the parameters by finding the parameters which maximize the sample likelihood.</p>
+<p>Many models for censored outcomes with a variety of distributions are implemented in the R core package <code>survival</code>, but the formula for specifying a tobit model with a gaussian outcome distribution correctly is very unintuitive. Thankfully, the package <code>AER</code> provides a simple <code>tobit()</code> wrapper which translates a more standard formula into the appropriate form for the <code>survReg()</code> function and fits the model. Fitting our model using <code>AER::tobit()</code> is simple.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>tobit_model <span class="ot">&lt;-</span> AER<span class="sc">::</span><span class="fu">tobit</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> x,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> sim_data,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">left =</span> sim_parms<span class="sc">$</span>DL,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">right =</span> <span class="cn">Inf</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">dist =</span> <span class="st">"gaussian"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tobit_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+AER::tobit(formula = y ~ x, left = sim_parms$DL, right = Inf, 
+    dist = "gaussian", data = sim_data)
+
+Observations:
+         Total  Left-censored     Uncensored Right-censored 
+           271             62            209              0 
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) 73.21256    0.75531   96.93   &lt;2e-16 ***
+x            2.80427    0.12071   23.23   &lt;2e-16 ***
+Log(scale)   1.57771    0.04957   31.83   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Scale: 4.844 
+
+Gaussian distribution
+Number of Newton-Raphson Iterations: 6 
+Log-likelihood: -661.2 on 3 Df
+Wald-statistic: 539.7 on 1 Df, p-value: &lt; 2.22e-16 </code></pre>
+</div>
+</div>
+<p>If we want a lot of compatibility with standard R functions however (e.g. <code>broom::tidy()</code> to get the confidence intervals for the parameters), we need to use <code>survreg</code>. Fortunately the documentation for <code>AER::tobit()</code> explains how the formula is transmogrified.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>U <span class="ot">&lt;-</span> sim_parms<span class="sc">$</span>DL</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>survreg_model <span class="ot">&lt;-</span> survival<span class="sc">::</span><span class="fu">survreg</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    survival<span class="sc">::</span><span class="fu">Surv</span>(y, y <span class="sc">&gt;</span> U, <span class="at">type =</span> <span class="st">'left'</span>) <span class="sc">~</span> x,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> sim_data,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">dist =</span> <span class="st">"gaussian"</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(survreg_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+survival::survreg(formula = survival::Surv(y, y &gt; U, type = "left") ~ 
+    x, data = sim_data, dist = "gaussian")
+              Value Std. Error    z      p
+(Intercept) 73.2126     0.7553 96.9 &lt;2e-16
+x            2.8043     0.1207 23.2 &lt;2e-16
+Log(scale)   1.5777     0.0496 31.8 &lt;2e-16
+
+Scale= 4.84 
+
+Gaussian distribution
+Loglik(model)= -661.2   Loglik(intercept only)= -831
+    Chisq= 339.55 on 1 degrees of freedom, p= 8e-76 
+Number of Newton-Raphson Iterations: 6 
+n= 271 </code></pre>
+</div>
+</div>
+<p>We can see that the two models are exactly the same. But since we’ve used a model from <code>survival</code>, we get the benefit of widespread compatibility with other <code>R</code>-ecosystem functionality. For example, we can easily get confidence intervals for all three estimated parameters with <code>broom</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(survreg_model, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 7
+  term        estimate std.error statistic   p.value conf.low conf.high
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)    73.2     0.755       96.9 0            71.7      74.7 
+2 x               2.80    0.121       23.2 2.15e-119     2.57      3.04
+3 Log(scale)      1.58    0.0496      31.8 2.77e-222    NA        NA   </code></pre>
+</div>
+</div>
+<p>Or at least I thought we could. Apparently there is not a built-in method to give the CI for the scale parameter, and we have to do it ourselves.</p>
+<div class="cell">
+<details>
+<summary>Code for 95% CI for scale</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Scale estimate: "</span>,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">exp</span>(<span class="fl">1.58</span>), <span class="dv">2</span>),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">", 95% CI: "</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">exp</span>(<span class="fl">1.58</span> <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fl">0.0496</span>), <span class="dv">2</span>),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">" - "</span>,</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">exp</span>(<span class="fl">1.58</span> <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fl">0.0496</span>), <span class="dv">2</span>),</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"."</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Scale estimate: 4.85, 95% CI: 4.41 - 5.35."</code></pre>
+</div>
+</div>
+<p>Anyways, we can compare these to the Bayesian estimates above and see that they are quite similar.</p>
 <!-- END OF FILE -->
 
 
@@ -845,7 +1097,6 @@ Processing complete, no problems detected.</code></pre>
 Stan Development Team. 2023. <em>Stan <span>Modeling Language Users</span>’ <span>Guide</span> and <span>Reference Manual</span></em>. 2.33 ed.
 </div>
 </div>
-</section>
 </section>
 
 </main> <!-- /main -->

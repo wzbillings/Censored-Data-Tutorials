@@ -395,22 +395,22 @@ which is why we refer to this method as "integrating out" the censored values.
 
 By adapting the Stan code from the manual [@StanManual, cp. 4] to include
 $x$ values in the calculation of the mean, we can implement this method for
-dealing with our censored $y$ values.
+dealing with our censored $y$ values. First we'll load and compile the Stan model.
 
-```{r}
+```{r model 2b compilation, message=FALSE, warning=FALSE}
 mod_2b <- cmdstanr::cmdstan_model(here::here("Ex2b.stan"), compile = FALSE)
-mod_2b$compile(pedantic = TRUE, force_recompile = TRUE)
+mod_2b$compile(force_recompile = TRUE)
 ```
 
-```{r}
-writeLines(readLines(here::here("Ex2b.stan")))
+```{.stan include="Ex2b.stan"}
 ```
 
-We need to get the data into the correct form again to pass into the Stan
-program. The form we need this time is thankfully much closer to the
-typical data frame format in R.
+As you can see from the above program, the data needs to be in a different
+format for this method. Actually, it's much easier to set up the data in the
+way this program specifies, and it's very similar to the data frame we already
+have. We just need a list and a few other components.
 
-```{r}
+```{r model 2b data}
 dat_2b <- list()
 dat_2b$N <- nrow(sim_data)
 dat_2b$N_cens <- sum(sim_data$cens)
@@ -422,23 +422,122 @@ dat_2b$DL <- as.integer(sim_parms$DL)
 str(dat_2b)
 ```
 
-```{r}
+Now that we have the program ready and the data set up, we can give the data
+to the program and do some MCMC sampling. We'll use a similar setup
+that we did for the previous example, namely 4 parallel chains which each run
+500 warmup iterations and 1000 sampling iterations (no need for overkill like
+we did before).
+
+```{r model 2b sampling}
 fit_2b <- mod_2b$sample(
 	dat_2b, seed = 100, parallel_chains = 4,
 	iter_warmup = 500,
-	iter_sampling = 5000
+	iter_sampling = 1000,
+	show_messages = FALSE
 )
 
 # Extract the posterior samples in a nicer format for later
 post_2b <- posterior::as_draws_df(fit_2b)
 ```
 
-```{r}
+We didn't get any warnings or errors, which means that the model finished the
+sampling procedure without any major errors, and we should next check the
+diagnostics.
+
+```{r model 2b diagnose}
 fit_2b$cmdstan_diagnose()
 ```
 
-```{r}
+Everything looks good here, but let's again look at the traceplots.
+
+```{r model 2b traceplot}
 bayesplot::mcmc_combo(post_2b, pars = c('alpha', 'beta', 'sigma'))
 ```
+
+We got some nice, healthy looking fuzzy caterpillars, so now we can be
+confident in our summary results. So now let's finally look at the parameter
+estimates.
+
+```{r}
+fit_2b$summary(variables = c('alpha', 'beta', 'sigma'))
+```
+
+These estimates are pretty similar to the estimates from the other method,
+which is good in a way because it means both methods are similar. The frequentist tobit model estimate is also similar (see the appendix).
+
+Unfortunately, none of the three models to estimate the
+regression value while taking the censoring into account produce estimates that
+are exactly the same as the true simulation parameters. However, unlike the
+much worse naive model estimates, at least our uncertainty intervals correctly
+contain the true values this time. So we cannot fully erase the effect of the
+flawed observation process on our data, but we can do a lot better by
+taking the censored data into consideration.
+
+## Appendix: tobit model check {.appendix .unnumbered}
+
+Since we're dealing with one censored outcome with a known limit of detection,
+there are actually some well-developed frequentist methods for this problem.
+Namely, we can use a **tobit model**, which specificies the likelihood
+model in the same way we did for the bayesian estimation method, and works
+very similarly to the second method where we integrate out the censored data points. However,
+instead of specifying priors to get a posterior distribution via Bayes' theorem, we instead estimate the parameters by finding the parameters which maximize the sample likelihood.
+
+Many models for censored outcomes with a variety of distributions are implemented in the R core package `survival`, but the formula for specifying a tobit model with a gaussian outcome distribution correctly is very unintuitive. Thankfully, the package `AER` provides a simple `tobit()` wrapper which translates a more standard formula into the appropriate form for the `survReg()` function and fits the model. Fitting our model using `AER::tobit()` is simple.
+
+```{r tobit with AER}
+tobit_model <- AER::tobit(
+	y ~ x,
+	data = sim_data,
+	left = sim_parms$DL,
+	right = Inf,
+	dist = "gaussian"
+)
+
+summary(tobit_model)
+```
+
+If we want a lot of compatibility with standard R functions however (e.g.
+`broom::tidy()` to get the confidence intervals for the parameters), we need
+to use `survreg`. Fortunately the documentation for `AER::tobit()` explains
+how the formula is transmogrified.
+
+```{r tobit with survreg}
+U <- sim_parms$DL
+survreg_model <- survival::survreg(
+	survival::Surv(y, y > U, type = 'left') ~ x,
+	data = sim_data,
+	dist = "gaussian"
+)
+summary(survreg_model)
+```
+
+We can see that the two models are exactly the same. But since we've used
+a model from `survival`, we get the benefit of widespread compatibility with
+other `R`-ecosystem functionality. For example, we can easily get confidence
+intervals for all three estimated parameters with `broom`.
+
+```{r tobit confidence intervals}
+broom::tidy(survreg_model, conf.int = TRUE)
+```
+
+Or at least I thought we could. Apparently there is not a built-in method to
+give the CI for the scale parameter, and we have to do it ourselves.
+
+```{r tobit scale CI}
+#| code-fold: true
+#| code-summary: "Code for 95% CI for scale"
+paste0(
+	"Scale estimate: ",
+	round(exp(1.58), 2),
+	", 95% CI: ",
+	round(exp(1.58 - 1.96 * 0.0496), 2),
+	" - ",
+	round(exp(1.58 + 1.96 * 0.0496), 2),
+	"."
+)
+```
+
+Anyways, we can compare these to the Bayesian estimates above and see that they
+are quite similar.
 
 <!-- END OF FILE -->
