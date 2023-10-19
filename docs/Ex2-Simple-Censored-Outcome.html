@@ -181,7 +181,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Ex3-Censored-Outcome-and-Predictor.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 2: One censored outcome</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 3: Censored outcome and censored predictor</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -348,13 +348,13 @@ i &amp;= 1, 2, \ldots, n
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mod_2a <span class="ot">&lt;-</span> cmdstanr<span class="sc">::</span><span class="fu">cmdstan_model</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"Ex2a.stan"</span>), <span class="at">compile =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mod_2a<span class="sc">$</span><span class="fu">compile</span>(<span class="at">pedantic =</span> <span class="cn">TRUE</span>, <span class="at">force_recompile =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning in 'C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/model-a106bee6050.stan', line 56, column 21: Argument
+<pre><code>Warning in 'C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/model-f3818262ea.stan', line 56, column 21: Argument
     0.01 suggests there may be parameters that are not unit scale; consider
     rescaling with a multiplier (see manual section 22.12).
-Warning in 'C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/model-a106bee6050.stan', line 55, column 18: Argument
+Warning in 'C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/model-f3818262ea.stan', line 55, column 18: Argument
     100 suggests there may be parameters that are not unit scale; consider
     rescaling with a multiplier (see manual section 22.12).
-Warning in 'C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/model-a106bee6050.stan', line 54, column 19: Argument
+Warning in 'C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/model-f3818262ea.stan', line 54, column 19: Argument
     100 suggests there may be parameters that are not unit scale; consider
     rescaling with a multiplier (see manual section 22.12).
 Warning: The parameter y_cens has no priors. This means either no prior is
@@ -369,7 +369,7 @@ Warning: The parameter y_cens has no priors. This means either no prior is
                  from stan/lib/stan_math/stan/math/rev.hpp:14,
                  from stan/lib/stan_math/stan/math.hpp:19,
                  from stan/src/stan/model/model_header.hpp:4,
-                 from C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/model-a106bee6050.hpp:2:
+                 from C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/model-f3818262ea.hpp:2:
 stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp: In function 'stan::return_type_t&lt;T_x, T_sigma, T_l&gt; stan::math::von_mises_cdf(const T_x&amp;, const T_mu&amp;, const T_k&amp;)':
 stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: '-Wmisleading-indentation' is disabled from this point onwards, since column-tracking was disabled due to the size of the code/headers
   194 |       if (cdf_n &lt; 0.0)
@@ -397,37 +397,37 @@ Chain 1 Iteration:  100 / 5500 [  1%]  (Warmup)
 Chain 1 Iteration:  200 / 5500 [  3%]  (Warmup) 
 Chain 1 Iteration:  300 / 5500 [  5%]  (Warmup) 
 Chain 1 Iteration:  400 / 5500 [  7%]  (Warmup) 
+Chain 1 Iteration:  500 / 5500 [  9%]  (Warmup) 
+Chain 1 Iteration:  501 / 5500 [  9%]  (Sampling) 
 Chain 2 Iteration:  100 / 5500 [  1%]  (Warmup) 
 Chain 2 Iteration:  200 / 5500 [  3%]  (Warmup) 
 Chain 2 Iteration:  300 / 5500 [  5%]  (Warmup) 
 Chain 3 Iteration:  100 / 5500 [  1%]  (Warmup) 
 Chain 3 Iteration:  200 / 5500 [  3%]  (Warmup) 
 Chain 3 Iteration:  300 / 5500 [  5%]  (Warmup) 
-Chain 3 Iteration:  400 / 5500 [  7%]  (Warmup) 
 Chain 4 Iteration:  100 / 5500 [  1%]  (Warmup) 
 Chain 4 Iteration:  200 / 5500 [  3%]  (Warmup) 
 Chain 4 Iteration:  300 / 5500 [  5%]  (Warmup) 
 Chain 4 Iteration:  400 / 5500 [  7%]  (Warmup) 
-Chain 1 Iteration:  500 / 5500 [  9%]  (Warmup) 
-Chain 1 Iteration:  501 / 5500 [  9%]  (Sampling) 
 Chain 1 Iteration:  600 / 5500 [ 10%]  (Sampling) 
 Chain 1 Iteration:  700 / 5500 [ 12%]  (Sampling) 
 Chain 2 Iteration:  400 / 5500 [  7%]  (Warmup) 
 Chain 2 Iteration:  500 / 5500 [  9%]  (Warmup) 
 Chain 2 Iteration:  501 / 5500 [  9%]  (Sampling) 
+Chain 3 Iteration:  400 / 5500 [  7%]  (Warmup) 
 Chain 3 Iteration:  500 / 5500 [  9%]  (Warmup) 
 Chain 3 Iteration:  501 / 5500 [  9%]  (Sampling) 
 Chain 3 Iteration:  600 / 5500 [ 10%]  (Sampling) 
 Chain 4 Iteration:  500 / 5500 [  9%]  (Warmup) 
 Chain 4 Iteration:  501 / 5500 [  9%]  (Sampling) 
 Chain 4 Iteration:  600 / 5500 [ 10%]  (Sampling) 
+Chain 4 Iteration:  700 / 5500 [ 12%]  (Sampling) 
 Chain 1 Iteration:  800 / 5500 [ 14%]  (Sampling) 
 Chain 1 Iteration:  900 / 5500 [ 16%]  (Sampling) 
 Chain 2 Iteration:  600 / 5500 [ 10%]  (Sampling) 
 Chain 2 Iteration:  700 / 5500 [ 12%]  (Sampling) 
 Chain 3 Iteration:  700 / 5500 [ 12%]  (Sampling) 
 Chain 3 Iteration:  800 / 5500 [ 14%]  (Sampling) 
-Chain 4 Iteration:  700 / 5500 [ 12%]  (Sampling) 
 Chain 4 Iteration:  800 / 5500 [ 14%]  (Sampling) 
 Chain 4 Iteration:  900 / 5500 [ 16%]  (Sampling) 
 Chain 1 Iteration: 1000 / 5500 [ 18%]  (Sampling) 
@@ -445,103 +445,103 @@ Chain 2 Iteration: 1000 / 5500 [ 18%]  (Sampling)
 Chain 2 Iteration: 1100 / 5500 [ 20%]  (Sampling) 
 Chain 3 Iteration: 1100 / 5500 [ 20%]  (Sampling) 
 Chain 3 Iteration: 1200 / 5500 [ 21%]  (Sampling) 
-Chain 3 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
 Chain 4 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
 Chain 4 Iteration: 1400 / 5500 [ 25%]  (Sampling) 
+Chain 4 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
 Chain 1 Iteration: 1400 / 5500 [ 25%]  (Sampling) 
 Chain 1 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
 Chain 2 Iteration: 1200 / 5500 [ 21%]  (Sampling) 
+Chain 2 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
+Chain 3 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
 Chain 3 Iteration: 1400 / 5500 [ 25%]  (Sampling) 
-Chain 3 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
-Chain 4 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
 Chain 4 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
 Chain 4 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
+Chain 4 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
 Chain 1 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
 Chain 1 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
-Chain 2 Iteration: 1300 / 5500 [ 23%]  (Sampling) 
 Chain 2 Iteration: 1400 / 5500 [ 25%]  (Sampling) 
+Chain 3 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
 Chain 3 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
 Chain 3 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
-Chain 4 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
 Chain 4 Iteration: 1900 / 5500 [ 34%]  (Sampling) 
 Chain 4 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
+Chain 4 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
 Chain 1 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
 Chain 1 Iteration: 1900 / 5500 [ 34%]  (Sampling) 
+Chain 1 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
 Chain 2 Iteration: 1500 / 5500 [ 27%]  (Sampling) 
+Chain 2 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
 Chain 3 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
 Chain 3 Iteration: 1900 / 5500 [ 34%]  (Sampling) 
-Chain 4 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
 Chain 4 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
-Chain 1 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
-Chain 1 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
-Chain 2 Iteration: 1600 / 5500 [ 29%]  (Sampling) 
-Chain 2 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
-Chain 3 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
 Chain 4 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
+Chain 1 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
+Chain 2 Iteration: 1700 / 5500 [ 30%]  (Sampling) 
+Chain 2 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
+Chain 3 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
+Chain 3 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
 Chain 4 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
 Chain 4 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
+Chain 4 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
 Chain 1 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
 Chain 1 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
-Chain 2 Iteration: 1800 / 5500 [ 32%]  (Sampling) 
 Chain 2 Iteration: 1900 / 5500 [ 34%]  (Sampling) 
-Chain 3 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
 Chain 3 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
 Chain 3 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
-Chain 4 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
 Chain 4 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
 Chain 4 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
 Chain 1 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
 Chain 1 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
 Chain 2 Iteration: 2000 / 5500 [ 36%]  (Sampling) 
+Chain 2 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
 Chain 3 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
+Chain 3 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
 Chain 4 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
 Chain 4 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
-Chain 1 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
-Chain 2 Iteration: 2100 / 5500 [ 38%]  (Sampling) 
-Chain 2 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
-Chain 3 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
-Chain 3 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
 Chain 4 Iteration: 3100 / 5500 [ 56%]  (Sampling) 
-Chain 4 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
+Chain 1 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
 Chain 1 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
-Chain 1 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
+Chain 2 Iteration: 2200 / 5500 [ 40%]  (Sampling) 
 Chain 2 Iteration: 2300 / 5500 [ 41%]  (Sampling) 
-Chain 2 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
+Chain 3 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
 Chain 3 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
-Chain 3 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
+Chain 4 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
 Chain 4 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
 Chain 4 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
-Chain 4 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
+Chain 1 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
 Chain 1 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
 Chain 1 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
+Chain 2 Iteration: 2400 / 5500 [ 43%]  (Sampling) 
 Chain 2 Iteration: 2500 / 5500 [ 45%]  (Sampling) 
+Chain 3 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
 Chain 3 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
-Chain 3 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
+Chain 4 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
 Chain 4 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
 Chain 4 Iteration: 3700 / 5500 [ 67%]  (Sampling) 
-Chain 4 Iteration: 3800 / 5500 [ 69%]  (Sampling) 
 Chain 1 Iteration: 3100 / 5500 [ 56%]  (Sampling) 
 Chain 1 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
 Chain 2 Iteration: 2600 / 5500 [ 47%]  (Sampling) 
-Chain 2 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
+Chain 3 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
 Chain 3 Iteration: 3100 / 5500 [ 56%]  (Sampling) 
-Chain 3 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
+Chain 4 Iteration: 3800 / 5500 [ 69%]  (Sampling) 
 Chain 4 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
-Chain 4 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
 Chain 1 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
 Chain 1 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
+Chain 2 Iteration: 2700 / 5500 [ 49%]  (Sampling) 
 Chain 2 Iteration: 2800 / 5500 [ 50%]  (Sampling) 
-Chain 2 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
+Chain 3 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
 Chain 3 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
-Chain 3 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
+Chain 4 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
 Chain 4 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
 Chain 4 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
-Chain 4 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
 Chain 1 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
 Chain 1 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
+Chain 2 Iteration: 2900 / 5500 [ 52%]  (Sampling) 
 Chain 2 Iteration: 3000 / 5500 [ 54%]  (Sampling) 
+Chain 3 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
 Chain 3 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
 Chain 3 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
+Chain 4 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
 Chain 4 Iteration: 4400 / 5500 [ 80%]  (Sampling) 
 Chain 4 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
 Chain 1 Iteration: 3700 / 5500 [ 67%]  (Sampling) 
@@ -550,35 +550,35 @@ Chain 2 Iteration: 3100 / 5500 [ 56%]  (Sampling)
 Chain 2 Iteration: 3200 / 5500 [ 58%]  (Sampling) 
 Chain 3 Iteration: 3700 / 5500 [ 67%]  (Sampling) 
 Chain 3 Iteration: 3800 / 5500 [ 69%]  (Sampling) 
-Chain 3 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
 Chain 4 Iteration: 4600 / 5500 [ 83%]  (Sampling) 
 Chain 4 Iteration: 4700 / 5500 [ 85%]  (Sampling) 
 Chain 4 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
 Chain 1 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
 Chain 1 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
 Chain 2 Iteration: 3300 / 5500 [ 60%]  (Sampling) 
-Chain 2 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
+Chain 3 Iteration: 3900 / 5500 [ 70%]  (Sampling) 
 Chain 3 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
-Chain 3 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
 Chain 4 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
 Chain 4 Iteration: 5000 / 5500 [ 90%]  (Sampling) 
 Chain 4 Iteration: 5100 / 5500 [ 92%]  (Sampling) 
 Chain 1 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
 Chain 1 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
+Chain 2 Iteration: 3400 / 5500 [ 61%]  (Sampling) 
 Chain 2 Iteration: 3500 / 5500 [ 63%]  (Sampling) 
+Chain 3 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
 Chain 3 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
-Chain 3 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
 Chain 4 Iteration: 5200 / 5500 [ 94%]  (Sampling) 
 Chain 4 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
-Chain 4 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
 Chain 1 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
 Chain 1 Iteration: 4400 / 5500 [ 80%]  (Sampling) 
 Chain 2 Iteration: 3600 / 5500 [ 65%]  (Sampling) 
 Chain 2 Iteration: 3700 / 5500 [ 67%]  (Sampling) 
+Chain 3 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
 Chain 3 Iteration: 4400 / 5500 [ 80%]  (Sampling) 
 Chain 3 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
+Chain 4 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
 Chain 4 Iteration: 5500 / 5500 [100%]  (Sampling) 
-Chain 4 finished in 2.5 seconds.
+Chain 4 finished in 2.4 seconds.
 Chain 1 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
 Chain 1 Iteration: 4600 / 5500 [ 83%]  (Sampling) 
 Chain 2 Iteration: 3800 / 5500 [ 69%]  (Sampling) 
@@ -588,29 +588,29 @@ Chain 3 Iteration: 4700 / 5500 [ 85%]  (Sampling)
 Chain 1 Iteration: 4700 / 5500 [ 85%]  (Sampling) 
 Chain 1 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
 Chain 2 Iteration: 4000 / 5500 [ 72%]  (Sampling) 
+Chain 2 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
 Chain 3 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
 Chain 3 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
 Chain 1 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
 Chain 1 Iteration: 5000 / 5500 [ 90%]  (Sampling) 
-Chain 2 Iteration: 4100 / 5500 [ 74%]  (Sampling) 
+Chain 1 Iteration: 5100 / 5500 [ 92%]  (Sampling) 
 Chain 2 Iteration: 4200 / 5500 [ 76%]  (Sampling) 
 Chain 3 Iteration: 5000 / 5500 [ 90%]  (Sampling) 
 Chain 3 Iteration: 5100 / 5500 [ 92%]  (Sampling) 
-Chain 1 Iteration: 5100 / 5500 [ 92%]  (Sampling) 
 Chain 1 Iteration: 5200 / 5500 [ 94%]  (Sampling) 
+Chain 1 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
 Chain 2 Iteration: 4300 / 5500 [ 78%]  (Sampling) 
 Chain 2 Iteration: 4400 / 5500 [ 80%]  (Sampling) 
 Chain 3 Iteration: 5200 / 5500 [ 94%]  (Sampling) 
 Chain 3 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
-Chain 3 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
-Chain 1 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
 Chain 1 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
 Chain 1 Iteration: 5500 / 5500 [100%]  (Sampling) 
 Chain 2 Iteration: 4500 / 5500 [ 81%]  (Sampling) 
-Chain 3 Iteration: 5500 / 5500 [100%]  (Sampling) 
-Chain 1 finished in 3.2 seconds.
-Chain 3 finished in 3.1 seconds.
 Chain 2 Iteration: 4600 / 5500 [ 83%]  (Sampling) 
+Chain 3 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
+Chain 3 Iteration: 5500 / 5500 [100%]  (Sampling) 
+Chain 1 finished in 3.1 seconds.
+Chain 3 finished in 3.0 seconds.
 Chain 2 Iteration: 4700 / 5500 [ 85%]  (Sampling) 
 Chain 2 Iteration: 4800 / 5500 [ 87%]  (Sampling) 
 Chain 2 Iteration: 4900 / 5500 [ 89%]  (Sampling) 
@@ -620,11 +620,11 @@ Chain 2 Iteration: 5200 / 5500 [ 94%]  (Sampling)
 Chain 2 Iteration: 5300 / 5500 [ 96%]  (Sampling) 
 Chain 2 Iteration: 5400 / 5500 [ 98%]  (Sampling) 
 Chain 2 Iteration: 5500 / 5500 [100%]  (Sampling) 
-Chain 2 finished in 3.7 seconds.
+Chain 2 finished in 3.6 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 3.1 seconds.
-Total execution time: 4.0 seconds.</code></pre>
+Mean chain execution time: 3.0 seconds.
+Total execution time: 3.8 seconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the posterior samples in a nicer format for later</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>post_2a <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_df</span>(fit_2a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -633,7 +633,7 @@ Total execution time: 4.0 seconds.</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit_2a<span class="sc">$</span><span class="fu">cmdstan_diagnose</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Processing csv files: C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2a-202310181723-1-5f15b6.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2a-202310181723-2-5f15b6.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2a-202310181723-3-5f15b6.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2a-202310181723-4-5f15b6.csv
+<pre><code>Processing csv files: C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/Ex2a-202310182050-1-5f1ade.csv, C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/Ex2a-202310182050-2-5f1ade.csv, C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/Ex2a-202310182050-3-5f1ade.csv, C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/Ex2a-202310182050-4-5f1ade.csv
 
 Checking sampler transitions treedepth.
 Treedepth satisfactory for all transitions.
@@ -949,7 +949,7 @@ Processing complete, no problems detected.</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fit_2b<span class="sc">$</span><span class="fu">cmdstan_diagnose</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Processing csv files: C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2b-202310181723-1-695d33.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2b-202310181723-2-695d33.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2b-202310181723-3-695d33.csv, C:/Users/Zane/AppData/Local/Temp/RtmpCQcqm6/Ex2b-202310181723-4-695d33.csv
+<pre><code>Processing csv files: C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/Ex2b-202310182051-1-69625b.csv, C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/Ex2b-202310182051-2-69625b.csv, C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/Ex2b-202310182051-3-69625b.csv, C:/Users/Zane/AppData/Local/Temp/Rtmp02Gefc/Ex2b-202310182051-4-69625b.csv
 
 Checking sampler transitions treedepth.
 Treedepth satisfactory for all transitions.
@@ -990,8 +990,8 @@ Processing complete, no problems detected.</code></pre>
 <p>Unfortunately, none of the three models to estimate the regression value while taking the censoring into account produce estimates that are exactly the same as the true simulation parameters. However, unlike the much worse naive model estimates, at least our uncertainty intervals correctly contain the true values this time. So we cannot fully erase the effect of the flawed observation process on our data, but we can do a lot better by taking the censored data into consideration.</p>
 </section>
 </section>
-<section id="appendix-tobit-model-check" class="level1 appendix unnumbered">
-<h1 class="appendix unnumbered">Appendix: tobit model check</h1>
+<section id="appendix-tobit-model-check" class="level2 appendix unnumbered">
+<h2 class="appendix unnumbered anchored" data-anchor-id="appendix-tobit-model-check">Appendix: tobit model check</h2>
 <p>Since we’re dealing with one censored outcome with a known limit of detection, there are actually some well-developed frequentist methods for this problem. Namely, we can use a <strong>tobit model</strong>, which specificies the likelihood model in the same way we did for the bayesian estimation method, and works very similarly to the second method where we integrate out the censored data points. However, instead of specifying priors to get a posterior distribution via Bayes’ theorem, we instead estimate the parameters by finding the parameters which maximize the sample likelihood.</p>
 <p>Many models for censored outcomes with a variety of distributions are implemented in the R core package <code>survival</code>, but the formula for specifying a tobit model with a gaussian outcome distribution correctly is very unintuitive. Thankfully, the package <code>AER</code> provides a simple <code>tobit()</code> wrapper which translates a more standard formula into the appropriate form for the <code>survReg()</code> function and fits the model. Fitting our model using <code>AER::tobit()</code> is simple.</p>
 <div class="cell">
@@ -1341,7 +1341,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./Ex3-Censored-Outcome-and-Predictor.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 2: One censored outcome</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 3: Censored outcome and censored predictor</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

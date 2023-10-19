@@ -1,0 +1,14 @@
+{
+  "hash": "13238d6403d35921bbadb9f46a6ef37d",
+  "result": {
+    "markdown": "# Example Model 2: One censored outcome\n\n\n\n\n\nFor the second example model, we'll work on a case \n\n\n\n<!-- END OF FILE -->\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

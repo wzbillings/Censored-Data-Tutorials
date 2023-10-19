@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Bayesian censoring - 4&nbsp; Example Model 2: One censored outcome</title>
+<title>Bayesian censoring - 4&nbsp; Example Model 3: Censored outcome and censored predictor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -62,6 +96,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -74,7 +110,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Ex3-Censored-Outcome-and-Predictor.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 2: One censored outcome</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Ex3-Censored-Outcome-and-Predictor.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 3: Censored outcome and censored predictor</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -126,7 +162,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Ex3-Censored-Outcome-and-Predictor.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 2: One censored outcome</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 3: Censored outcome and censored predictor</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -159,14 +195,23 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#data-simulation" id="toc-data-simulation" class="nav-link active" data-scroll-target="#data-simulation"><span class="header-section-number">4.1</span> Data simulation</a></li>
+  <li><a href="#stan-data-setup" id="toc-stan-data-setup" class="nav-link" data-scroll-target="#stan-data-setup"><span class="header-section-number">4.2</span> Stan data setup</a></li>
+  <li><a href="#stan-code" id="toc-stan-code" class="nav-link" data-scroll-target="#stan-code"><span class="header-section-number">4.3</span> Stan code</a></li>
+  <li><a href="#model-fitting-and-performance" id="toc-model-fitting-and-performance" class="nav-link" data-scroll-target="#model-fitting-and-performance"><span class="header-section-number">4.4</span> Model fitting and performance</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 2: One censored outcome</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 3: Censored outcome and censored predictor</span></h1>
 </div>
 
 
@@ -181,10 +226,517 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>For the second example model, we’ll work on a case</p>
+<p>Now that we’ve covered the simple cases, we’ll try to be a bit more adventurous. For the next model, we’ll simulate data where both the outcome and the predictor model are censored. We’ll also implement both lower and upper limits of detection for both the outcome and the predictor, so we’ll only have one main example in this section. We’ll also only implement one method – in general the method where we integrate out censored values has been easier to code, so we’ll stick with that method for both our predictor and our output here.</p>
+<section id="data-simulation" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="data-simulation"><span class="header-section-number">4.1</span> Data simulation</h2>
+<p>As usual, we’ll begin our data simulation by writing out the true data generating process (likelihood model) that we’ll use to generate the data. This model is a bit complicated–of course we’ll have the same regression part of the model as we’ve had before, that relates the latent <span class="math inline">\(y^*\)</span> values to the latent <span class="math inline">\(x^*\)</span> values. But then the observation model will include a censoring scheme for the observation of both <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.</p>
+<p>Importantly, in this model we also need to specify a distributional assumption for <span class="math inline">\(X\)</span>, otherwise we can’t estimate what the uncensored <span class="math inline">\(X\)</span> values should look like. So for the sake of simplicity, we’ll assume a Gaussian distribution for the <span class="math inline">\(x\)</span>-values as well, although this is definitely something we need to think more about in the future. <strong>Furthermore, let’s assume <span class="math inline">\(x\)</span> has a standard normal distribution, since we can standardize <span class="math inline">\(x\)</span> before modeling.</strong></p>
+<p><span class="math display">\[
+\begin{align*}
+y_i &amp;= \begin{cases}
+y_\min, &amp; y_i^* \leq y_\min \\
+y_i^* &amp; y_\min &lt; y_i^* \leq y_\max \\
+y_\max &amp;  y_\max &lt; y_i^*
+\end{cases} \\
+x_i &amp;= \begin{cases}
+x_\min, &amp; x_i^* \leq x_\min \\
+x_i^* &amp; x_\min &lt; x_i^* \leq x_\max \\
+x_\max &amp;  x_\max &lt; x_i^*
+\end{cases} \\
+y^*_i &amp;\sim \mathrm{Normal}(\mu_i, \sigma^2) \\
+\mu_i &amp;= \alpha + \beta \cdot x^*_i \\
+x_i^* &amp;\sim \mathrm{Normal}(0, 1)
+\end{align*}
+\]</span></p>
+<p>Again, we can choose whatever parameters we want for the simulation. I played around with the simulation until I got a plot I thought looked about right. Those simulation parameters are printed below.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 8
+ $ n    : num 400
+ $ alpha: num 1
+ $ beta : num 4
+ $ sigma: num 5
+ $ y_min: num -9
+ $ y_max: num 12
+ $ x_min: num -1
+ $ x_max: num 2</code></pre>
+</div>
+</div>
+<p>So with those parameters, we can then simulate some data according to this generative model.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 400 × 5
+    x_star      mu  y_star       x       y
+     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+ 1  1.80     8.19   7.08    1.80    7.08  
+ 2  1.16     5.64   6.71    1.16    6.71  
+ 3  0.155    1.62   6.05    0.155   6.05  
+ 4  0.0988   1.40   1.24    0.0988  1.24  
+ 5 -3.16   -11.6   -7.35   -1      -7.35  
+ 6 -0.682   -1.73  -1.46   -0.682  -1.46  
+ 7  1.56     7.25   3.40    1.56    3.40  
+ 8 -0.195    0.219 -0.216  -0.195  -0.216 
+ 9  0.628    3.51   7.10    0.628   7.10  
+10  0.821    4.28   0.0773  0.821   0.0773
+# ℹ 390 more rows</code></pre>
+</div>
+</div>
+<p>Since we’ve simulated the data, we know the latent values and the observed values, so we can plot our simulated data in order to get a better understanding of how much the censoring process will affect our estimates.</p>
+<div class="cell">
+<details>
+<summary>Plotting code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">yintercept =</span> <span class="fu">c</span>(sim_parms<span class="sc">$</span>y_min, sim_parms<span class="sc">$</span>y_max),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="dv">1</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"darkgray"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">xintercept =</span> <span class="fu">c</span>(sim_parms<span class="sc">$</span>x_min, sim_parms<span class="sc">$</span>x_max),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="dv">1</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"darkgray"</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> <span class="fu">subset</span>(sim_data, (x <span class="sc">!=</span> x_star) <span class="sc">|</span> (y <span class="sc">!=</span> y_star)),</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> x_star, <span class="at">xend =</span> x, <span class="at">y =</span> y_star, <span class="at">yend =</span> y),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"gray"</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> <span class="fl">0.25</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">lwd =</span> <span class="dv">1</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> x_star, <span class="at">y =</span> y_star), <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">22</span>, <span class="dv">22</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Independent variable"</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Dependent variable"</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Ex3-Censored-Outcome-and-Predictor_files/figure-html/data plot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can see that a substantial amount of the data points are censored. In total, <span class="math inline">\(16.5\%\)</span> of records were censored in <span class="math inline">\(x\)</span> only, <span class="math inline">\(13.25\%\)</span> of records were censored in <span class="math inline">\(y\)</span> only, and <span class="math inline">\(5\%\)</span> of records were censored in both <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. Thus, <span class="math inline">\(24.75\%\)</span> of records were censored in some way.</p>
+<p>I also deliberately set the upper and lower limits for both <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> to be asymmetrical so we can more clearly see how our censoring process can strongly bias the estimates: we have more records censored at lower values than higher values, which gives us a shifted window where we observe data.</p>
+<p>So now that we have the data simulated, we want to try to recover the original parameters with a Bayesian model.</p>
+</section>
+<section id="stan-data-setup" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="stan-data-setup"><span class="header-section-number">4.2</span> Stan data setup</h2>
+<p>I also want to write the Stan code to accept data in a specific format that we want to test. The data should be formatted like the table below.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>X</th>
+<th>X_L</th>
+<th>X_U</th>
+<th>Y</th>
+<th>Y_L</th>
+<th>Y_U</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(x_1\)</span></td>
+<td><span class="math inline">\(x_\min\)</span></td>
+<td><span class="math inline">\(x_\max\)</span></td>
+<td><span class="math inline">\(y_1\)</span></td>
+<td><span class="math inline">\(y_\min\)</span></td>
+<td><span class="math inline">\(y_\max\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(x_2\)</span></td>
+<td><span class="math inline">\(x_\min\)</span></td>
+<td><span class="math inline">\(x_\max\)</span></td>
+<td><span class="math inline">\(y_2\)</span></td>
+<td><span class="math inline">\(y_\min\)</span></td>
+<td><span class="math inline">\(y_\max\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(x_n\)</span></td>
+<td><span class="math inline">\(x_\min\)</span></td>
+<td><span class="math inline">\(x_\max\)</span></td>
+<td><span class="math inline">\(y_n\)</span></td>
+<td><span class="math inline">\(y_\min\)</span></td>
+<td><span class="math inline">\(y_\max\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Here, <span class="math inline">\(x_\min\)</span> is the lower limit of detection for <span class="math inline">\(x\)</span> and <span class="math inline">\(x_\max\)</span> is the upper limit of detection for <span class="math inline">\(X\)</span> (and similar for <span class="math inline">\(Y\)</span>). Eventually, if this is the data format we decide to permanently adopt going forward, we will want to write a suite of helper functions to conveniently get the data in this form. But for now I will do it manually. Fortunately it is quite easy. And if the censoring limits changed for any observations, it would have been easier to store the data in this format in the first place.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="ot">&lt;-</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    sim_data <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(x, y) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">x_l =</span> sim_parms<span class="sc">$</span>x_min,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">x_u =</span> sim_parms<span class="sc">$</span>x_max,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">.after =</span> x</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">y_l =</span> sim_parms<span class="sc">$</span>y_min,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">y_u =</span> sim_parms<span class="sc">$</span>y_max,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">.after =</span> y</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>stan_data <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 400 × 6
+        x   x_l   x_u     y   y_l   y_u
+    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  1.80      -1     2  7.08    -9    12
+2  1.16      -1     2  6.71    -9    12
+3  0.155     -1     2  6.05    -9    12
+4  0.0988    -1     2  1.24    -9    12
+5 -1         -1     2 -7.35    -9    12
+# ℹ 395 more rows</code></pre>
+</div>
+</div>
+<p>Now we just need to convert the data frame to a list format and add a variable for the number of records.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stan_list <span class="ot">&lt;-</span> <span class="fu">as.list</span>(stan_data)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>stan_list<span class="sc">$</span>N <span class="ot">&lt;-</span> <span class="fu">nrow</span>(stan_data)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(stan_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 7
+ $ x  : num [1:400] 1.7973 1.1599 0.1547 0.0988 -1 ...
+ $ x_l: num [1:400] -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 ...
+ $ x_u: num [1:400] 2 2 2 2 2 2 2 2 2 2 ...
+ $ y  : num [1:400] 7.08 6.71 6.05 1.24 -7.35 ...
+ $ y_l: num [1:400] -9 -9 -9 -9 -9 -9 -9 -9 -9 -9 ...
+ $ y_u: num [1:400] 12 12 12 12 12 12 12 12 12 12 ...
+ $ N  : int 400</code></pre>
+</div>
+</div>
+</section>
+<section id="stan-code" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="stan-code"><span class="header-section-number">4.3</span> Stan code</h2>
+<p>Of course as usual we need to compile the Stan code. The code is also included here for reference.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pth <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"Ex3.stan"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> cmdstanr<span class="sc">::</span><span class="fu">cmdstan_model</span>(pth, <span class="at">compile =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>mod<span class="sc">$</span><span class="fu">compile</span>(<span class="at">force_recompile =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>In file included from stan/lib/stan_math/stan/math/prim/prob/von_mises_lccdf.hpp:5,
+                 from stan/lib/stan_math/stan/math/prim/prob/von_mises_ccdf_log.hpp:4,
+                 from stan/lib/stan_math/stan/math/prim/prob.hpp:356,
+                 from stan/lib/stan_math/stan/math/prim.hpp:16,
+                 from stan/lib/stan_math/stan/math/rev.hpp:14,
+                 from stan/lib/stan_math/stan/math.hpp:19,
+                 from stan/src/stan/model/model_header.hpp:4,
+                 from C:/Users/Zane/AppData/Local/Temp/RtmpkPCWNJ/model-45387b5d7b21.hpp:2:
+stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp: In function 'stan::return_type_t&lt;T_x, T_sigma, T_l&gt; stan::math::von_mises_cdf(const T_x&amp;, const T_mu&amp;, const T_k&amp;)':
+stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: '-Wmisleading-indentation' is disabled from this point onwards, since column-tracking was disabled due to the size of the code/headers
+  194 |       if (cdf_n &lt; 0.0)
+      | </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: adding '-flarge-source-files' will allow for more column-tracking support, at the expense of compilation time and memory</code></pre>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div class="sourceCode" id="cb11"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="model-fitting-and-performance" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="model-fitting-and-performance"><span class="header-section-number">4.4</span> Model fitting and performance</h2>
+<p>Now that the model is successfully compiled, we need to generate MCMC samples from the posterior distribution. We’ll use 4 chains (run in parallel) with 500 warmup iterations and 2500 sampling iterations each, for a total of 10000 samples overall, which should be plenty for this problem. Otherwise, we’ll leave the control parameters at their default values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> mod<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    stan_list,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">123123</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_warmup =</span> <span class="dv">500</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_sampling =</span> <span class="dv">2500</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 Iteration:    1 / 3000 [  0%]  (Warmup) 
+Chain 1 Iteration:  100 / 3000 [  3%]  (Warmup) 
+Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) 
+Chain 1 Iteration:  300 / 3000 [ 10%]  (Warmup) </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 Exception: normal_lpdf: Scale parameter is 0, but must be positive! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPCWNJ/model-45387b5d7b21.stan', line 62, column 3 to column 31)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 2 Iteration:    1 / 3000 [  0%]  (Warmup) 
+Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) 
+Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) 
+Chain 2 Iteration:  300 / 3000 [ 10%]  (Warmup) 
+Chain 3 Iteration:    1 / 3000 [  0%]  (Warmup) 
+Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) 
+Chain 3 Iteration:  200 / 3000 [  6%]  (Warmup) 
+Chain 4 Iteration:    1 / 3000 [  0%]  (Warmup) 
+Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) 
+Chain 4 Iteration:  200 / 3000 [  6%]  (Warmup) 
+Chain 1 Iteration:  400 / 3000 [ 13%]  (Warmup) 
+Chain 1 Iteration:  500 / 3000 [ 16%]  (Warmup) 
+Chain 1 Iteration:  501 / 3000 [ 16%]  (Sampling) 
+Chain 1 Iteration:  600 / 3000 [ 20%]  (Sampling) 
+Chain 1 Iteration:  700 / 3000 [ 23%]  (Sampling) 
+Chain 1 Iteration:  800 / 3000 [ 26%]  (Sampling) 
+Chain 1 Iteration:  900 / 3000 [ 30%]  (Sampling) 
+Chain 1 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
+Chain 1 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
+Chain 1 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
+Chain 1 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
+Chain 1 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
+Chain 1 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 1 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
+Chain 1 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 2 Iteration:  400 / 3000 [ 13%]  (Warmup) 
+Chain 2 Iteration:  500 / 3000 [ 16%]  (Warmup) 
+Chain 2 Iteration:  501 / 3000 [ 16%]  (Sampling) 
+Chain 2 Iteration:  600 / 3000 [ 20%]  (Sampling) 
+Chain 2 Iteration:  700 / 3000 [ 23%]  (Sampling) 
+Chain 2 Iteration:  800 / 3000 [ 26%]  (Sampling) 
+Chain 2 Iteration:  900 / 3000 [ 30%]  (Sampling) 
+Chain 2 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
+Chain 2 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
+Chain 2 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
+Chain 2 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
+Chain 2 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
+Chain 2 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 3 Iteration:  300 / 3000 [ 10%]  (Warmup) 
+Chain 3 Iteration:  400 / 3000 [ 13%]  (Warmup) 
+Chain 3 Iteration:  500 / 3000 [ 16%]  (Warmup) 
+Chain 3 Iteration:  501 / 3000 [ 16%]  (Sampling) 
+Chain 3 Iteration:  600 / 3000 [ 20%]  (Sampling) 
+Chain 3 Iteration:  700 / 3000 [ 23%]  (Sampling) 
+Chain 3 Iteration:  800 / 3000 [ 26%]  (Sampling) 
+Chain 3 Iteration:  900 / 3000 [ 30%]  (Sampling) 
+Chain 3 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
+Chain 3 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
+Chain 3 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
+Chain 3 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
+Chain 3 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
+Chain 3 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
+Chain 4 Iteration:  300 / 3000 [ 10%]  (Warmup) 
+Chain 4 Iteration:  400 / 3000 [ 13%]  (Warmup) 
+Chain 4 Iteration:  500 / 3000 [ 16%]  (Warmup) 
+Chain 4 Iteration:  501 / 3000 [ 16%]  (Sampling) 
+Chain 4 Iteration:  600 / 3000 [ 20%]  (Sampling) 
+Chain 4 Iteration:  700 / 3000 [ 23%]  (Sampling) 
+Chain 4 Iteration:  800 / 3000 [ 26%]  (Sampling) 
+Chain 4 Iteration:  900 / 3000 [ 30%]  (Sampling) 
+Chain 4 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
+Chain 4 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
+Chain 4 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
+Chain 4 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
+Chain 4 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
+Chain 4 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
+Chain 4 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 1 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
+Chain 1 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
+Chain 1 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
+Chain 1 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 1 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 2 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
+Chain 2 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
+Chain 2 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
+Chain 2 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
+Chain 2 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 3 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 3 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
+Chain 3 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
+Chain 3 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
+Chain 3 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
+Chain 4 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
+Chain 4 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 4 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
+Chain 4 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
+Chain 4 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
+Chain 4 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
+Chain 1 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
+Chain 1 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 1 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 1 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 2 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 2 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
+Chain 2 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 2 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 3 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 3 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 3 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
+Chain 3 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 4 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 4 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
+Chain 4 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 4 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
+Chain 4 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
+Chain 4 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 1 finished in 0.6 seconds.
+Chain 2 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 3 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 3 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 4 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 4 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 2 finished in 0.7 seconds.
+Chain 3 finished in 0.7 seconds.
+Chain 4 finished in 0.7 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.7 seconds.
+Total execution time: 1.0 seconds.</code></pre>
+</div>
+</div>
+<p>As usual, we want to check the diagnostics, and fortunately <code>cmdstanr</code> gives us an easy to use diagnostic flagger.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">cmdstan_diagnose</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Processing csv files: C:/Users/Zane/AppData/Local/Temp/RtmpkPCWNJ/Ex3-202310182051-1-1292e5.csv, C:/Users/Zane/AppData/Local/Temp/RtmpkPCWNJ/Ex3-202310182051-2-1292e5.csv, C:/Users/Zane/AppData/Local/Temp/RtmpkPCWNJ/Ex3-202310182051-3-1292e5.csv, C:/Users/Zane/AppData/Local/Temp/RtmpkPCWNJ/Ex3-202310182051-4-1292e5.csv
+
+Checking sampler transitions treedepth.
+Treedepth satisfactory for all transitions.
+
+Checking sampler transitions for divergences.
+No divergent transitions found.
+
+Checking E-BFMI - sampler transitions HMC potential energy.
+E-BFMI satisfactory.
+
+Effective sample size satisfactory.
+
+Split R-hat values satisfactory all parameters.
+
+Processing complete, no problems detected.</code></pre>
+</div>
+</div>
+<p>We can examine the trace plots and posterior distributions of the parameters of interest to confirm that there is no funny business.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_array</span>(fit)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_combo</span>(post, <span class="at">par =</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Ex3-Censored-Outcome-and-Predictor_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>And so now we can finally examine the fitted values and compare them to our true simulation values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">summary</span>() <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(variable <span class="sc">!=</span> <span class="st">"lp__"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 7%">
+<col style="width: 10%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">variable</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">median</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">mad</th>
+<th style="text-align: right;">q5</th>
+<th style="text-align: right;">q95</th>
+<th style="text-align: right;">rhat</th>
+<th style="text-align: right;">ess_bulk</th>
+<th style="text-align: right;">ess_tail</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">alpha</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8190.67</td>
+<td style="text-align: right;">7220.56</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">beta</td>
+<td style="text-align: right;">4.14</td>
+<td style="text-align: right;">4.14</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">3.66</td>
+<td style="text-align: right;">4.63</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9034.90</td>
+<td style="text-align: right;">7285.48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sigma</td>
+<td style="text-align: right;">5.10</td>
+<td style="text-align: right;">5.10</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">4.80</td>
+<td style="text-align: right;">5.42</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9738.63</td>
+<td style="text-align: right;">7383.51</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We can see that our model estimated the slope and variance quite well, although it is not doing too great at figuring out the intercept. In fact, the true value of <span class="math inline">\(\alpha = 1\)</span> isn’t even in the credible interval. However, the estimates for <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\sigma\)</span> are very close to the true estimates. In most applications, the intercept is not too useful and the slope is what we want an accurate estimate of anyway, so this is probably acceptable.</p>
+<p>TODO figure out what else needs to go in this example.</p>
 <!-- END OF FILE -->
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
