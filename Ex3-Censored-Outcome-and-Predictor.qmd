@@ -206,7 +206,7 @@ But for now I will do it manually. Fortunately it is quite easy. And if the
 censoring limits changed for any observations, it would have been easier
 to store the data in this format in the first place.
 
-```{r}
+```{r data reshaping}
 stan_data <-
 	sim_data |>
 	dplyr::select(x, y) |>
@@ -227,7 +227,7 @@ stan_data |> print(n = 5)
 Now we just need to convert the data frame to a list format and add a variable
 for the number of records.
 
-```{r}
+```{r make data list}
 stan_list <- as.list(stan_data)
 stan_list$N <- nrow(stan_data)
 str(stan_list)
@@ -238,15 +238,16 @@ str(stan_list)
 Of course as usual we need to compile the Stan code. The code is also
 included here for reference.
 
-```{r}
+```{r compile stan model, message = FALSE}
 pth <- here::here("Ex3.stan")
 mod <- cmdstanr::cmdstan_model(pth, compile = FALSE)
 mod$compile(force_recompile = TRUE)
 ```
 
 ::: {.callout-note icon=false collapse=true appearance="simple"}
+### Model code {.unnumbered}
 
-```{.stan include=(pth)}
+```{.stan include="Ex3.stan"}
 ```
 
 :::
@@ -259,27 +260,28 @@ from the posterior distribution. We'll use 4 chains (run in parallel) with
 samples overall, which should be plenty for this problem. Otherwise, we'll
 leave the control parameters at their default values.
 
-```{r}
+```{r sample MCMC}
 fit <- mod$sample(
 	stan_list,
 	seed = 123123,
 	parallel_chains = 4,
 	iter_warmup = 500,
-	iter_sampling = 2500
+	iter_sampling = 2500,
+	show_messages = FALSE
 )
 ```
 
 As usual, we want to check the diagnostics, and fortunately `cmdstanr` gives
 us an easy to use diagnostic flagger.
 
-```{r}
+```{r diagnose fit}
 fit$cmdstan_diagnose()
 ```
 
 We can examine the trace plots and posterior distributions of the parameters
 of interest to confirm that there is no funny business.
 
-```{r}
+```{r traceplots}
 post <- posterior::as_draws_array(fit)
 bayesplot::mcmc_combo(post, par = c("alpha", "beta", "sigma"))
 ```
@@ -287,7 +289,7 @@ bayesplot::mcmc_combo(post, par = c("alpha", "beta", "sigma"))
 And so now we can finally examine the fitted values and compare them to our
 true simulation values.
 
-```{r}
+```{r model summary}
 fit$summary() |>
 	dplyr::filter(variable != "lp__") |>
 	knitr::kable(digits = 2)
