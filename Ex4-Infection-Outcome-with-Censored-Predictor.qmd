@@ -1,4 +1,4 @@
-# Example Model 2: One censored outcome
+# Example Model 4: Logistic regression with censored predictors
 
 ```{r setup, include = FALSE}
 # ggplot2 theme setup
@@ -30,8 +30,145 @@ ggplot2::theme_set(
 )
 ```
 
-For the second example model, we'll work on a case 
+For the next example model we have enough background knowledge to implement
+a model for a problem that my group has been trying to tackle recently, and
+that is somewhat common with the type of data that I work with. Suppose we want
+to test the efficacy of a novel vaccine candidate in a clinical trial.
+
+Typically, these vaccines have **immunological correlates of protection**,
+some value we can measure that gives a general idea of how strong a person's
+immune response was, and correlates with their probability of getting a disease.
+One of the most common types of these measurements are antibody titers, where
+typically a high antibody titer is protective and corresponds to a lower
+probability of disease. If we have a clinical trial where we record if
+patients get the disease (after challenge or after a sufficiently long
+followup period, for this example the details are not too important as long
+as we assume the infection status is measured accurately), we can model how
+these measurements are related to protection via **logistic regression**.
+
+## Model with one patient group
+
+For the first model, we'll consider a simpler case where we only have one
+group of patients. This model would be appropriate for, e.g., an observational
+study where all patients are given the vaccine of interest.
+
+The data generating model is as follows:
+
+$$
+\begin{align*}
+y_i &\sim \text{Bernoulli}\left(p\right) \\
+\mathrm{logit}(p) &= \alpha + \beta \cdot x_i
+\end{align*}
+$$
+where $y_i$ is a binary outcome where 1 indicates infection and 0 indicates
+no infection, and $x_i$ is our antibody titer. However, the specific problem
+we deal with in practice is that these antibody titers tend to have lower
+limits of detection. Thus, we need to add an observation model to our
+data generating process to reflect the incomplete observations we obtain of $x$.
+
+$$
+\begin{align*}
+y_i &\sim \text{Bernoulli}\left(p_i\right) \\
+\mathrm{logit}(p_i) &= \alpha + \beta \cdot x^*_i \\
+x_i^* &\sim \mathrm{Normal}\left(\mu_x, \sigma^2_x\right) \\
+x_i &= \begin{cases}
+\frac{1}{2}\mathrm{LoD}, & x^*_i < \mathrm{LoD} \\
+x^*_i, & x^*_i \geq \mathrm{LoD}
+\end{cases} \\
+\end{align*}
+$$
+Here, we assume that we work with the $x$ variable on the log scale at all times.
+
+Now that we have the data generating process written out, we can simulate
+some example data. Note that in this example, we can interpret $\alpha$ as the
+log-odds of infection if a person were to have no antibodies. For example,
+if we assume that this probability is $50\%$ we would apply the logit
+transformation to get that $\alpha = 0$. However, let's assume that the
+inoculum dose is quite high and during our subject selection process we've
+included anyone who might have a genetic resistance to the disease (i.e.,
+FUT2- individuals for norovirus). So let's say if a person has zero antibodies,
+their probably of getting sick should be $90\%$. Then, $\log(0.9 / 0.1) \approx 2.2$.
+
+We then want our true $\beta$ value to be negative, indicating that
+as the number of antibodies rise, the log-odds of infection decrease. We can
+interpret $\beta$ as the change in the log-odds ratio associated with a
+one-unit change in antibody titer -- the nonlinearity here makes it a bit
+more difficult to interpret this effect. We can, however, intercept $\exp(\beta)$ as the odds ratio between individuals with titer $x_i + 1$ and 
+individuals with titer $x_i$. This corresponds to a nonlinear change in risk
+that depends on the value of $x_i$. However, if we want the odds of infection
+to halve for each 1 unit increase in antibody titer, we would set $\beta = -\log(2) \approx -0.7$.
+
+```{r}
+set.seed(134125)
+sim_parms <- list(
+	n = 110,
+	alpha = 2.2,
+	beta = -1.37,
+	mu_x = 2,
+	sigma_x = 1.5,
+	LoD = 0
+)
+```
+
+```{r}
+inv_logit <- function(x) {return(1 / (1 + exp(-x)))}
+
+sim_one_group <- function(n, alpha, beta, mu_x, sigma_x, LoD) {
+	out <- tibble::tibble(
+		x_star = rnorm(n, mu_x, sigma_x),
+		x = ifelse(x_star < LoD, 0.5 * LoD, x_star),
+		p = inv_logit(alpha + beta * x_star),
+		y = rbinom(n, size = 1, prob = p)
+	)
+}
+
+sim_data <- do.call(sim_one_group, sim_parms)
+```
+
+```{r}
+table(sim_data$y)
+hist(
+	subset(sim_data, y == 0)$x, col = rgb(1, 0, 0, 0.5),
+	breaks = seq(0, ceiling(max(sim_data$x)), 0.5),
+	main = "Distribution of titer counts by infection status",
+	xlab = "x (simulated antibody titer)",
+	ylim = c(0, 20)
+)
+hist(
+	subset(sim_data, y == 1)$x, col = rgb(0, 0, 1, 0.5), add = T,
+	breaks = seq(0, ceiling(max(sim_data$x)), 0.5)
+)
+
+legend(
+	"topright",
+	c("Not infected", "Infected"),
+	col = c(rgb(1, 0, 0, 0.5), rgb(0, 0, 1, 0.5)),
+	pch = 15,
+	cex = 1.2
+)
+```
 
 
+
+## Effect of vaccine
+
+CHECK RETHINKING AND FIX THE NOTATION!!
+
+$$
+\begin{align*}
+y_i &\sim \text{Bernoulli}\left(p\right) \\
+\mathrm{logit}(p) &= \beta_0 + \beta_{T[\mathrm{T}_i]} + \beta_{x[\mathrm{T}_i]} \cdot x^*_i \\
+\log\left(x_i^*\right) &\sim \mathrm{Normal}\left(\mu_x, \sigma^2_x\right) \\
+\mu_x &= \alpha_0 + \alpha_{1[\mathrm{T}_o]} \\
+x_i &= \begin{cases}
+\frac{1}{2}\mathrm{LoD}, & x^*_i < \mathrm{LoD} \\
+x^*_i, & x^*_i \geq \mathrm{LoD}
+\end{cases} \\
+T_i &= \begin{cases}
+1, & \text{individual } i \text{ is in the placebo group} \\
+2, & \text{individual } i \text{ is in the vaccine group}
+\end{cases}
+\end{align*}
+$$
 
 <!-- END OF FILE -->
