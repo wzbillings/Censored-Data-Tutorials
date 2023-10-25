@@ -1,6 +1,7 @@
 # Example Model 4: Logistic regression with censored predictors
 
 ```{r setup, include = FALSE}
+library(cmdstanr)
 # ggplot2 theme setup
 library(ggplot2)
 ggplot2::theme_set(
@@ -9,7 +10,7 @@ ggplot2::theme_set(
 			plot.background = ggplot2::element_rect(
 				fill = "white", color = "white"
 			),
-			axis.text = ggplot2::element_text(size = 12, color = "black"),
+			axis.text = ggplot2::element_text(size = 14, color = "black"),
 			axis.title = ggplot2::element_text(size = 22),
 			plot.subtitle = ggplot2::element_text(
 				size = 16, hjust = 0, margin = ggplot2::margin(b = 2)
@@ -105,7 +106,7 @@ sim_parms <- list(
 	alpha = 2.2,
 	beta = -1.37,
 	mu_x = 2,
-	sigma_x = 1.5,
+	sigma_x = 2,
 	LoD = 0
 )
 ```
@@ -125,27 +126,141 @@ sim_one_group <- function(n, alpha, beta, mu_x, sigma_x, LoD) {
 sim_data <- do.call(sim_one_group, sim_parms)
 ```
 
-```{r}
-table(sim_data$y)
-hist(
-	subset(sim_data, y == 0)$x, col = rgb(1, 0, 0, 0.5),
-	breaks = seq(0, ceiling(max(sim_data$x)), 0.5),
-	main = "Distribution of titer counts by infection status",
-	xlab = "x (simulated antibody titer)",
-	ylim = c(0, 20)
-)
-hist(
-	subset(sim_data, y == 1)$x, col = rgb(0, 0, 1, 0.5), add = T,
-	breaks = seq(0, ceiling(max(sim_data$x)), 0.5)
-)
+Of course visualizing the relationship between a binary outcome and a
+continuous predictor is in some sense more complex than visualizing the
+relationship between a continuous outcome and a continuous predictor.
 
-legend(
-	"topright",
-	c("Not infected", "Infected"),
-	col = c(rgb(1, 0, 0, 0.5), rgb(0, 0, 1, 0.5)),
-	pch = 15,
-	cex = 1.2
+First, let's look at how the distribution of the predictor variable changes
+if we condition on the outcome.
+
+```{r}
+sim_data |>
+	tidyr::pivot_longer(cols = c(x, x_star)) |>
+	dplyr::mutate(
+		yf = factor(
+			y,
+			levels = c(0, 1),
+			labels = c("Not infected", "Infected")
+		),
+		name = factor(
+			name,
+			levels = c("x_star", "x"),
+			labels = c("Latent variable", "Observed variable")
+		)
+	) |>
+	ggplot() +
+	aes(x = value, fill = yf) +
+	geom_vline(
+		xintercept = 0,
+		linetype = "dashed",
+		color = "black",
+		linewidth = 1
+	) +
+	geom_histogram(
+		binwidth = 0.5, boundary = 0, closed = "left",
+		position = "identity", alpha = 0.6,
+		color = "black"
+	) +
+	scale_x_continuous(
+		name = "Simulated log titer",
+		breaks = scales::breaks_pretty()
+	) +
+	scale_y_continuous(breaks = scales::breaks_pretty()) +
+	scale_fill_brewer(palette = "Dark2", name = NULL) +
+	facet_wrap(facets = vars(name))
+```
+
+Essentially everything below our lower threshold gets bumped up, which
+will make the summary statistics of the distribution more similar between
+groups for the observed titer values than they would have been for the latent
+titer values. However, we can still see a large difference.
+
+```{r}
+interp <-
+	tibble::tibble(
+		value = seq(-2, 6, 0.1),
+		p = inv_logit(sim_parms$alpha + sim_parms$beta * value)
+	)
+
+interp2 <-
+	dplyr::bind_rows(
+		"Latent variable" = interp,
+		"Observed variable" = interp,
+		.id = "name"
+	)
+
+lab1 <- latex2exp::TeX(r"($Pr(y_{i} = 1 \ | \ x_{i})$)")
+
+sim_data |>
+	tidyr::pivot_longer(cols = c(x, x_star)) |>
+	dplyr::mutate(
+		yf = factor(
+			y,
+			levels = c(0, 1),
+			labels = c("Not infected", "Infected")
+		),
+		name = factor(
+			name,
+			levels = c("x_star", "x"),
+			labels = c("Latent variable", "Observed variable")
+		)
+	) |>
+	ggplot() +
+	aes(x = value, color = name) +
+	geom_line(
+		data = interp2, aes(y = p), color = "darkgray", linetype = 2, linewidth = 1
+	) +
+	geom_point(
+		aes(y = y), size = 3, alpha = 0.5,
+		position = position_jitter(width = 0, height = 0.05, seed = 370)
+	) +
+	scale_x_continuous(
+		name = "Simulated log titer",
+		breaks = scales::breaks_pretty()
+	) +
+	scale_y_continuous(
+		name = lab1,
+		breaks = scales::breaks_pretty()
+	) +
+	scale_color_brewer(palette = "Accent", name = NULL) +
+	facet_wrap(facets = vars(name))
+```
+
+```{r}
+data_list <-
+	sim_data |>
+	dplyr::mutate(x_l = sim_parms$LoD) |>
+	dplyr::select(x, x_l, y) |>
+	as.list()
+
+data_list$N <- sim_parms$n
+
+str(data_list)
+```
+
+```{r}
+mod <- cmdstanr::cmdstan_model(here::here("Ex4a.stan"), compile = FALSE)
+mod$compile(force_recompile = TRUE, pedantic = TRUE)
+```
+
+```{r sample MCMC}
+fit <- mod$sample(
+	data_list,
+	seed = 25452345,
+	parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 2500,
+	show_messages = T
 )
+```
+
+```{r}
+fit$cmdstan_diagnose()
+```
+
+
+```{r}
+fit$summary()
 ```
 
 
@@ -156,19 +271,171 @@ CHECK RETHINKING AND FIX THE NOTATION!!
 
 $$
 \begin{align*}
-y_i &\sim \text{Bernoulli}\left(p\right) \\
-\mathrm{logit}(p) &= \beta_0 + \beta_{T[\mathrm{T}_i]} + \beta_{x[\mathrm{T}_i]} \cdot x^*_i \\
+y_i &\sim \text{Bernoulli}\left(p_i\right) \\
+\mathrm{logit}(p_i) &= \beta_0 + \beta_{1, T[i]} + \beta_{2, T[i]} \cdot x^*_i \\
 \log\left(x_i^*\right) &\sim \mathrm{Normal}\left(\mu_x, \sigma^2_x\right) \\
-\mu_x &= \alpha_0 + \alpha_{1[\mathrm{T}_o]} \\
+\mu_x &= \alpha_0 + \alpha_{1,T[i]} \\
 x_i &= \begin{cases}
 \frac{1}{2}\mathrm{LoD}, & x^*_i < \mathrm{LoD} \\
 x^*_i, & x^*_i \geq \mathrm{LoD}
 \end{cases} \\
-T_i &= \begin{cases}
+T[i] &= \begin{cases}
 1, & \text{individual } i \text{ is in the placebo group} \\
 2, & \text{individual } i \text{ is in the vaccine group}
 \end{cases}
 \end{align*}
 $$
+
+```{r}
+set.seed(341341)
+sim2_parms <- list(
+	n = 116,
+	a0 = 2,
+	a1 = c(0.5, 2),
+	b0 = 1.5,
+	b1 = c(0.2, 0.7),
+	b2 = c(-0.67, -1.37),
+	sigma_x = 1.5,
+	LoD = 1,
+	latent = TRUE
+)
+sim_two_groups <- function(n, b0, b1, b2, a0, a1, sigma_x, LoD,
+													 latent = TRUE) {
+	out <- tibble::tibble(
+		# Randomly assign each individual to 1 (placebo) or 2 (vaccine)
+		t = rbinom(n, size = 1, prob = 0.5) + 1,
+		mu = a0 + a1[t],
+		x_star = rnorm(n, mu, sigma_x),
+		x = dplyr::if_else(x_star < LoD, 0.5 * LoD, x_star),
+		p = inv_logit(b0 + b1[t] + b2[t] * x_star),
+		y = rbinom(n, 1, prob = p)
+	)
+	
+	# If the arg 'latent' is specified as anything other than FALSE, return the
+	# latent variables that we don't observe. Otherwise return only (X, y).
+	if (isFALSE(latent)) {
+		out <- out |> dplyr::select(t, x, y)
+	}
+	
+	return(out)
+}
+sim_data_4b <- do.call(sim_two_groups, sim2_parms)
+```
+
+```{r}
+sim_data_4b |>
+	dplyr::mutate(
+		t = factor(
+			t,
+			levels = c(1, 2),
+			labels = c("Placebo", "Vaccine")
+		),
+		y = factor(
+			y,
+			levels = c(0, 1),
+			labels = c("Not infected", "Infected")
+		)
+	) |>
+	gtsummary::tbl_cross(
+		row = t, col = y,
+		label = list(t ~ "Treatment", y ~ "Outcome")
+	)
+```
+
+
+**these curves are implied by the model and parameters, not by the simulated
+data**
+```{r}
+x_vec <- seq(-6, 12, 0.01)
+r1 <- sapply(x, \(x) inv_logit(1.5 + 0.2 - 0.67 * x))
+r2 <- sapply(x, \(x) inv_logit(1.5 + 0.7 - 1.37 * x))
+
+layout(matrix(c(1, 2, 3, 3), ncol = 2, byrow = TRUE))
+plot(x, r2 - r1, ylab = "risk difference", type = "l")
+plot(x, r2 / r1, ylab = "risk ratio", type = "l")
+lab2 <- latex2exp::TeX(r"($Pr(y_{i} = 1 \ | \ x_{i}, T_{i})$)")
+plot(
+	NULL, NULL,
+	ylim = c(0, 1),
+	xlim = c(-6, 12),
+	yaxs = "i",
+	xaxs = "i",
+	xlab = "Simulated log titer",
+	ylab = lab2
+)
+lines(x, r1, lty = 2, lwd = 1.5)
+lines(x, r2, lty = 1, lwd = 1.5)
+# IDK what's wrong with the legend, seems it doesn't like layout.
+# switch to ggplot to fix
+#legend(x = 9, y = 0.8, c('Unexposed', 'Exposed'), lty = c(2, 1), lwd = 2)
+```
+
+```{r}
+x_dens <-
+	tibble::tibble(
+		Latent = x_vec,
+		Observed = dplyr::if_else(
+			x_vec < sim2_parms$LoD,
+			sim2_parms$LoD,
+			x_vec
+		),
+		Placebo = sim2_parms$a0 + sim2_parms$a1[1],
+		Vaccine = sim2_parms$a0 + sim2_parms$a1[2]
+	) |>
+	tidyr::pivot_longer(
+		cols = c(Placebo, Vaccine),
+		names_to = "t",
+		values_to = "mu"
+	) |>
+	tidyr::pivot_longer(
+		cols = c(Latent, Observed),
+		names_to = "o",
+		values_to = "x"
+	) |>
+	dplyr::mutate(
+		d = dplyr::if_else(
+			o == "Latent",
+			dnorm(x, mean = mu, sd = sim2_parms$sigma_x),
+			crch::dcnorm(
+				x, mean = mu, sd = sim2_parms$sigma_x,
+				left = sim2_parms$LoD, right = Inf
+			)
+		)
+	)
+
+anno_df <-
+	x_dens[1:4, ] |>
+	dplyr::filter(o == "Observed")
+
+ggplot(x_dens) +
+	aes(x = x, y = d, linetype = t, group = t) +
+	geom_vline(
+		xintercept = sim2_parms$LoD,
+		linetype = 1, linewidth = 1, color = "gray"
+	) +
+	geom_line(linewidth = 1.5) +
+	geom_point(
+		data = anno_df,
+		size = 2,
+		stroke = 2,
+		shape = 21,
+		color = "black",
+		fill = "darkgray"
+	) +
+	facet_wrap(vars(o)) +
+	scale_linetype_discrete(name = NULL) +
+	scale_x_continuous(breaks = scales::breaks_pretty()) +
+	scale_y_continuous(breaks = scales::breaks_pretty()) +
+	labs(
+		x = "Simulated log titer",
+		y = "Implied probability density"
+	) +
+	#coord_cartesian(expand = FALSE, ylim = c(-0.01, 0.28)) +
+	theme(axis.text.y = element_text(size = 10))
+```
+
+## Try gamma dist. for x on non-logged scale?
+
+## Do we want to work out a hierarchical model?
 
 <!-- END OF FILE -->
