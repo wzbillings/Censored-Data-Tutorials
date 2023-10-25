@@ -1,6 +1,7 @@
 # Example Model 5: Interval Censoring
 
 ```{r setup, include = FALSE}
+library(cmdstanr)
 # ggplot2 theme setup
 library(ggplot2)
 ggplot2::theme_set(
@@ -105,10 +106,39 @@ setting $x_i$.
 $$
 \begin{align*}
 t_i &= \lceil t_i^* \rceil \\
-t^*_i &\sim \mathrm{Weibull}\left(\lambda_i, k\right) \\
+t^*_i &\sim \mathrm{Weibull}\left(k, \lambda_i\right) \\
 \lambda_i &= \alpha + \beta x_i
 \end{align*}
 $$
+
+We will deal with the interval censoring, as usual, by modifying the likelihood
+of the outcome. For a completely observed outcome $t^*_i$, the likelihood
+would be
+$$
+\mathcal{L}\left(\theta \mid t_i^*\right) = f(t_i^* \mid \theta),
+$$
+where $f(\cdot)$ is the Weibull density function. However, a censored data
+point actually lies at a point mass of probability and for our censored
+observation, which we recall is integer-valued for
+this DGP, the contribution to the likelihood is
+$$
+\mathcal{L}\left(\theta \mid t_i\right) = \mathrm{Pr}\left(
+\lfloor t_i^* \rfloor < x \leq \lceil t_i^* \rceil
+\right) = \int_{\lfloor t_i^* \rfloor}^{\lceil t_i^* \rceil}f(x) \ dx = F(t_i) - F(t_i-1).
+$$
+The Stan code for this would be
+````{.stan}
+target += weibull_lcdf(y[i] | lambda[i], k) -
+	weibull_lcdf(y[i] - 1 | lambda[i], k)
+```
+or equivalently
+````{.stan}
+target += weibull_lcdf(y_u[i] | lambda[i], k) -
+	weibull_lcdf(y_l[i] | lambda[i], k)
+```
+if the data is specified in the format we prefer.
+
+**NEED TO WORK ON NOTATION FOR THIS--CHECK JON AND YANG'S REFS**
 
 Now, as usual, I decided to just plot the data and mess around with the
 parameters until I thought it looked right.
@@ -151,22 +181,100 @@ sim_data |> dplyr::group_by(x) |> dplyr::summarise(eft = mean(t))
 
 ```{r}
 sim_data |>
-	dplyr::mutate(x_jitter = x + rnorm(nrow(sim_data), 0, 0.1)) |>
+	dplyr::mutate(
+		x_jitter = x + rnorm(nrow(sim_data), 0, 0.1)
+	) |>
 	ggplot2::ggplot() +
-	aes(x = x_jitter, y = t, group = (x)) +
-	geom_point(position = ggbeeswarm::position_beeswarm())
-#ggbeeswarm::geom_beeswarm(aes(y = t_star), color = "gray")
+	aes(x = x_jitter, y = t_star, group = (x)) +
+	geom_point() +
 	geom_segment(
-		aes(x = x, xend = x, y = t, yend = t_star)
+		aes(x = x_jitter, xend = x, y = t_star, yend = t)
 	)
 	geom_count(shape = 21, fill = "#ffffff50")
 ```
 
+**NEED TO LOOK AT HOW BRMS HANDLES INTERVAL CENSORING**
+https://discourse.mc-stan.org/t/mixed-right-left-and-interval-censored-log-normal-with-brms/27571 
 
+## Fitting latent data
+
+```{r}
+dat_latent <- list()
+dat_latent$N <- nrow(sim_data)
+dat_latent$x <- sim_data$x
+dat_latent$y <- sim_data$t_star
+
+str(dat_latent)
+```
+
+```{r}
+mod_l <- cmdstanr::cmdstan_model(here::here("Ex5a.stan"), compile = FALSE)
+mod_l$compile(pedantic = TRUE, force_recompile = TRUE)
+```
+
+```{r}
+fit_l <- mod_l$sample(
+	dat_latent,
+	seed = 546465,
+	parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 2500,
+	show_messages = T
+)
+```
+
+```{r}
+fit_l$summary()
+```
+
+## Fitting censored data
 
 In this parametrization, the outcome variable $t_i$Note that this measurement process will generate an integer valued response.
 However, we know that if the value of $t_i = t$, then in reality
 $t_i \in (t - 1, t]$, and we can never know the true value of $t_i$ because
 we don't do inspections more often.
+
+```{r}
+dat_censored <- list()
+dat_censored$N <- nrow(sim_data)
+dat_censored$x <- sim_data$x
+dat_censored$y1 <- sim_data$t - 1
+dat_censored$y2 <- sim_data$t
+
+str(dat_censored)
+```
+
+```{r}
+mod_c <- cmdstanr::cmdstan_model(here::here("Ex5b.stan"), compile = FALSE)
+mod_c$compile(pedantic = TRUE, force_recompile = TRUE)
+```
+
+```{r}
+fit_c <- mod_c$sample(
+	dat_censored,
+	seed = 3248315,
+	parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 2500,
+	show_messages = T
+)
+```
+
+```{r}
+fit_c$summary()
+```
+
+## Making the interval wider
+
+We can introduce more
+
+## Midpoint correction
+
+### Original interval
+
+### Wider interval
+
+
+
 
 <!-- END OF FILE -->
