@@ -43,10 +43,10 @@ model {
 	vector[N] p;
 	
 	// Priors
-	alpha ~ normal(0, 100);
-	beta ~ normal(0, 100);
-	mu_x ~ normal(0, 100);
-	sigma_x ~ normal(0, 100);
+	alpha ~ normal(0, 2);
+	beta ~ normal(0, 2);
+	mu_x ~ normal(0, 2);
+	sigma_x ~ normal(0, 2);
 	
 	// Likelihood updating
 	for (i in 1:N) {
