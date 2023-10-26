@@ -326,15 +326,15 @@ sim2_parms <- list(
 	LoD = 3,
 	latent = TRUE
 )
-sim_two_groups <- function(n, b0, b1, b2, a0, a1, sigma_x, LoD,
+sim_two_groups <- function(n, b1, b2, a1, sigma_x, LoD,
 													 latent = TRUE) {
 	out <- tibble::tibble(
 		# Randomly assign each individual to 1 (placebo) or 2 (vaccine)
 		t = rbinom(n, size = 1, prob = 0.5) + 1,
-		mu = a0 + a1[t],
+		mu = a1[t],
 		x_star = rnorm(n, mu, sigma_x),
 		x = dplyr::if_else(x_star < LoD, 0.5 * LoD, x_star),
-		p = inv_logit(b0 + b1[t] + b2[t] * x_star),
+		p = inv_logit(b1[t] + b2[t] * x_star),
 		y = rbinom(n, 1, prob = p)
 	)
 	
@@ -462,12 +462,12 @@ fit_summary <- fit4b$summary() |>
 	dplyr::mutate(
 		truth = c(
 			#sim2_parms$a0,
-			sim2_parms$a0 + sim2_parms$a1[[1]],
-			sim2_parms$a0 + sim2_parms$a1[[2]],
+			sim2_parms$a1[[1]],
+			sim2_parms$a1[[2]],
 			sim2_parms$sigma_x,
 			#sim2_parms$b0,
-			sim2_parms$b0 + sim2_parms$b1[[1]],
-			sim2_parms$b0 + sim2_parms$b1[[2]],
+			sim2_parms$b1[[1]],
+			sim2_parms$b1[[2]],
 			sim2_parms$b2[[1]],
 			sim2_parms$b2[[2]]
 		)
@@ -526,12 +526,12 @@ fit_summary_l <- fit4b_l$summary() |>
 	dplyr::mutate(
 		truth = c(
 			#sim2_parms$a0,
-			sim2_parms$a0 + sim2_parms$a1[[1]],
-			sim2_parms$a0 + sim2_parms$a1[[2]],
+			sim2_parms$a1[[1]],
+			sim2_parms$a1[[2]],
 			sim2_parms$sigma_x,
 			#sim2_parms$b0,
-			sim2_parms$b0 + sim2_parms$b1[[1]],
-			sim2_parms$b0 + sim2_parms$b1[[2]],
+			sim2_parms$b1[[1]],
+			sim2_parms$b1[[2]],
 			sim2_parms$b2[[1]],
 			sim2_parms$b2[[2]]
 		)
@@ -590,12 +590,12 @@ fit_summary_n <- fit4b_n$summary() |>
 	dplyr::mutate(
 		truth = c(
 			#sim2_parms$a0,
-			sim2_parms$a0 + sim2_parms$a1[[1]],
-			sim2_parms$a0 + sim2_parms$a1[[2]],
+			sim2_parms$a1[[1]],
+			sim2_parms$a1[[2]],
 			sim2_parms$sigma_x,
 			#sim2_parms$b0,
-			sim2_parms$b0 + sim2_parms$b1[[1]],
-			sim2_parms$b0 + sim2_parms$b1[[2]],
+			sim2_parms$b1[[1]],
+			sim2_parms$b1[[2]],
 			sim2_parms$b2[[1]],
 			sim2_parms$b2[[2]]
 		)
@@ -657,12 +657,14 @@ all_fits |>
 data**
 ```{r}
 x_vec <- seq(-6, 12, 0.01)
-r1 <- sapply(x, \(x) inv_logit(1.5 + 0.2 - 0.67 * x))
-r2 <- sapply(x, \(x) inv_logit(1.5 + 0.7 - 1.37 * x))
+r1 <- sapply(x_vec, \(x) inv_logit(1.5 + 0.2 - 0.67 * x))
+r2 <- sapply(x_vec, \(x) inv_logit(1.5 + 0.7 - 1.37 * x))
 
 layout(matrix(c(1, 2, 3, 3), ncol = 2, byrow = TRUE))
-plot(x, r2 - r1, ylab = "risk difference", type = "l")
-plot(x, r2 / r1, ylab = "risk ratio", type = "l")
+plot(x_vec, r2 - r1, ylab = "risk difference", type = "l", xlab = "")
+abline(h = 0, lty = 2)
+plot(x_vec, r2 / r1, ylab = "risk ratio", type = "l", xlab = "")
+abline(h = 1, lty = 2)
 lab2 <- latex2exp::TeX(r"($Pr(y_{i} = 1 \ | \ x_{i}, T_{i})$)")
 plot(
 	NULL, NULL,
@@ -673,8 +675,8 @@ plot(
 	xlab = "Simulated log titer",
 	ylab = lab2
 )
-lines(x, r1, lty = 2, lwd = 1.5)
-lines(x, r2, lty = 1, lwd = 1.5)
+lines(x_vec, r1, lty = 2, lwd = 1.5) # placebo
+lines(x_vec, r2, lty = 1, lwd = 1.5) # vaccine
 # IDK what's wrong with the legend, seems it doesn't like layout.
 # switch to ggplot to fix
 #legend(x = 9, y = 0.8, c('Unexposed', 'Exposed'), lty = c(2, 1), lwd = 2)
@@ -689,8 +691,8 @@ x_dens <-
 			sim2_parms$LoD,
 			x_vec
 		),
-		Placebo = sim2_parms$a0 + sim2_parms$a1[1],
-		Vaccine = sim2_parms$a0 + sim2_parms$a1[2]
+		Placebo = sim2_parms$a1[1],
+		Vaccine = sim2_parms$a1[2]
 	) |>
 	tidyr::pivot_longer(
 		cols = c(Placebo, Vaccine),
@@ -717,7 +719,8 @@ anno_df <-
 	x_dens[1:4, ] |>
 	dplyr::filter(o == "Observed")
 
-ggplot(x_dens) +
+x_dens |>
+	ggplot() +
 	aes(x = x, y = d, linetype = t, group = t) +
 	geom_vline(
 		xintercept = sim2_parms$LoD,
@@ -732,7 +735,7 @@ ggplot(x_dens) +
 		color = "black",
 		fill = "darkgray"
 	) +
-	facet_wrap(vars(o)) +
+	facet_grid(vars(o), vars(t)) +
 	scale_linetype_discrete(name = NULL) +
 	scale_x_continuous(breaks = scales::breaks_pretty()) +
 	scale_y_continuous(breaks = scales::breaks_pretty()) +
