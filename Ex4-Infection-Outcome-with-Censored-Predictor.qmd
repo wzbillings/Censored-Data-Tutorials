@@ -79,7 +79,11 @@ x^*_i, & x^*_i \geq \mathrm{LoD}
 \end{cases} \\
 \end{align*}
 $$
-Here, we assume that we work with the $x$ variable on the log scale at all times.
+Here, we assume that we work with the $x$ variable on the log scale at all times,\
+mostly cause it's annoying and confusing to write out all the logs every time,
+so we could also write
+$$x_i^* = \mathrm{log} \left(z^*_i\right)$$
+and say $z^*_i$ is the actual latent un-logged titer.
 
 Now that we have the data generating process written out, we can simulate
 some example data. Note that in this example, we can interpret $\alpha$ as the
@@ -239,6 +243,10 @@ data_list$N <- sim_parms$n
 str(data_list)
 ```
 
+````{.stan, include = "Ex4a.stan"}
+
+```
+
 ```{r}
 mod <- cmdstanr::cmdstan_model(here::here("Ex4a.stan"), compile = FALSE)
 mod$compile(force_recompile = TRUE, pedantic = TRUE)
@@ -268,14 +276,27 @@ fit$summary()
 
 ## Effect of vaccine
 
-CHECK RETHINKING AND FIX THE NOTATION!!
+Of course, a more interesting question is when we have $k$ different
+treatment groups. These groups could be vaccine and placebo, like the example
+that motivated this project, or they could be multiple different vaccine
+candidates, doses, etc. So we now need to incorporate the effect of the
+treatment into the model. However, we know that the treatment will have a
+**direct effect on $x$**, the antibody titers, and we can add a **direct effect
+on $y$** to represent the combined effect of the vaccine on other facets of the
+immune system (e.g. cell-mediated responses) which explain variations in
+infection risk that are not due to antibodies.
+
+In this framework, **$x$ becomes a mediator of the relationship between $t$, the
+treatment, and $y$**. For simplicity, we model the effect of $t$ on $x$, and the
+effect of $t$ and $x$ jointly on $y$, both as linear functions of the
+predictors. Specifically, the data generating model is given as follows.
 
 $$
 \begin{align*}
 y_i &\sim \text{Bernoulli}\left(p_i\right) \\
-\mathrm{logit}(p_i) &= \beta_0 + \beta_{1, T[i]} + \beta_{2, T[i]} \cdot x^*_i \\
+\mathrm{logit}(p_i) &= \beta_{1, T[i]} + \beta_{2, T[i]} \cdot x^*_i \\
 \log\left(x_i^*\right) &\sim \mathrm{Normal}\left(\mu_x, \sigma^2_x\right) \\
-\mu_x &= \alpha_0 + \alpha_{1,T[i]} \\
+\mu_x &= \alpha_{T[i]} \\
 x_i &= \begin{cases}
 \frac{1}{2}\mathrm{LoD}, & x^*_i < \mathrm{LoD} \\
 x^*_i, & x^*_i \geq \mathrm{LoD}
@@ -287,14 +308,19 @@ T[i] &= \begin{cases}
 \end{align*}
 $$
 
+Given the generative model, we can simulate data which follow our assumptions.
+
 ```{r}
 set.seed(341341)
+# Some parameters are commented out because I originally had a global
+# intercept for mu and for p, but then the intercept parameters are
+# nonidentifiable under index coding as written.
 sim2_parms <- list(
 	n = 116,
-	a0 = 2,
-	a1 = c(0.5, 2),
-	b0 = 1.5,
-	b1 = c(0.2, 0.7),
+	#a0 = 2,
+	a1 = c(2.5, 4),
+	#b0 = 1.5,
+	b1 = c(1.7, 2.2),
 	b2 = c(-0.67, -1.37),
 	sigma_x = 1.5,
 	LoD = 3,
@@ -383,7 +409,10 @@ This analysis is more complicated, and requires us to use a regression model.
 Fortunately we know the data generating process, so writing the Stan code
 for an accurate model is not too hard.
 
-DISPLAY STAN CODE HERE
+<!-- NEED TO ADD HIDING CONTAINER -->
+````{.stan, include = "Ex4b.stan"}
+
+```
 
 ```{r}
 pth <- here::here("Ex4b.stan")

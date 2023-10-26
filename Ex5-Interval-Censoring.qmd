@@ -40,10 +40,6 @@ predictors).
 
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3684949/#:~:text=In%20statistical%20literature%2C%20interval%20censoring,instead%20of%20being%20observed%20exactly. 
 
-
-
-## Data generating process
-
 The data generating process for interval censored data I think can be quite
 variable. Typically I think about this in terms of HAI data, where the observed
 value is the floored version of the latent value, so a measurement process that
@@ -80,16 +76,19 @@ failure time already has a rate in weeks, so we don't have to worry about
 converting the units. If we wanted, e.g., the parameters to be on the scale
 of days we could probably just rescale the model.
 
+## Data generating process
+
 For this model, let's assume that the rate of failure, $\lambda_i$ is a linear
-function of some covariate $x_i$. I don't know that much about machines or
-what would realistically cause them to fail, but we don't want to make the
-example too hard at this point, so we want $x_i$ to be an inherent characteristic
-of the machine. Let's say $x_i$ is some integer number from $1$ to $5$ that
-controls how the machine works -- it is inherent to the type of machine. If I
-can think of a good variable that might work for this, I'll update that later.
-The expected failure time increases linearly by some amount $\beta$ for each
-unit of increase in $x_i$. There is also some base expected failure rate $\alpha$ shared
-by all of the machines. So the expected log failure time can be given as
+function of some covariate $x_i$. I don't know that much about machines or what
+would realistically cause them to fail, but we don't want to make the example
+too hard at this point, so we want $x_i$ to be an inherent characteristic of the
+machine. Let's say $x_i$ is some integer number from $1$ to $5$ that controls
+how the machine works -- it is inherent to the type of machine. If I can think
+of a good variable that might work for this, I'll update that later. The
+expected failure time increases linearly by some amount $\beta$ for each unit of
+increase in $x_i$. There is also some baseline expected failure rate $\alpha$
+shared by all of the machines. So the expected log failure time (if the failure
+time were constant) can be given as
 $$
 \log(\lambda_i) = \alpha + \beta x_i.
 $$
@@ -103,13 +102,21 @@ influences how quickly the failure rate changes over time. We assume this
 parameter is the same for all machines, which are identical other than the
 setting $x_i$.
 
+So then if our failure times were completely observed, the data generating
+process would be as follows.
+
 $$
 \begin{align*}
-t_i &= \lceil t_i^* \rceil \\
 t^*_i &\sim \mathrm{Weibull}\left(k, \lambda_i\right) \\
 \lambda_i &= \alpha + \beta x_i
 \end{align*}
 $$
+
+But recall what I said before about running inspections only once a week.
+If this were the case, assuming our failure times are also measured in weeks,
+we would also have to apply a censoring mechanism for the data we observe,
+given by
+$$t_i = \lceil t_i^* \rceil.$$
 
 We will deal with the interval censoring, as usual, by modifying the likelihood
 of the outcome. For a completely observed outcome $t^*_i$, the likelihood
@@ -123,25 +130,49 @@ observation, which we recall is integer-valued for
 this DGP, the contribution to the likelihood is
 $$
 \mathcal{L}\left(\theta \mid t_i\right) = \mathrm{Pr}\left(
-\lfloor t_i^* \rfloor < x \leq \lceil t_i^* \rceil
-\right) = \int_{\lfloor t_i^* \rfloor}^{\lceil t_i^* \rceil}f(x) \ dx = F(t_i) - F(t_i-1).
+L_i< t_i \leq U_i
+\right) = \int_{L_i}^{U_i}f_{T_i}(\tau) \ d\tau = F_{T_i}(U_i) - F_{T_i}(L_i),
 $$
+where $L_i = \lfloor t_i^*\rfloor = t_i - 1$ and
+$U_i = \lceil t_i^* \rceil = t_i$, both of which are assumed to be known
+constants after the data are observed.
+
 The Stan code for this would be
 ````{.stan}
-target += weibull_lcdf(y[i] | lambda[i], k) -
-	weibull_lcdf(y[i] - 1 | lambda[i], k)
+target += log_diff_exp(
+	weibull_lcdf(y[i] | k, lambda[i]),
+	weibull_lcdf(y[i] - 1 | k, lambda[i])
+)
 ```
 or equivalently
 ````{.stan}
-target += weibull_lcdf(y_u[i] | lambda[i], k) -
-	weibull_lcdf(y_l[i] | lambda[i], k)
+target += log_diff_exp(
+	weibull_lcdf(y_u[i] | k, lambda[i]),
+	weibull_lcdf(y_l[i] | k, lambda[i])
+)
 ```
-if the data is specified in the format we prefer.
+if the data is specified in the format we prefer. Note that we use the Stan
+internal function `log_diff_exp()` for increased numerical precision rather than
+dividing the log values of the two functions manually. Note than there are[some
+concerns](https://discourse.mc-stan.org/t/interval-censored-data-fails-with-weibull-but-not-gamma/28780)
+about the numerical stability of the Weibull CDF function implemented in Stan,
+with a [GitHub issue](https://github.com/stan-dev/math/issues/2810) for
+improving the stability open at time of writing. For improved numerical
+stability, we can rewrite the `weibull_lcdf()` function using Stan's newer math
+functions with improved stability.
+````{.stan}
+functions {
+  real my_weibull_lcdf(real y, real alpha, real sigma) {
+    return log1m_exp(-pow(y / sigma, alpha));
+  }
+}
+```
 
-**NEED TO WORK ON NOTATION FOR THIS--CHECK JON AND YANG'S REFS**
+## Data simulation
 
-Now, as usual, I decided to just plot the data and mess around with the
-parameters until I thought it looked right.
+So with the data generating process, including the censoring mechanism, written
+down, we can simulate some data. As usual, I decided to just plot the data and
+mess around with the parameters until I thought it looked right.
 
 ```{r}
 set.seed(2384590)
@@ -153,7 +184,6 @@ sim_parms <- list(
 )
 
 str(sim_parms)
-
 ```
 
 ```{r}
@@ -226,6 +256,30 @@ fit_l <- mod_l$sample(
 ```{r}
 fit_l$summary()
 ```
+
+## Naive method -- use the same model for censored data
+
+```{r}
+dat_naive <- dat_latent
+dat_naive$y <- sim_data$t
+str(dat_naive)
+```
+
+```{r}
+fit_n <- mod_l$sample(
+	dat_naive,
+	seed = 546465,
+	parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 2500,
+	show_messages = T
+)
+```
+
+```{r}
+fit_n$summary()
+```
+
 
 ## Fitting censored data
 
