@@ -1,0 +1,62 @@
+---
+title: "Andreas thoughts"
+editor: visual
+---
+
+
+# Thoughts/Comments
+
+## Chapter 1 and general
+
+* Maybe number equations for easier referencing?
+
+* Last equation in chapter 1, I don't fully understand the F() part and the vertical bars. What exactly is done here? If I interpret the previous steps correctly, for each censored value there should be a term F(U_l) - F(L_l) in there, right? Or something different?
+
+* I know the repo/website is called Bayesian censoring, but if you think about/do some of those things also in a frequentist setup, e.g. what you do for Yang's LOD paper, maybe we could add those musings/write-ups to this website too? I don't think we need to aim for a full "we do everything in both frameworks" approach, but any component of dealing with censored data in a non-Bayesian framework that you are already doing anyway, might be worth adding.
+
+* If you plan on having this website eventually as a resource for others, you'll need to add more comments/documentation to your code so people can follow along not just with the theory but also the coding bits.
+
+* Code and text in the same quarto doc is of course perfectly fine. But if you find it a bit tedious to write/maintain/run (I personally do), you could also consider the split approach (e.g. see my Bayesian blog posts where I split R code and Rmd/Qmd into separate files: https://github.com/andreashandel/andreashandelwebsite/tree/main/posts/2022-02-23-longitudinal-multilevel-bayes-2)
+
+## Chapter 2
+
+* Does one need to structure the data in such a way that all censored are at end, or missing in a vector given to Stan? If there was some structure in the data, e.g. measurements for different individuals, or some time-series structure, it seems having this reshuffling of all censored at end could be tricky. Wouldn't it be possible to have an x_ind variable that indicates if the data is censored or not and then an if statement in the stan code that does different computations based on censored or not?
+
+* I'm not 100% sure I understand Ex1.Stan. It looks like observed and censored values are treated the same in the code. But I think the trick happens in lines 54 and 55, where in 54 because x_obs is data, one needs to read from "left to right", i.e. x_obs informs estimates of mu_x and sigma_x, while in line 55 x_cens "doesn't exist" and thus is estimated. Is that right?
+
+
+* I do like the data structure for the Bjorn method better (though right now all censored are at the end, can they be anywhere)? And could DL be a vector with a different censoring level for each data point?
+
+* I think I mostly understand Ex1b.Stan but might need a guided walk-through and/or more comments/documentation in the code.
+
+
+## Chapter 3
+
+* Are either of those 2 methods (imputation or integration) only applicable to outcomes but not predictors? Or is all this completely interchangable for outcomes or predictors with censoring? What's conceptually the difference between those 2 methods? Do they make different assumptions/lead to different results? Or is the imputation method just one that gives explicit estimates for the missing values, while the integration method does not?
+
+* Is the imputation method the same as the one used for the predictor in Chapter 2? The Stan manual talks about censored data without referencing either outcome or predictor, does that mean these 2 methods apply to both predictor and outcome?
+
+* Wondering again, if we had some kind of hierarchical model, e.g. measurements for different patients, how would the data structure and Stan code generalize? Seems like it relies right now on ordering the data in a specific way that I'm not clear how easily that generalizes.
+
+* Why is there y_cens in the data but not used in Ex2a.stan as input data and instead defined later in the code?
+
+* I don't fully understand Ex2a.stan. Where is the final full likelihood computed? And I don't fully understand the flow of information here.
+
+* Ex2b.stan code looks more like Ex1b.stan code. Does that mean those two use the same approach, or are those code similarities just coincidental?
+
+* Would we expect there to be a scenario where the models can properly estimate/recover the truth, and the censoring bit just impacts the uncertainty estimates? Or is it just the case that with this type of censored data, estimates will end up biased no matter what?
+
+
+## Chapter 4
+
+* Pretty much every example that statisticians show is a normal, and then they claim it generalizes. And poor schmucks like me can't figure out how :) So maybe at some point/for some examples make these distributions something other than normal to show how this can look in the non-default case?
+
+* I overall find this example, the data format and the Stan code the easiest to understand. Which of chapter 3 and 2 correspond to a subset of this with just outcome or just predictor censored? And is it worth discussing any other methods, do they add any information (see comments above about imputation vs. integration).
+
+* For this code, how biased are estimates for predictor or outcome? Do we have the same problem as in chapter 3? Can we explore when/how bias creeps into either variable and if there are scenarios where one can estimate unbiased with censoring, just with increased uncertainty?
+
+* More generally, there is probably literature discussing if censoring introduces "unfixable" bias or if there are stats methods that can give unbiased, though more uncertain estimates if censoring exists?
+
+
+
+
