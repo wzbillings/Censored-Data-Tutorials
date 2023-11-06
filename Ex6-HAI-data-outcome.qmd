@@ -1,37 +1,74 @@
-# Example Model 2: One censored outcome
+# Example Model 6: the HAI manifesto
 
 ```{r setup, include = FALSE}
 # ggplot2 theme setup
 library(ggplot2)
-ggplot2::theme_set(
-	ggplot2::theme_minimal() +
-		ggplot2::theme(
-			plot.background = ggplot2::element_rect(
-				fill = "white", color = "white"
-			),
-			axis.text = ggplot2::element_text(size = 12, color = "black"),
-			axis.title = ggplot2::element_text(size = 22),
-			plot.subtitle = ggplot2::element_text(
-				size = 16, hjust = 0, margin = ggplot2::margin(b = 2)
-			),
-			plot.title = ggplot2::element_text(
-				size = 19, hjust = 0, margin = ggplot2::margin(b = 2, l = 2)
-			),
-			plot.caption = ggplot2::element_text(size = 14),
-			strip.text = ggplot2::element_text(
-				size = 16, hjust = 0.5, margin = ggplot2::margin(b = 2, t = 2)
-			),
-			panel.spacing = ggplot2::unit(2, "lines"),
-			legend.position = "bottom",
-			legend.text = ggplot2::element_text(size = 16, color = "black"),
-			legend.title = ggplot2::element_text(size = 18, color = "black"),
-			plot.margin = ggplot2::margin(t = 6, r = 6, b = 6, l = 6)
-		)
-)
+ggplot2::theme_set(hgp::theme_ms())
 ```
 
-For the second example model, we'll work on a case 
+Most of my research about the influenza vaccine is focused on the analysis of
+Hemagglutination Inhibition (HAI) assay data. These data are proxies for
+neutralizing influenza antibodies, and have the advantage of being easy to
+perform and being able to capture cross-reactivity across different strains of
+influenza. However, the assay has a unique data generating process. I've
+discussed this before in a few posts on my blog (
+[first](https://wzbillings.com/posts/2023-07-25_simulating-titer-data/),
+[second](https://wzbillings.com/posts/2023-08-10_titer-w-distance/)), but I
+never got to the part where we actually fit the models to make sure our
+censoring approach works.
 
+HAI makes a potentially interesting example because of three features of the
+data:
 
+1. The outcome is left censored with a lower limit of detection;
+1. The outcome is interval censored for values above the LLOD; and
+1. There are two appropriate models, which we can compare and contrast.
+
+For all of these models, we'll work under one general example study. Suppose
+we recruit $n$ patients for a study and give them a flu vaccine. For each of
+those patients, we collect their pre-vaccination titer and post-vaccination
+(say at 28 days) to 11 different influenza strains. These strains include the
+same strain that is in the vaccine (which has distance $0$), and ten other
+strains, which each have distances $d = \{0.1, 0.2, 0.3, \ldots, 1.0\}$. The
+outcome variable, post-vaccination titers, will be left-censored and also
+interval-censored. We assume that the mean of the outcome is a linear
+function of the distance. Unfortunately the two models we need to consider
+are hard to describe in the same language, so we'll get down to brass tacks
+with the data generating process (DGP) in the respective sections.
+
+For dealing with interval censored data, we will pass the
+data to Stan using the `interval2` format from the `survival` package. In this
+format, we pass two columns, say `y_l` and `y_u`. If a data point is not
+censored, then `y_l == y_u`. If a data point is left-censored, then `y_l = -Inf`
+and `y_u` is set to the lower limit of detection. Similarly, if a data point
+is right-censored, `y_l` is set to the upper limit of detection and `y_u = Inf`.
+Finally, if a data point is interval-censored, `y_l` and `y_u` are set to the
+lower and upper bounds of the interval containing the datum, respectively.
+
+# Log-normal model
+
+Both of these models will share a lot of similarities, but for some reason
+I find the lognormal model easier to think about, so we'll do most of the
+explaining under the context of this model. We start with the assumption that
+our *underyling, latent titer* value (the "true titer") is some real number
+which follows a normal distribution. We assume that the mean of this
+distribution is a linear function of the antigenic distance, as we mentioned,
+and we assume constant variance.
+$$
+z_i^* \sim \mathcal{N}\left( \beta_0 + \beta_1 x_i, \sigma^2 \right) \\
+y_i^* = 2^{z_i^*} \sim \mathrm{lognormal}\left(\beta_0 + \beta_1 x_i, \sigma^2\right)
+$$
+
+# Gamma model
+
+# Midpoint correction instead of interval censoring
+
+# Extensions to consider in the future
+
+* An individual is randomly missing strains due to laboratory errors
+* Repeated measures across study years
+* Repeated measures across study years where some strains are systematically
+missing based on the year
+* Models which control for pre-vaccination titer.
 
 <!-- END OF FILE -->
