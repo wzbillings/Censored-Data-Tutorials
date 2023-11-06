@@ -1,0 +1,30 @@
+# Example model #XX: Hierarchical modeling
+
+For this example, we'll introduce the concept of hierarchical modeling, which
+is extremely useful in most real world situations.
+
+## 0 levels: fixed effects model
+
+* $n$ students in one classroom.
+* Each student has to do some task.
+* We assume that there is no variation between the effect of each student,
+differences in observations are due to random fluctuations from the true
+parameter.
+* Estimate via fixed effects model.
+* Covariates
+
+## 1 level: random effects by students
+
+* This time we assume that each individual mean is drawn from some distribution
+* What happens if we use the fixed effect model?
+* random effects
+
+## 2 levels: random effects by classes
+
+* Adding in clusters by classrooms
+
+## 3 levels: random effects by schools
+
+## Bonus! 4 levels: random effects within students
+
+* Repeated measures for each student
