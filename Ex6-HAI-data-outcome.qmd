@@ -45,25 +45,50 @@ is right-censored, `y_l` is set to the upper limit of detection and `y_u = Inf`.
 Finally, if a data point is interval-censored, `y_l` and `y_u` are set to the
 lower and upper bounds of the interval containing the datum, respectively.
 
-# Log-normal model
+## Log-normal model
 
 Both of these models will share a lot of similarities, but for some reason
 I find the lognormal model easier to think about, so we'll do most of the
 explaining under the context of this model. We start with the assumption that
 our *underyling, latent titer* value (the "true titer") is some real number
-which follows a normal distribution. We assume that the mean of this
+which follows a log-normal distribution. We assume that the mean of this
 distribution is a linear function of the antigenic distance, as we mentioned,
-and we assume constant variance.
+and we assume constant variance. In math terms, we assume that
 $$
-z_i^* \sim \mathcal{N}\left( \beta_0 + \beta_1 x_i, \sigma^2 \right) \\
-y_i^* = 2^{z_i^*} \sim \mathrm{lognormal}\left(\beta_0 + \beta_1 x_i, \sigma^2\right)
+y_i^* \sim \text{Log-normal}\left(\frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{\sigma}{\log_2 e}\right).
 $$
+Note that we scale the coefficients by a factor of $\frac{1}{\log_2{e}}$
+because
+$$\log{y_i^*} \sim \text{Normal}\left( \frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{\sigma}{\log_2 e} \right),$$
+which combined with the identity that
+$$\log{y_i^*} = \frac{\log_2 y_i^*}{\log_2{e}},$$
+implies
+$$ \log_2 y_i^* \sim \text{Normal}\left( \beta_0 + \beta_1 x_i, \sigma \right) .$$
+This gives us a connection to the natural units of measurement, and makes it
+easier to understand the models and set priors.
 
-# Gamma model
 
-# Midpoint correction instead of interval censoring
+## Gamma model
 
-# Extensions to consider in the future
+ADD A CALLOUT BOX HERE
+
+### Gamma distribution parametrization {.unnumbered}
+There are at least three common reparametrizations of the Gamma parametrization.
+Here, we follow the convention used by
+[Stan](https://mc-stan.org/docs/functions-reference/gamma-distribution.html),
+which is different from the parametrization implemented by Richard McElreath
+in the `rethinking` package. Note that in the common $\alpha, \beta$
+parametrization that we adopt, one can easily model the mean by implementing
+the probability model as
+$$
+y_i \sim \text{Gamma}\left(\alpha_i = \frac{\mu_i}{\beta}, \beta\right).
+$$
+So, if you were curious, that is where the $\frac{1}{\beta}$ comes from
+in the following section.
+
+## Midpoint correction instead of interval censoring
+
+## Extensions to consider in the future
 
 * An individual is randomly missing strains due to laboratory errors
 * Repeated measures across study years

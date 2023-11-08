@@ -163,9 +163,9 @@
   {
     "objectID": "Ex6-HAI-data-outcome.html",
     "href": "Ex6-HAI-data-outcome.html",
-    "title": "7  Example Model 2: One censored outcome",
+    "title": "7  Example Model 6: the HAI manifesto",
     "section": "",
-    "text": "For the second example model, we’ll work on a case"
+    "text": "Most of my research about the influenza vaccine is focused on the analysis of Hemagglutination Inhibition (HAI) assay data. These data are proxies for neutralizing influenza antibodies, and have the advantage of being easy to perform and being able to capture cross-reactivity across different strains of influenza. However, the assay has a unique data generating process. I’ve discussed this before in a few posts on my blog ( first, second), but I never got to the part where we actually fit the models to make sure our censoring approach works.\nHAI makes a potentially interesting example because of three features of the data:\n\nThe outcome is left censored with a lower limit of detection;\nThe outcome is interval censored for values above the LLOD; and\nThere are two appropriate models, which we can compare and contrast.\n\nFor all of these models, we’ll work under one general example study. Suppose we recruit \\(n\\) patients for a study and give them a flu vaccine. For each of those patients, we collect their pre-vaccination titer and post-vaccination (say at 28 days) to 11 different influenza strains. These strains include the same strain that is in the vaccine (which has distance \\(0\\)), and ten other strains, which each have distances \\(d = \\{0.1, 0.2, 0.3, \\ldots, 1.0\\}\\). The outcome variable, post-vaccination titers, will be left-censored and also interval-censored. We assume that the mean of the outcome is a linear function of the distance. Unfortunately the two models we need to consider are hard to describe in the same language, so we’ll get down to brass tacks with the data generating process (DGP) in the respective sections.\nFor dealing with interval censored data, we will pass the data to Stan using the interval2 format from the survival package. In this format, we pass two columns, say y_l and y_u. If a data point is not censored, then y_l == y_u. If a data point is left-censored, then y_l = -Inf and y_u is set to the lower limit of detection. Similarly, if a data point is right-censored, y_l is set to the upper limit of detection and y_u = Inf. Finally, if a data point is interval-censored, y_l and y_u are set to the lower and upper bounds of the interval containing the datum, respectively.\n\n8 Log-normal model\nBoth of these models will share a lot of similarities, but for some reason I find the lognormal model easier to think about, so we’ll do most of the explaining under the context of this model. We start with the assumption that our underyling, latent titer value (the “true titer”) is some real number which follows a normal distribution. We assume that the mean of this distribution is a linear function of the antigenic distance, as we mentioned, and we assume constant variance. In math terms, we assume that \\[\ny_i^* \\sim \\mathrm{lognormal}\\left(\\frac{\\beta_0 + \\beta_1 x_i}{\\log_2 e}, \\frac{\\sigma}{\\log_2 e}\\right).\n\\] Note that we scale the coefficients by a factor of \\(\\frac{1}{\\log_2{e}}\\) because \\[\\log{y_i^*} \\sim \\mathrm{Normal}\\left( \\frac{\\beta_0 + \\beta_1 x_i}{\\log_2 e}, \\frac{\\sigma}{\\log_2 e} \\right),\\] which combined with the identity that \\[\\log{y_i^*} = \\frac{\\log_2 y_i^*}{\\log_2{e}},\\] implies \\[ \\log_2 y_i^* \\sim \\mathrm{Normal}\\left( \\beta_0 + \\beta_1 x_i, \\sigma \\right) .\\] This gives us a connection to the natural units of measurement, and makes it easier to understand the models and set priors.\n\n\n9 Gamma model\n\n\n10 Midpoint correction instead of interval censoring\n\n\n11 Extensions to consider in the future\n\nAn individual is randomly missing strains due to laboratory errors\nRepeated measures across study years\nRepeated measures across study years where some strains are systematically missing based on the year\nModels which control for pre-vaccination titer."
   },
   {
     "objectID": "references.html",
@@ -173,5 +173,33 @@
     "title": "References",
     "section": "",
     "text": "Stan Development Team. 2023. Stan Modeling Language\nUsers’ Guide and Reference Manual.\n2.33 ed."
+  },
+  {
+    "objectID": "Ex6-HAI-data-outcome.html#log-normal-model",
+    "href": "Ex6-HAI-data-outcome.html#log-normal-model",
+    "title": "7  Example Model 6: the HAI manifesto",
+    "section": "7.1 Log-normal model",
+    "text": "7.1 Log-normal model\nBoth of these models will share a lot of similarities, but for some reason I find the lognormal model easier to think about, so we’ll do most of the explaining under the context of this model. We start with the assumption that our underyling, latent titer value (the “true titer”) is some real number which follows a log-normal distribution. We assume that the mean of this distribution is a linear function of the antigenic distance, as we mentioned, and we assume constant variance. In math terms, we assume that \\[\ny_i^* \\sim \\text{Log-normal}\\left(\\frac{\\beta_0 + \\beta_1 x_i}{\\log_2 e}, \\frac{\\sigma}{\\log_2 e}\\right).\n\\] Note that we scale the coefficients by a factor of \\(\\frac{1}{\\log_2{e}}\\) because \\[\\log{y_i^*} \\sim \\text{Normal}\\left( \\frac{\\beta_0 + \\beta_1 x_i}{\\log_2 e}, \\frac{\\sigma}{\\log_2 e} \\right),\\] which combined with the identity that \\[\\log{y_i^*} = \\frac{\\log_2 y_i^*}{\\log_2{e}},\\] implies \\[ \\log_2 y_i^* \\sim \\text{Normal}\\left( \\beta_0 + \\beta_1 x_i, \\sigma \\right) .\\] This gives us a connection to the natural units of measurement, and makes it easier to understand the models and set priors."
+  },
+  {
+    "objectID": "Ex6-HAI-data-outcome.html#gamma-model",
+    "href": "Ex6-HAI-data-outcome.html#gamma-model",
+    "title": "7  Example Model 6: the HAI manifesto",
+    "section": "7.2 Gamma model",
+    "text": "7.2 Gamma model\nADD A CALLOUT BOX HERE\n\nGamma distribution parametrization\nThere are at least three common reparametrizations of the Gamma parametrization. Here, we follow the convention used by Stan, which is different from the parametrization implemented by Richard McElreath in the rethinking package. Note that in the common \\(\\alpha, \\beta\\) parametrization that we adopt, one can easily model the mean by implementing the probability model as \\[\ny_i \\sim \\text{Gamma}\\left(\\alpha_i = \\frac{\\mu_i}{\\beta}, \\beta\\right).\n\\] So, if you were curious, that is where the \\(\\frac{1}{\\beta}\\) comes from in the following section."
+  },
+  {
+    "objectID": "Ex6-HAI-data-outcome.html#midpoint-correction-instead-of-interval-censoring",
+    "href": "Ex6-HAI-data-outcome.html#midpoint-correction-instead-of-interval-censoring",
+    "title": "7  Example Model 6: the HAI manifesto",
+    "section": "7.3 Midpoint correction instead of interval censoring",
+    "text": "7.3 Midpoint correction instead of interval censoring"
+  },
+  {
+    "objectID": "Ex6-HAI-data-outcome.html#extensions-to-consider-in-the-future",
+    "href": "Ex6-HAI-data-outcome.html#extensions-to-consider-in-the-future",
+    "title": "7  Example Model 6: the HAI manifesto",
+    "section": "7.4 Extensions to consider in the future",
+    "text": "7.4 Extensions to consider in the future\n\nAn individual is randomly missing strains due to laboratory errors\nRepeated measures across study years\nRepeated measures across study years where some strains are systematically missing based on the year\nModels which control for pre-vaccination titer."
   }
 ]
