@@ -10,12 +10,12 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-    - Ex1-Simple-Censored-Predictor.qmd
-    - Ex2-Simple-Censored-Outcome.qmd
-    - Ex3-Censored-Outcome-and-Predictor.qmd
-    - Ex4-Infection-Outcome-with-Censored-Predictor.qmd
-    - Ex5-Interval-Censoring.qmd
-    - Ex6-HAI-data-outcome.qmd
+    - ex1-simple-censored-outcome/index.qmd
+    - ex2-simple-censored-predictor/index.qmd
+    - ex3-censored-outcome-and-predictor/index.qmd
+    - ex4-infection-outcome-with-censored-predictor/index.qmd
+    - ex5-interval-censoring/index.qmd
+    - ex6-HAI-data-outcome/index.qmd
     - references.qmd
 
 bibliography: references.bib
