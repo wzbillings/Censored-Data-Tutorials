@@ -1,0 +1,99 @@
+# Example Model 6: the HAI manifesto
+
+```{r setup, include = FALSE}
+# ggplot2 theme setup
+library(ggplot2)
+ggplot2::theme_set(hgp::theme_ms())
+```
+
+Most of my research about the influenza vaccine is focused on the analysis of
+Hemagglutination Inhibition (HAI) assay data. These data are proxies for
+neutralizing influenza antibodies, and have the advantage of being easy to
+perform and being able to capture cross-reactivity across different strains of
+influenza. However, the assay has a unique data generating process. I've
+discussed this before in a few posts on my blog (
+[first](https://wzbillings.com/posts/2023-07-25_simulating-titer-data/),
+[second](https://wzbillings.com/posts/2023-08-10_titer-w-distance/)), but I
+never got to the part where we actually fit the models to make sure our
+censoring approach works.
+
+HAI makes a potentially interesting example because of three features of the
+data:
+
+1. The outcome is left censored with a lower limit of detection;
+1. The outcome is interval censored for values above the LLOD; and
+1. There are two appropriate models, which we can compare and contrast.
+
+For all of these models, we'll work under one general example study. Suppose
+we recruit $n$ patients for a study and give them a flu vaccine. For each of
+those patients, we collect their pre-vaccination titer and post-vaccination
+(say at 28 days) to 11 different influenza strains. These strains include the
+same strain that is in the vaccine (which has distance $0$), and ten other
+strains, which each have distances $d = \{0.1, 0.2, 0.3, \ldots, 1.0\}$. The
+outcome variable, post-vaccination titers, will be left-censored and also
+interval-censored. We assume that the mean of the outcome is a linear
+function of the distance. Unfortunately the two models we need to consider
+are hard to describe in the same language, so we'll get down to brass tacks
+with the data generating process (DGP) in the respective sections.
+
+For dealing with interval censored data, we will pass the
+data to Stan using the `interval2` format from the `survival` package. In this
+format, we pass two columns, say `y_l` and `y_u`. If a data point is not
+censored, then `y_l == y_u`. If a data point is left-censored, then `y_l = -Inf`
+and `y_u` is set to the lower limit of detection. Similarly, if a data point
+is right-censored, `y_l` is set to the upper limit of detection and `y_u = Inf`.
+Finally, if a data point is interval-censored, `y_l` and `y_u` are set to the
+lower and upper bounds of the interval containing the datum, respectively.
+
+## Log-normal model
+
+Both of these models will share a lot of similarities, but for some reason
+I find the lognormal model easier to think about, so we'll do most of the
+explaining under the context of this model. We start with the assumption that
+our *underyling, latent titer* value (the "true titer") is some real number
+which follows a log-normal distribution. We assume that the mean of this
+distribution is a linear function of the antigenic distance, as we mentioned,
+and we assume constant variance. In math terms, we assume that
+$$
+y_i^* \sim \text{Log-normal}\left(\frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{\sigma}{\log_2 e}\right).
+$$
+Note that we scale the coefficients by a factor of $\frac{1}{\log_2{e}}$
+because
+$$\log{y_i^*} \sim \text{Normal}\left( \frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{\sigma}{\log_2 e} \right),$$
+which combined with the identity that
+$$\log{y_i^*} = \frac{\log_2 y_i^*}{\log_2{e}},$$
+implies
+$$ \log_2 y_i^* \sim \text{Normal}\left( \beta_0 + \beta_1 x_i, \sigma \right) .$$
+This gives us a connection to the natural units of measurement, and makes it
+easier to understand the models and set priors.
+
+
+## Gamma model
+
+ADD A CALLOUT BOX HERE
+
+### Gamma distribution parametrization {.unnumbered}
+There are at least three common reparametrizations of the Gamma parametrization.
+Here, we follow the convention used by
+[Stan](https://mc-stan.org/docs/functions-reference/gamma-distribution.html),
+which is different from the parametrization implemented by Richard McElreath
+in the `rethinking` package. Note that in the common $\alpha, \beta$
+parametrization that we adopt, one can easily model the mean by implementing
+the probability model as
+$$
+y_i \sim \text{Gamma}\left(\alpha_i = \frac{\mu_i}{\beta}, \beta\right).
+$$
+So, if you were curious, that is where the $\frac{1}{\beta}$ comes from
+in the following section.
+
+## Midpoint correction instead of interval censoring
+
+## Extensions to consider in the future
+
+* An individual is randomly missing strains due to laboratory errors
+* Repeated measures across study years
+* Repeated measures across study years where some strains are systematically
+missing based on the year
+* Models which control for pre-vaccination titer.
+
+<!-- END OF FILE -->

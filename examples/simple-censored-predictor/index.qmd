@@ -1,0 +1,148 @@
+# Example Model 1: One censored predictor
+
+```{r setup, include = FALSE}
+library(cmdstanr)
+# ggplot2 theme setup
+library(ggplot2)
+ggplot2::theme_set(hgp::theme_ms())
+pth_base <- here::here("examples", "simple-censored-predictor")
+```
+
+
+For our first example model, we will consider an example where we have a single
+censored predictor. Other than censoring, we assume the predictor is measured
+without error. We also assume a non-censored perfectly observed outcome,
+which follows a Gaussian linear model where the only predictor is that
+censored one. (We could add additional non-censored predictors but it would
+just make this example more complicated.) The data generating process for the
+outcome, $y_i, \ i = \{1, 2, \ldots, n\}$ is
+$$
+\begin{align*}
+y_i &\sim \mathrm{Normal}\left(\mu, \sigma^2\right) \\
+\mu &= \beta_0 + \beta_1 x_i^*
+\end{align*}
+$$
+where $x_i^*$ is the latent, true value of the predictor $x$. However, because
+of some imperfect measurement process, we can't observed $x_i^*$, instead we
+observe
+$$
+x_i = \begin{cases}
+x_{\min}, & x_i^* \leq x_{\min} \\
+x_i^*, & x_i^* > x_{\min}
+\end{cases}.
+$$
+So if we want to correctly model $y$, we will need to take the left censoring
+of $x$ into account.
+
+```{r}
+lod <- 0
+generate_data <- function(n = 1000, xmin = 2, beta0 = 1, beta1 = 2, sigma = 5,
+													seed = 83719273) {
+	l <- tibble::tibble(
+		x_star = rnorm(n, 5, 3),
+		x = ifelse(x_star <= xmin, xmin, x_star),
+		mu = beta0 + beta1 * x_star,
+		y = rnorm(n, mu, sigma)
+	)
+	
+	o <- dplyr::select(l, x, y)
+	
+	out <- list("latent" = l, "observed" = o)
+}
+
+dat <- generate_data(xmin = lod)
+dat_l <- dat$latent
+dat_o <- dat$observed
+```
+
+We can take a quick look at the data to see what the relationship looks
+like when x is censored or not.
+
+```{r}
+dat_l |>
+	ggplot() +
+	geom_vline(xintercept = lod, linetype = "dashed", color = "gray") +
+	geom_line(
+		aes(x = x_star, y = 1 + 2 * x_star), color = "red", linetype = "dashed",
+		linewidth = 1
+	) +
+	geom_point(aes(x = x_star, y = y), color = "gray", size = 2) +
+	geom_point(aes(x = x, y = y), color = "black", size = 2) +
+	labs(x = "x", y = "y")
+```
+
+Here the gray points show the true latent values of the censored points, and
+the black points show what we actually observed. The red line is the true
+regression line from the data generating process.
+
+For a Bayesian model, before we can fit anything to the data we need to choose
+suitable priors.
+
+```{r}
+df_stan <-
+	dat_o |>
+	dplyr::mutate(
+		cens = factor(x <= lod, levels = c(FALSE, TRUE), labels = c('obs', 'cens'))
+	) |>
+	# Arrange by whether or not the data is censored. Getting the right format
+	# for Stan is kind of annoying.
+	dplyr::arrange(cens)
+
+dat_stan <- list()
+dat_stan$y <- df_stan$y
+dat_stan$x_obs <- subset(df_stan, cens == 'obs')$x
+dat_stan$N <- length(dat_stan$y)
+dat_stan$N_obs <- length(dat_stan$x_obs)
+dat_stan$N_cens <- dat_stan$N - dat_stan$N_obs
+dat_stan$DL <- lod
+```
+
+Load and compile the stan program
+
+```{r}
+library(cmdstanr)
+mod_pth <- here::here(pth_base, 'Ex1.stan')
+mod <- cmdstanr::cmdstan_model(stan_file = mod_pth)
+```
+
+
+```{r}
+fit <- mod$sample(dat_stan, seed = 100, parallel_chains = 4)
+```
+
+```{r}
+fit$summary() |> print(n = Inf)
+```
+
+## The other method (Bjorn method)
+
+```{r}
+mod_pth <- here::here(pth_base, 'Ex1b.stan')
+mod2 <- cmdstanr::cmdstan_model(stan_file = mod_pth)
+```
+
+```{r}
+dat2 <- list()
+dat2$y <- df_stan$y
+dat2$x <- df_stan$x
+dat2$x_cens <- df_stan$cens
+dat2$N <- length(dat2$y)
+dat2$DL <- lod
+```
+
+```{r}
+fit2 <- mod2$sample(dat2, seed = 100, parallel_chains = 4)
+```
+
+```{r}
+fit2$summary() |>
+	dplyr::filter(!startsWith(variable, "x")) |>
+	print(n = Inf)
+```
+
+```{r}
+post <- posterior::as_draws_array(fit2)
+```
+
+
+<!-- END OF FILE -->

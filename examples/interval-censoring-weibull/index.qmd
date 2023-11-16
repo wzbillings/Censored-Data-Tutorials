@@ -1,0 +1,312 @@
+# Example Model 5: Interval Censoring
+
+```{r setup, include = FALSE}
+library(cmdstanr)
+# ggplot2 theme setup
+library(ggplot2)
+ggplot2::theme_set(hgp::theme_ms())
+pth_base <- here::here("examples", "interval-censoring-weibull")
+```
+
+For our previous models, we've been concerned about data that have limits of
+detection, including simultaneous upper and lower limits of detection. For
+this example, we'll work through the data generating model for an outcome
+which is **interval censored** with a known predictor (extending to a censored
+predictor follows from this example and the previous examples on censored
+predictors).
+
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3684949/#:~:text=In%20statistical%20literature%2C%20interval%20censoring,instead%20of%20being%20observed%20exactly. 
+
+The data generating process for interval censored data I think can be quite
+variable. Typically I think about this in terms of HAI data, where the observed
+value is the floored version of the latent value, so a measurement process that
+generates a value that's rounded up or down is a data genearting process for
+an interval censored variable.
+
+The most well-known type of interval censored data comes from studies where
+the observation time does not completely cover the amount of time where an
+event could have occurred. For example, consider a factory that runs
+regularly scheduled maintenance checks, say once per week. If a specific machine
+fails, but failures are only noticed at the maintenance checks, then we know
+only that the failure occurred *after* the last maintenance check and *before*
+the current maintenance check. So for example if we report our data weekly, we
+could say that a particular machine was operational at week 2 and failed by
+week 3, putting its failure time in the interval $(2, 3]$. (In this
+example, I consider the interval closed on the upper bound because the machine
+could have failed moments before the inspection and we would have known
+it was broken.) Such an example would lead to a data generating process where the failure times
+are drawn from some random distribution, and then the ceiling is returned by
+the observation process once the failure times are converted to weeks.
+
+**Is there an example of interval censored data generating process that
+doesn't come from floor/ceiling of observation process?**
+
+One other way to get interval censored data is by responding to a question
+on a survey which only asks for an interval rather than an exact number.
+
+For this example, we'll do something different from the usual and model
+**machine failure times**. Consider a factory with $n$ machines. There is
+redundancy in the amount of available machines to do the factory's task, and
+the machines are considered fairly robust, so maintenance checks are performed
+once a week. For simplicity, we'll set the parameters such that the expected
+failure time already has a rate in weeks, so we don't have to worry about
+converting the units. If we wanted, e.g., the parameters to be on the scale
+of days we could probably just rescale the model.
+
+## Data generating process
+
+For this model, let's assume that the rate of failure, $\lambda_i$ is a linear
+function of some covariate $x_i$. I don't know that much about machines or what
+would realistically cause them to fail, but we don't want to make the example
+too hard at this point, so we want $x_i$ to be an inherent characteristic of the
+machine. Let's say $x_i$ is some integer number from $1$ to $5$ that controls
+how the machine works -- it is inherent to the type of machine. If I can think
+of a good variable that might work for this, I'll update that later. The
+expected failure time increases linearly by some amount $\beta$ for each unit of
+increase in $x_i$. There is also some baseline expected failure rate $\alpha$
+shared by all of the machines. So the expected log failure time (if the failure
+time were constant) can be given as
+$$
+\log(\lambda_i) = \alpha + \beta x_i.
+$$
+We use the log link function here to ensure that expected failure times are
+always positive, while the function of $x_i$ does not necessarily need to be.
+
+Finally, we assume that the longer each machine operates without being repaired,
+the more likely the machine is to fail. We represent this by modeling the
+failure time as a Weibull distribution with constant parameter $k$, which
+influences how quickly the failure rate changes over time. We assume this
+parameter is the same for all machines, which are identical other than the
+setting $x_i$.
+
+So then if our failure times were completely observed, the data generating
+process would be as follows.
+
+$$
+\begin{align*}
+t^*_i &\sim \mathrm{Weibull}\left(k, \lambda_i\right) \\
+\lambda_i &= \alpha + \beta x_i
+\end{align*}
+$$
+
+But recall what I said before about running inspections only once a week.
+If this were the case, assuming our failure times are also measured in weeks,
+we would also have to apply a censoring mechanism for the data we observe,
+given by
+$$t_i = \lceil t_i^* \rceil.$$
+
+We will deal with the interval censoring, as usual, by modifying the likelihood
+of the outcome. For a completely observed outcome $t^*_i$, the likelihood
+would be
+$$
+\mathcal{L}\left(\theta \mid t_i^*\right) = f(t_i^* \mid \theta),
+$$
+where $f(\cdot)$ is the Weibull density function. However, a censored data
+point actually lies at a point mass of probability and for our censored
+observation, the contribution to the likelihood is
+$$
+\mathcal{L}\left(\theta \mid t_i\right) = \mathrm{Pr}\left(
+L_i< t_i \leq U_i
+\right) = \int_{L_i}^{U_i}f_{T_i}(\tau) \ d\tau = F_{T_i}(U_i) - F_{T_i}(L_i),
+$$
+where $L_i = \lfloor t_i^*\rfloor = t_i - 1$ and
+$U_i = \lceil t_i^* \rceil = t_i$, both of which are assumed to be known
+constants after the data are observed.
+
+The Stan code for this would be
+````{.stan}
+target += log_diff_exp(
+	weibull_lcdf(y[i] | k, lambda[i]),
+	weibull_lcdf(y[i] - 1 | k, lambda[i])
+)
+```
+or equivalently
+````{.stan}
+target += log_diff_exp(
+	weibull_lcdf(y_u[i] | k, lambda[i]),
+	weibull_lcdf(y_l[i] | k, lambda[i])
+)
+```
+if the data is specified in the format we prefer. Note that we use the Stan
+internal function `log_diff_exp()` for increased numerical precision rather than
+dividing the log values of the two functions manually. Note than there are[some
+concerns](https://discourse.mc-stan.org/t/interval-censored-data-fails-with-weibull-but-not-gamma/28780)
+about the numerical stability of the Weibull CDF function implemented in Stan,
+with a [GitHub issue](https://github.com/stan-dev/math/issues/2810) for
+improving the stability, open at time of writing. For improved numerical
+stability, we can rewrite the `weibull_lcdf()` function using Stan's newer math
+functions with improved stability.
+````{.stan}
+functions {
+  real my_weibull_lcdf(real y, real alpha, real sigma) {
+    return log1m_exp(-pow(y / sigma, alpha));
+  }
+}
+```
+
+## Data simulation
+
+So with the data generating process, including the censoring mechanism, written
+down, we can simulate some data. As usual, I decided to just plot the data and
+mess around with the parameters until I thought it looked right.
+
+```{r}
+set.seed(2384590)
+sim_parms <- list(
+	n = 210,
+	k = 1.5,
+	alpha = 2,
+	beta = -0.35
+)
+
+str(sim_parms)
+```
+
+```{r}
+gen_data <- function(n, k, alpha, beta) {
+	out <- tibble::tibble(
+		x = sample(
+			1:5, size = n, replace = TRUE,
+			prob = c(0.4, 0.25, 0.2, 0.1, 0.05)
+		),
+		l_lambda = alpha + beta * x,
+		lambda = exp(l_lambda),
+		t_star = rweibull(n, shape = k, scale = lambda),
+		t = ceiling(t_star)
+	)
+	
+	return(out)
+}
+
+sim_data <- do.call(gen_data, sim_parms)
+print(sim_data, n = 5)
+
+plot(jitter(sim_data$x), sim_data$t)
+sim_data |> dplyr::group_by(x) |> dplyr::summarise(eft = mean(t))
+```
+
+```{r}
+sim_data |>
+	dplyr::mutate(
+		x_jitter = x + rnorm(nrow(sim_data), 0, 0.1)
+	) |>
+	ggplot2::ggplot() +
+	aes(x = x_jitter, y = t_star, group = (x)) +
+	geom_point() +
+	geom_segment(
+		aes(x = x_jitter, xend = x, y = t_star, yend = t)
+	)
+	geom_count(shape = 21, fill = "#ffffff50")
+```
+
+**NEED TO LOOK AT HOW BRMS HANDLES INTERVAL CENSORING**
+https://discourse.mc-stan.org/t/mixed-right-left-and-interval-censored-log-normal-with-brms/27571 
+
+## Fitting latent data
+
+```{r}
+dat_latent <- list()
+dat_latent$N <- nrow(sim_data)
+dat_latent$x <- sim_data$x
+dat_latent$y <- sim_data$t_star
+
+str(dat_latent)
+```
+
+```{r}
+mod_pth <- here::here(pth_base, "Ex5a.stan")
+mod_l <- cmdstanr::cmdstan_model(mod_pth, compile = FALSE)
+mod_l$compile(pedantic = TRUE, force_recompile = TRUE)
+```
+
+```{r}
+fit_l <- mod_l$sample(
+	dat_latent,
+	seed = 546465,
+	parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 2500,
+	show_messages = T
+)
+```
+
+```{r}
+fit_l$summary()
+```
+
+## Naive method -- use the same model for censored data
+
+```{r}
+dat_naive <- dat_latent
+dat_naive$y <- sim_data$t
+str(dat_naive)
+```
+
+```{r}
+fit_n <- mod_l$sample(
+	dat_naive,
+	seed = 546465,
+	parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 2500,
+	show_messages = T
+)
+```
+
+```{r}
+fit_n$summary()
+```
+
+
+## Fitting censored data
+
+In this parametrization, the outcome variable $t_i$Note that this measurement process will generate an integer valued response.
+However, we know that if the value of $t_i = t$, then in reality
+$t_i \in (t - 1, t]$, and we can never know the true value of $t_i$ because
+we don't do inspections more often.
+
+```{r}
+dat_censored <- list()
+dat_censored$N <- nrow(sim_data)
+dat_censored$x <- sim_data$x
+dat_censored$y1 <- sim_data$t - 1
+dat_censored$y2 <- sim_data$t
+
+str(dat_censored)
+```
+
+```{r}
+mod_pth <- here::here(pth_base, "Ex5b.stan")
+mod_c <- cmdstanr::cmdstan_model(mod_pth, compile = FALSE)
+mod_c$compile(pedantic = TRUE, force_recompile = TRUE)
+```
+
+```{r}
+fit_c <- mod_c$sample(
+	dat_censored,
+	seed = 3248315,
+	parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 2500,
+	show_messages = T
+)
+```
+
+```{r}
+fit_c$summary()
+```
+
+## Making the interval wider
+
+We can introduce more
+
+## Midpoint correction
+
+### Original interval
+
+### Wider interval
+
+
+
+
+<!-- END OF FILE -->
