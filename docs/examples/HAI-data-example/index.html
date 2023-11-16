@@ -165,10 +165,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#log-normal-model" id="toc-log-normal-model" class="nav-link active" data-scroll-target="#log-normal-model"><span class="header-section-number">7.1</span> Log-normal model</a></li>
-  <li><a href="#gamma-model" id="toc-gamma-model" class="nav-link" data-scroll-target="#gamma-model"><span class="header-section-number">7.2</span> Gamma model</a>
-  <ul class="collapse">
-  <li><a href="#gamma-distribution-parametrization" id="toc-gamma-distribution-parametrization" class="nav-link" data-scroll-target="#gamma-distribution-parametrization">Gamma distribution parametrization</a></li>
-  </ul></li>
+  <li><a href="#gamma-model" id="toc-gamma-model" class="nav-link" data-scroll-target="#gamma-model"><span class="header-section-number">7.2</span> Gamma model</a></li>
   <li><a href="#midpoint-correction-instead-of-interval-censoring" id="toc-midpoint-correction-instead-of-interval-censoring" class="nav-link" data-scroll-target="#midpoint-correction-instead-of-interval-censoring"><span class="header-section-number">7.3</span> Midpoint correction instead of interval censoring</a></li>
   <li><a href="#extensions-to-consider-in-the-future" id="toc-extensions-to-consider-in-the-future" class="nav-link" data-scroll-target="#extensions-to-consider-in-the-future"><span class="header-section-number">7.4</span> Extensions to consider in the future</a></li>
   </ul>
@@ -211,13 +208,24 @@ y_i^* \sim \text{Log-normal}\left(\frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{
 </section>
 <section id="gamma-model" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="gamma-model"><span class="header-section-number">7.2</span> Gamma model</h2>
-<p>ADD A CALLOUT BOX HERE</p>
-<section id="gamma-distribution-parametrization" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="gamma-distribution-parametrization">Gamma distribution parametrization</h3>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Gamma distribution parametrization
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>There are at least three common reparametrizations of the Gamma parametrization. Here, we follow the convention used by <a href="https://mc-stan.org/docs/functions-reference/gamma-distribution.html">Stan</a>, which is different from the parametrization implemented by Richard McElreath in the <code>rethinking</code> package. Note that in the common <span class="math inline">\(\alpha, \beta\)</span> parametrization that we adopt, one can easily model the mean by implementing the probability model as <span class="math display">\[
 y_i \sim \text{Gamma}\left(\alpha_i = \frac{\mu_i}{\beta}, \beta\right).
-\]</span> So, if you were curious, that is where the <span class="math inline">\(\frac{1}{\beta}\)</span> comes from in the following section.</p>
-</section>
+\]</span> However, we almost always call our regression coefficients <span class="math inline">\(\beta\)</span>. And since that’s the part that’s most relevant, we’ll leave those alone. I’ll call the second parameter of the gamma distribution <span class="math inline">\(k\)</span> instead. So, if you were curious, that is where the <span class="math inline">\(\frac{1}{k}\)</span> comes from in the following section.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="midpoint-correction-instead-of-interval-censoring" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="midpoint-correction-instead-of-interval-censoring"><span class="header-section-number">7.3</span> Midpoint correction instead of interval censoring</h2>

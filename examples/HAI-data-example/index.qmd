@@ -1,9 +1,11 @@
 # Example Model 6: the HAI manifesto
 
 ```{r setup, include = FALSE}
+library(cmdstanr)
 # ggplot2 theme setup
 library(ggplot2)
 ggplot2::theme_set(hgp::theme_ms())
+pth_base <- here::here("examples", "HAI-data-example")
 ```
 
 Most of my research about the influenza vaccine is focused on the analysis of
@@ -67,24 +69,102 @@ $$ \log_2 y_i^* \sim \text{Normal}\left( \beta_0 + \beta_1 x_i, \sigma \right) .
 This gives us a connection to the natural units of measurement, and makes it
 easier to understand the models and set priors.
 
-
 ## Gamma model
 
-ADD A CALLOUT BOX HERE
+The gamma model and lognormal model are both right-skewed families which
+can also approximate normal distributions with the correct set of parameter
+values. However, the gamma family is somewhat more flexible in the
+ranges of shapes it can take on, and includes exponential and chi-squared
+distributions (as examples of shapes which are difficult to match with the
+log-normal distribution). Additionally, the variance of the log-normal family
+is independent of the mean, while the variance of the gamma family is
+proportional to the mean. (Another way to say that is that the coefficient of
+variation of the log-normal model is always constant, while the coefficient of
+variation of the gamma model is constant for a given value of the mean, which
+increases as the mean increases.)
+
+While the log of a gamma random variable does not have a simple interpretation
+like the log-normal family does, there are known formulas for the moments of
+this distribution. However, they require complex calculations using
+derivatives of the gamma function. Notably, there is also a generalized
+gamma distribution which has been proposed (CITE THIS) as a general model
+for fitting antibody assay data, but this distribution is not common in
+practice.
+
+::: {.callout-note icon=false collapse=true appearance="simple"}
 
 ### Gamma distribution parametrization {.unnumbered}
 There are at least three common reparametrizations of the Gamma parametrization.
-Here, we follow the convention used by
-[Stan](https://mc-stan.org/docs/functions-reference/gamma-distribution.html),
-which is different from the parametrization implemented by Richard McElreath
-in the `rethinking` package. Note that in the common $\alpha, \beta$
-parametrization that we adopt, one can easily model the mean by implementing
-the probability model as
+[Stan](https://mc-stan.org/docs/functions-reference/gamma-distribution.html)
+implements the standard "shape-scale" parametrization, which is most commonly
+used by statisticians. In the `rethinking` package, Richard McElreath implements
+a "mean-scale" parametrization which uses the substitution
+$\alpha = \mu / \beta$. **However**, in a GLM context, the most frequently
+used parametrization is the "shape-mean" parametrization (CITE AGRESTI AND
+MCCULOUGH NELDER). 
+
+Beginning with the parametrization made in the Stan guide, we make the
+substitutions $\alpha = k$ and $\beta = \frac{k}{\mu}$.
+By making those substitutions in the density, we can show that
+$$E(y) = \mu \quad \text{and} \quad \mathrm{Var}(y) = \frac{\mu^2}{k}.$$
+
+When we specify $\mu = f(X)$ in the context of a linear model, we must then
+invert the transformation, and when we invoke the gamma distribution in Stan,
+we would write
+$$y \sim \text{Gamma}\left(k, \frac{k}{\mu} \right).$$
+
+:::
+
+To specify a gamma likelihood for our titer outcome, we would write in math
+terms that
 $$
-y_i \sim \text{Gamma}\left(\alpha_i = \frac{\mu_i}{\beta}, \beta\right).
+\begin{align*}
+y_i^* &\sim \text{Gamma}\left(k, \frac{k}{\mu_i}\right) \\
+g(\mu_i) &= \beta_0 + \beta_1 x_i
+\end{align*}
 $$
-So, if you were curious, that is where the $\frac{1}{\beta}$ comes from
-in the following section.
+where $g(\cdot)$ is a suitably-chosen link function. Note that the parameters of
+the gamma distribution must be greater than zero, necessitating the use of a
+non-identity link function, in contrast to the log-normal distribution where no
+link function is necessary. The canonical link function here is $g(x) = -1/x$,
+which is really a pretty useless link function in a real life context because it
+requires us to place constraints on the $\beta_i$ values. So, use of the link
+function $g(x) = \exp(x)$ is more common, and is what we would use here.
+
+Because the gamma distribution does not have an easily-interpretable formula
+on the log-scale, we fit the distribution on the natural scale of the parameter
+(although I guess we could also fit a gamma model to the log-scale outcome, but
+this is unusual) and thus we do not need to worry about the scaling of the
+parameters. Once again: **there is no easy interpretation of the gamma
+regression parameters on the log-scale.**
+
+**NEED TO CITE https://www.jstor.org/stable/2685723?searchText=&searchUri=&ab_segments=&searchKey=&refreqid=fastly-default%3A7ee1f3ec4603b86f40438da20e839c33 and Moulton/Halsey**
+
+## The observation model
+
+OK, so that would be great if that was all we had to do. But unfortunately,
+as I mentioned, HAI titers are interval censored and have a lower limit of
+detection, which we need to include in our model. We do this following the
+traditional method of updating the likelihood directly. Because of the way that
+the censoring mechanism occurs in practice, we need to define our censoring
+mechanism on the log scale. So, define
+$$z_i^* = f(y_i^*) = \log_2 \left(\frac{y_i^*}{5}\right).$$
+Notably, this implies that
+$$y_i^* = f^{-1}(z_i^*) = 5\cdot 2^{z_i^*}.$$
+The assay is performed by two-fold dilutions
+
+```{r}
+hai_plot <-
+	
+```
+
+
+## Data simulations
+
+The first thing we need to do now is simulate some titers. We probably want
+to simulate data from both of those two models, in order to see how the
+distributions differ. So, we'll ensure that the linear regression coefficients
+are the same, and we can see what happens in both models. 
 
 ## Midpoint correction instead of interval censoring
 
