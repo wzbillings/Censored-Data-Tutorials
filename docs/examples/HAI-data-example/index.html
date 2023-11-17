@@ -166,8 +166,10 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#log-normal-model" id="toc-log-normal-model" class="nav-link active" data-scroll-target="#log-normal-model"><span class="header-section-number">7.1</span> Log-normal model</a></li>
   <li><a href="#gamma-model" id="toc-gamma-model" class="nav-link" data-scroll-target="#gamma-model"><span class="header-section-number">7.2</span> Gamma model</a></li>
-  <li><a href="#midpoint-correction-instead-of-interval-censoring" id="toc-midpoint-correction-instead-of-interval-censoring" class="nav-link" data-scroll-target="#midpoint-correction-instead-of-interval-censoring"><span class="header-section-number">7.3</span> Midpoint correction instead of interval censoring</a></li>
-  <li><a href="#extensions-to-consider-in-the-future" id="toc-extensions-to-consider-in-the-future" class="nav-link" data-scroll-target="#extensions-to-consider-in-the-future"><span class="header-section-number">7.4</span> Extensions to consider in the future</a></li>
+  <li><a href="#the-observation-model" id="toc-the-observation-model" class="nav-link" data-scroll-target="#the-observation-model"><span class="header-section-number">7.3</span> The observation model</a></li>
+  <li><a href="#data-simulations" id="toc-data-simulations" class="nav-link" data-scroll-target="#data-simulations"><span class="header-section-number">7.4</span> Data simulations</a></li>
+  <li><a href="#midpoint-correction-instead-of-interval-censoring" id="toc-midpoint-correction-instead-of-interval-censoring" class="nav-link" data-scroll-target="#midpoint-correction-instead-of-interval-censoring"><span class="header-section-number">7.5</span> Midpoint correction instead of interval censoring</a></li>
+  <li><a href="#extensions-to-consider-in-the-future" id="toc-extensions-to-consider-in-the-future" class="nav-link" data-scroll-target="#extensions-to-consider-in-the-future"><span class="header-section-number">7.6</span> Extensions to consider in the future</a></li>
   </ul>
 </nav>
     </div>
@@ -202,12 +204,14 @@ ul.task-list li input[type="checkbox"] {
 <p>For dealing with interval censored data, we will pass the data to Stan using the <code>interval2</code> format from the <code>survival</code> package. In this format, we pass two columns, say <code>y_l</code> and <code>y_u</code>. If a data point is not censored, then <code>y_l == y_u</code>. If a data point is left-censored, then <code>y_l = -Inf</code> and <code>y_u</code> is set to the lower limit of detection. Similarly, if a data point is right-censored, <code>y_l</code> is set to the upper limit of detection and <code>y_u = Inf</code>. Finally, if a data point is interval-censored, <code>y_l</code> and <code>y_u</code> are set to the lower and upper bounds of the interval containing the datum, respectively.</p>
 <section id="log-normal-model" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="log-normal-model"><span class="header-section-number">7.1</span> Log-normal model</h2>
-<p>Both of these models will share a lot of similarities, but for some reason I find the lognormal model easier to think about, so we’ll do most of the explaining under the context of this model. We start with the assumption that our <em>underyling, latent titer</em> value (the “true titer”) is some real number which follows a log-normal distribution. We assume that the mean of this distribution is a linear function of the antigenic distance, as we mentioned, and we assume constant variance. In math terms, we assume that <span class="math display">\[
+<p>Both of these models will share a lot of similarities, but for some reason I find the lognormal model easier to think about, so we’ll do most of the explaining under the context of this model. We start with the assumption that our <em>underyling, latent titer</em> value (the “true titer”) is some real number which follows a log-normal distribution. We assume that the mean of this distribution is a linear function of the antigenic distance, as we mentioned, and we assume constant variance. In math terms, we assume that <span id="eq-ln-model"><span class="math display">\[
 y_i^* \sim \text{Log-normal}\left(\frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{\sigma}{\log_2 e}\right).
-\]</span> Note that we scale the coefficients by a factor of <span class="math inline">\(\frac{1}{\log_2{e}}\)</span> because <span class="math display">\[\log{y_i^*} \sim \text{Normal}\left( \frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{\sigma}{\log_2 e} \right),\]</span> which combined with the identity that <span class="math display">\[\log{y_i^*} = \frac{\log_2 y_i^*}{\log_2{e}},\]</span> implies <span class="math display">\[ \log_2 y_i^* \sim \text{Normal}\left( \beta_0 + \beta_1 x_i, \sigma \right) .\]</span> This gives us a connection to the natural units of measurement, and makes it easier to understand the models and set priors.</p>
+\tag{7.1}\]</span></span> Note that we scale the coefficients by a factor of <span class="math inline">\(\frac{1}{\log_2{e}}\)</span> because <span class="math display">\[\log{y_i^*} \sim \text{Normal}\left( \frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{\sigma}{\log_2 e} \right),\]</span> which combined with the identity that <span class="math display">\[\log{y_i^*} = \frac{\log_2 y_i^*}{\log_2{e}},\]</span> implies <span class="math display">\[ \log_2 y_i^* \sim \text{Normal}\left( \beta_0 + \beta_1 x_i, \sigma \right) .\]</span> This gives us a connection to the natural units of measurement, and makes it easier to understand the models and set priors.</p>
 </section>
 <section id="gamma-model" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="gamma-model"><span class="header-section-number">7.2</span> Gamma model</h2>
+<p>The gamma model and lognormal model are both right-skewed families which can also approximate normal distributions with the correct set of parameter values. However, the gamma family is somewhat more flexible in the ranges of shapes it can take on, and includes exponential and chi-squared distributions (as examples of shapes which are difficult to match with the log-normal distribution). Additionally, the variance of the log-normal family is independent of the mean, while the variance of the gamma family is proportional to the mean. (Another way to say that is that the coefficient of variation of the log-normal model is always constant, while the coefficient of variation of the gamma model is constant for a given value of the mean, which increases as the mean increases.)</p>
+<p>While the log of a gamma random variable does not have a simple interpretation like the log-normal family does, there are known formulas for the moments of this distribution. However, they require complex calculations using derivatives of the gamma function. Notably, there is also a generalized gamma distribution which has been proposed (CITE THIS) as a general model for fitting antibody assay data, but this distribution is not common in practice.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -220,18 +224,54 @@ Gamma distribution parametrization
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>There are at least three common reparametrizations of the Gamma parametrization. Here, we follow the convention used by <a href="https://mc-stan.org/docs/functions-reference/gamma-distribution.html">Stan</a>, which is different from the parametrization implemented by Richard McElreath in the <code>rethinking</code> package. Note that in the common <span class="math inline">\(\alpha, \beta\)</span> parametrization that we adopt, one can easily model the mean by implementing the probability model as <span class="math display">\[
-y_i \sim \text{Gamma}\left(\alpha_i = \frac{\mu_i}{\beta}, \beta\right).
-\]</span> However, we almost always call our regression coefficients <span class="math inline">\(\beta\)</span>. And since that’s the part that’s most relevant, we’ll leave those alone. I’ll call the second parameter of the gamma distribution <span class="math inline">\(k\)</span> instead. So, if you were curious, that is where the <span class="math inline">\(\frac{1}{k}\)</span> comes from in the following section.</p>
+<p>There are at least three common reparametrizations of the Gamma parametrization. <a href="https://mc-stan.org/docs/functions-reference/gamma-distribution.html">Stan</a> implements the standard “shape-scale” parametrization, which is most commonly used by statisticians. In the <code>rethinking</code> package, Richard McElreath implements a “mean-scale” parametrization which uses the substitution <span class="math inline">\(\alpha = \mu / \beta\)</span>. <strong>However</strong>, in a GLM context, the most frequently used parametrization is the “shape-mean” parametrization (CITE AGRESTI AND MCCULOUGH NELDER).</p>
+<p>Beginning with the parametrization made in the Stan guide, we make the substitutions <span class="math inline">\(\alpha = k\)</span> and <span class="math inline">\(\beta = \frac{k}{\mu}\)</span>. By making those substitutions in the density, we can show that <span class="math display">\[E(y) = \mu \quad \text{and} \quad \mathrm{Var}(y) = \frac{\mu^2}{k}.\]</span></p>
+<p>When we specify <span class="math inline">\(\mu = f(X)\)</span> in the context of a linear model, we must then invert the transformation, and when we invoke the gamma distribution in Stan, we would write <span class="math display">\[y \sim \text{Gamma}\left(k, \frac{k}{\mu} \right).\]</span></p>
 </div>
 </div>
 </div>
+<p>To specify a gamma likelihood for our titer outcome, we would write in math terms that <span id="eq-gamma-model"><span class="math display">\[
+\begin{align*}
+y_i^* &amp;\sim \text{Gamma}\left(k, \frac{k}{\mu_i}\right) \\
+g(\mu_i) &amp;= \beta_0 + \beta_1 x_i
+\end{align*}
+\tag{7.2}\]</span></span> where <span class="math inline">\(g(\cdot)\)</span> is a suitably-chosen link function. Note that the parameters of the gamma distribution must be greater than zero, necessitating the use of a non-identity link function, in contrast to the log-normal distribution where no link function is necessary. The canonical link function here is <span class="math inline">\(g(x) = -1/x\)</span>, which is really a pretty useless link function in a real life context because it requires us to place constraints on the <span class="math inline">\(\beta_i\)</span> values. So, use of the link function <span class="math inline">\(g(x) = \exp(x)\)</span> is more common, and is what we would use here.</p>
+<p>Because the gamma distribution does not have an easily-interpretable formula on the log-scale, we fit the distribution on the natural scale of the parameter (although I guess we could also fit a gamma model to the log-scale outcome, but this is unusual) and thus we do not need to worry about the scaling of the parameters. Once again: <strong>there is no easy interpretation of the gamma regression parameters on the log-scale.</strong></p>
+<p><strong>NEED TO CITE https://www.jstor.org/stable/2685723?searchText=&amp;searchUri=&amp;ab_segments=&amp;searchKey=&amp;refreqid=fastly-default%3A7ee1f3ec4603b86f40438da20e839c33 and Moulton/Halsey</strong></p>
 </section>
-<section id="midpoint-correction-instead-of-interval-censoring" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="midpoint-correction-instead-of-interval-censoring"><span class="header-section-number">7.3</span> Midpoint correction instead of interval censoring</h2>
+<section id="the-observation-model" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="the-observation-model"><span class="header-section-number">7.3</span> The observation model</h2>
+<p>OK, so that would be great if that was all we had to do. But unfortunately, as I mentioned, HAI titers are interval censored and have a lower limit of detection, which we need to include in our model. We do this following the traditional method of updating the likelihood directly. Because of the way that the censoring mechanism occurs in practice, we need to define our censoring mechanism on the log scale. So, define <span id="eq-transform"><span class="math display">\[z_i^* = f(y_i^*) = \log_2 \left(\frac{y_i^*}{5}\right). \tag{7.3}\]</span></span> Notably, this implies that <span class="math display">\[y_i^* = f^{-1}(z_i^*) = 5\cdot 2^{z_i^*}.\]</span> The assay is performed by two-fold dilutions, so we actually observe the log-scale value during the measurement process. The limit of detection for the assay is conventionally 1:10, though it could be as low as 1:4 (CITE THAT THING AMANDA SENT ME). However, due to the reagents necessary to run the assay there is a physical limit of detection, and 1:10 has been adopted as a widely used standard in influenza research. For convenience, we will only consider the reciprocal titers, so a titer of 1:10 would be reported as 10. Note that <span class="math display">\[
+f(10) = \log_2 2 = 1,
+\]</span> so 1 is the LoD on the log scale, any any values strictly less than one are below the LoD. Following standard conventions, we write these values as 5 on the natural scale, or 0 on the log scale.</p>
+<p>Note also that the measurement process reflects a discretization of an underyling continuous value. The HAI titer measurement is defined as the lowest possible dilution of serum which inhibits agglutination. This value could be, for example, a dilution of 12.5443 (on the natural scale), but we would observe this as a titer of 10 in our assay. Equivalently, the true latent log-scale titer might be 1.327, which we would observe as 1. See Figure <a href="#fig-hai-plot">Figure&nbsp;<span>7.1</span></a> for an example showing the raw lab assay.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-hai-plot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="HAI-plot.png" class="img-fluid figure-img" width="1800"></p>
+<figcaption class="figure-caption">Figure&nbsp;7.1: Example HAI titer data that we would observe while doing the assay in the lab. These assays are run on 96-well plates, where each row is a separate assay and each column is a serial two-fold dilution, beginning at a dilution of 1:10 (of the serum) and progressing rightwards.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A convenient way to write this is by noticing that we take the floor of all values on the log scale. So, we can write our data observation model as <span id="eq-observation-model"><span class="math display">\[
+y_i = \begin{cases}
+0, &amp; y_i^* &lt; 1 \\
+\left\lfloor y_i^* \right\rfloor, &amp; y_i^* \geq 1
+\end{cases}
+\tag{7.4}\]</span></span></p>
+<p>where <span class="math inline">\(y_i^*\)</span> is the latent true titer and <span class="math inline">\(y_i\)</span> is the observed titer.</p>
 </section>
-<section id="extensions-to-consider-in-the-future" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="extensions-to-consider-in-the-future"><span class="header-section-number">7.4</span> Extensions to consider in the future</h2>
+<section id="data-simulations" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="data-simulations"><span class="header-section-number">7.4</span> Data simulations</h2>
+<p>The first thing we need to do now is simulate some titers. We probably want to simulate data from both of those two models, in order to see how the distributions differ. So, we’ll ensure that the linear regression coefficients are the same, and we can see what happens in both models.</p>
+</section>
+<section id="midpoint-correction-instead-of-interval-censoring" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="midpoint-correction-instead-of-interval-censoring"><span class="header-section-number">7.5</span> Midpoint correction instead of interval censoring</h2>
+</section>
+<section id="extensions-to-consider-in-the-future" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="extensions-to-consider-in-the-future"><span class="header-section-number">7.6</span> Extensions to consider in the future</h2>
 <ul>
 <li>An individual is randomly missing strains due to laboratory errors</li>
 <li>Repeated measures across study years</li>

@@ -4,7 +4,7 @@
 library(cmdstanr)
 # ggplot2 theme setup
 library(ggplot2)
-ggplot2::theme_set(hgp::theme_ms())
+ggplot2::theme_set(hgp::theme_ms(text_size_axis_text = 16))
 pth_base <- here::here("examples", "HAI-data-example")
 ```
 
@@ -58,7 +58,7 @@ distribution is a linear function of the antigenic distance, as we mentioned,
 and we assume constant variance. In math terms, we assume that
 $$
 y_i^* \sim \text{Log-normal}\left(\frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{\sigma}{\log_2 e}\right).
-$$
+$$ {#eq-ln-model}
 Note that we scale the coefficients by a factor of $\frac{1}{\log_2{e}}$
 because
 $$\log{y_i^*} \sim \text{Normal}\left( \frac{\beta_0 + \beta_1 x_i}{\log_2 e}, \frac{\sigma}{\log_2 e} \right),$$
@@ -122,7 +122,7 @@ $$
 y_i^* &\sim \text{Gamma}\left(k, \frac{k}{\mu_i}\right) \\
 g(\mu_i) &= \beta_0 + \beta_1 x_i
 \end{align*}
-$$
+$$ {#eq-gamma-model}
 where $g(\cdot)$ is a suitably-chosen link function. Note that the parameters of
 the gamma distribution must be greater than zero, necessitating the use of a
 non-identity link function, in contrast to the log-normal distribution where no
@@ -148,16 +148,140 @@ detection, which we need to include in our model. We do this following the
 traditional method of updating the likelihood directly. Because of the way that
 the censoring mechanism occurs in practice, we need to define our censoring
 mechanism on the log scale. So, define
-$$z_i^* = f(y_i^*) = \log_2 \left(\frac{y_i^*}{5}\right).$$
+$$z_i^* = f(y_i^*) = \log_2 \left(\frac{y_i^*}{5}\right).$$ {#eq-transform}
 Notably, this implies that
 $$y_i^* = f^{-1}(z_i^*) = 5\cdot 2^{z_i^*}.$$
-The assay is performed by two-fold dilutions
+The assay is performed by two-fold dilutions, so we actually observe the
+log-scale value during the measurement process. The limit of detection for the
+assay is conventionally 1:10, though it could be as low as 1:4 (CITE THAT
+THING AMANDA SENT ME). However, due to the reagents necessary to run the assay
+there is a physical limit of detection, and 1:10 has been adopted as a widely
+used standard in influenza research. For convenience, we will only consider the
+reciprocal titers, so a titer of 1:10 would be reported as 10. Note that
+$$
+f(10) = \log_2 2 = 1,
+$$
+so 1 is the LoD on the log scale, any any values strictly less than one are
+below the LoD. Following standard conventions, we write these values as 5 on
+the natural scale, or 0 on the log scale.
 
-```{r}
-hai_plot <-
-	
+Note also that the measurement process reflects a discretization of an
+underyling continuous value. The HAI titer measurement is defined as the lowest
+possible dilution of serum which inhibits agglutination. This value could be,
+for example, a dilution of 12.5443 (on the natural scale), but we would observe
+this as a titer of 10 in our assay. Equivalently, the true latent log-scale
+titer might be 1.327, which we would observe as 1. See Figure @fig-hai-plot for
+an example showing the raw lab assay.
+
+```{r hai data gen, include=FALSE}
+# This code chunk simulates some random HAI data following no real DGP,
+# I just randomly changed some numbers until the plot looked right.
+set.seed(12341233)
+
+# Set the number of rows and columns for the plate. 8 rows x 12 columns is the
+# normal dimension for a 96 well plate for HAI assay.
+n_rows <- 8
+n_cols <- 12
+
+# This part does the actual simulation.
+hai_data <-
+	tibble::tibble(
+		# Traditionally the rows are labelled with letters, so get the first
+		# N_ROWS number of letters.
+		row = letters[1:n_rows],
+		# Technically these HAIs are drawn from a beta-binomial model cause that
+		# was easy for me to do and flexible enough that it was easy to get a
+		# plot that looked nice to me. So this first part randomly samples
+		# N_ROWS probability values from a beta distribution, I just used an online
+		# app for plotting beta distributions to pick parameters that looked ok.
+		p = rbeta(n_rows, 2, 6),
+		# Now simulate the HAI values from a binomial distribution. I used this
+		# so that we would have clear bounds, but you could also (more realistically
+		# too) use gamma-poisson instead of beta-binomial for an unbound simulation
+		# which is also affected by upper LoD.
+		# Anyways with the beta distribution I picked it doesn't really matter.
+		# This will simulate values bounded on {0, 1, ..., n_cols}.
+		# And it will simulate n_rows number of them./
+		hai = rbinom(n_rows, size = n_cols, prob = p)
+	) |>
+	# Get the data into the right format for plotting
+	dplyr::mutate(
+		# This is the tricky bit that makes the plot work. This takes as its only
+		# inputs the number of columns and an individuals' HAI titer that we 
+		# previously simulated. It creates a vector of 1's whose length is the
+		# value of the HAI titer. Then vectors a vector of 0's whose length is
+		# n_cols - HAI titer value. And binds those together to get a vector of
+		# length n_cols, e.g. for the default n_cols = 12 and HAI = 4:
+		# agg = 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0.
+		# Then we make a data frame where the first column represents a column
+		# indicator and goes from 1 to 12, and that vector we made is the
+		# second column. We do this for each simulated HAI value, and this function
+		# adds a list-column of numeric vectors to the data frame.
+		hai_vec = purrr::map(
+			hai,
+			\(x) tibble::tibble(
+				col = 1:12,
+				agg = c(rep(1, times = x), rep(0, times = n_cols - x))
+			)
+		)
+	) |>
+	# Transform the list-column into n_cols number of rows for each row with a
+	# vector entry in the list-column.
+	tidyr::unnest(hai_vec)
 ```
 
+```{r hai plot gen, include = FALSE}
+# This part makes the ggplot, which is pretty self-explanatory.
+hai_plot <-
+	hai_data |>
+	dplyr::mutate(agg = factor(agg, levels = c(1, 0))) |>
+	ggplot() +
+	aes(x = col, y = forcats::fct_rev(row), fill = agg) +
+	geom_point(
+		shape = 21,
+		color = "black",
+		size = 20,
+		fill = "#ffdca8",
+		stroke = 1
+	) +
+	geom_point(shape = 21, size = 10, show.legend = FALSE, color = "transparent") +
+	labs(x = NULL, y = NULL, fill = NULL) +
+	scale_x_continuous(
+		breaks = 1:n_cols,
+		labels = paste0("1:", 5 * 2 ^ (1:n_cols))
+	) +
+	scale_fill_manual(values = c("transparent", "#880808")) +
+	theme(
+		panel.grid.major = element_blank(),
+		panel.grid.minor = element_blank(),
+		axis.ticks = element_line(color = "black", linewidth = 0.5),
+		panel.border = element_rect(color = "black", fill = "transparent")
+	)
+
+ggsave(here::here(pth_base, "HAI-plot.png"), hai_plot, width = 12, height = 8)
+```
+
+```{r fig-hai-plot}
+#| echo: false
+#| fig-cap: |
+#|   Example HAI titer data that we would observe while doing the
+#|   assay in the lab. These assays are run on 96-well plates, where each row
+#|   is a separate assay and each column is a serial two-fold dilution,
+#|   beginning at a dilution of 1:10 (of the serum) and progressing rightwards.
+knitr::include_graphics(here::here(pth_base, "HAI-plot.png"))
+```
+
+A convenient way to write this is by
+noticing that we take the floor of all values on the log scale. So, we can
+write our data observation model as
+$$
+y_i = \begin{cases}
+0, & y_i^* < 1 \\
+\left\lfloor y_i^* \right\rfloor, & y_i^* \geq 1
+\end{cases}
+$$ {#eq-observation-model}
+
+where $y_i^*$ is the latent true titer and $y_i$ is the observed titer.
 
 ## Data simulations
 
