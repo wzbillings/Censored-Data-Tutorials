@@ -1804,6 +1804,18 @@
       ],
       "Hash": "24b224366f9c2e7534d2344d10d59211"
     },
+    "hgp": {
+      "Package": "hgp",
+      "Version": "0.0.1",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "ahgroup",
+      "RemoteRepo": "hgp",
+      "RemoteRef": "main",
+      "RemoteSha": "665c17f0ac7dee6534147a30f0d97bc2aca24d60",
+      "Hash": "440afe67f3238e90e12cea5aea09770a"
+    },
     "highr": {
       "Package": "highr",
       "Version": "0.10",
@@ -4163,6 +4175,17 @@
       "Source": "Repository",
       "Repository": "RSPM",
       "Hash": "d98c94dacb7e0efcf83b0a133a705504"
+    },
+    "zlib": {
+      "Package": "zlib",
+      "Version": "1.0.3",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "Rcpp"
+      ],
+      "Hash": "69c4006026d0d48bfc0635b238ff7a70"
     },
     "zoo": {
       "Package": "zoo",

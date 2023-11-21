@@ -52,3 +52,10 @@ editor: visual
 -   For this code, how biased are estimates for predictor or outcome? Do we have the same problem as in chapter 3? Can we explore when/how bias creeps into either variable and if there are scenarios where one can estimate unbiased with censoring, just with increased uncertainty?
 
 -   More generally, there is probably literature discussing if censoring introduces "unfixable" bias or if there are stats methods that can give unbiased, though more uncertain estimates if censoring exists?
+
+## Chapter 5 - logistic with censored predictor
+
+- In general, and for the NoV project specifically, LOD values are not set to LOD/2. I suggest as you update, write both text and code more generally such that there's just a generic value that values below LOD bight be set to.
+
+- If you hide code (e.g. first code chunk for this index.qmd file), someone who works along in the html file can't reproduce. For instance I had to look at the source to figure out where `pth_base` is pointing to. In general, my recommendation would be to pull the R code out of the qmd file, add labels to code chunks and then pull it in. This way one can run the R script by itself, or run/see it inside the quarto/html document.
+
