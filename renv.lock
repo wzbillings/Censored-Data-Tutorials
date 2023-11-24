@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.3.1",
+    "Version": "4.3.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -3259,7 +3259,7 @@
     },
     "rstan": {
       "Package": "rstan",
-      "Version": "2.26.23",
+      "Version": "2.32.3",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
@@ -3278,7 +3278,7 @@
         "pkgbuild",
         "stats4"
       ],
-      "Hash": "137e535a84b86280c714315e587a435b"
+      "Hash": "4ac5b7639d28cd4fab19baaf46f33c6a"
     },
     "rstudioapi": {
       "Package": "rstudioapi",
