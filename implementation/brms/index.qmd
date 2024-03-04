@@ -1,0 +1,3 @@
+# Censoring with `brms`
+
+this is a placeholder
