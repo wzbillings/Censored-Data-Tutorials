@@ -15,33 +15,120 @@ y_{\mathrm{max}}, & y_i^* > y_{\mathrm{max}}
 $$
 Specifically, this is an example of **right censoring**, where there is an
 **upper limit of detection**, or maximum value that we can observe with
-precision.
+precision. Right censoring is also incredibly common in epidemiology and
+biomedical studies: when we conduct an observational study or clinical trial,
+we expect to observe individuals who have not experienced the outcome of
+interest before the trial ends. These individuals have a time-to-event with
+a lower bound of the length of the trial (the event could have occurred the
+moment we stopped observing) and an infinite upper bound, because the event
+may never occur. Such an individual's survival time would be right-censored,
+and many common survival analysis methods can account for right-censored
+data (assuming an appropriate parametric distribution for the outcome).
 
 We can also have the opposite case, where we can detect any theoretical
 measurement above a certain value. In this case, the data are said to have a
 **lower limit of detection** and this phenomenon is called **left censoring**.
 For example, imagine we are testing the concentration of lead in the tap water
-of several buildings. Our test cannot detect lead levels below 5 parts per
+of several buildings. Our test cannot detect lead levels below 1 part per
 billion (ppb), but can detect any larger amount of lead. In that case, our
 observed values would instead look like this:
 $$
-y_i = \begin{cases}
+\begin{aligned}
+y_i &= \begin{cases}
 y_i^*, & y_i^* \geq y_{\mathrm{min}} \\
 y_{\mathrm{min}}, & y_i^* < y_{\mathrm{min}}
-\end{cases}; \quad i = 1, \ldots, n,
+\end{cases};\\
+i &= 1, \ldots, n; \\
+y_{\min} &= 1 \text{ ppb;}
+\end{aligned}
 $$
-where $y_{\mathrm{min}}$ is the lower limit of detection.
+where $y_{\mathrm{min}}$ is the lower limit of detection. I don't know anything
+about how lead concentration tests work, but suppose that at a certain point our
+test "saturates": we know that the concentration is at or above, say, 5 parts
+per million (ppm), but the test cannot detect any higher values. Then some of
+our observations would be left-censored (below the lower LOD) and some
+observations would be right-censored (above the upper LOD). So then the
+lead level data that we observe would look this:
 
 $$
-y_i = \begin{cases}
-y_i^*, & y_i^* \geq y_{\mathrm{min}} \\
-y_{\mathrm{min}}, & y_i^* < y_{\mathrm{min}}
-\end{cases}; \quad i = 1, \ldots, n,
+\begin{aligned}
+y_i &= \begin{cases}
+y_{\mathrm{min}}, & y_i^* < y_{\mathrm{min}} \\
+y_i^*, & y_{\max} \geq y_i^* \geq y_{\mathrm{min}} \\
+y_{\max}, & y_i^* > y_{\max}
+\end{cases};\\
+i &= 1, \ldots, n; \\
+y_{\min} &= 1 \text{ ppb;} \\
+y_{\max} &= 5 \text{ ppm;}
+\end{aligned}
 $$
+Note that for a continuous random variable like (presumably) the level of lead
+in drinking water, it doesn't really matter which categories include the
+boundary values, because $P(Y_i^* = y_i^*) = 0$ for any value of $y_i^*$
+including $y_{\min}$ and $y_{\max}$. If the censored variable is not absolutely
+continuous, then this distinction may need to be clarified and depends on the
+observation process.
 
 Finally, we can have interval censoring, where we know a data value is within
 some interval, but we do not know precisely where the value lies within that
-interval. An example of this is antibody titer dilutions: for flu HAI titer,
+interval. We could imagine a lead test that looks like this (whether such a
+test could exist in reality, I am unsure). Suppose that the test involves
+dipping a test strip into water, and the test strip changes color based on the
+amount of lead present in the water. However, only a discrete number of
+shades can be visibility distinguished, so even though the underlying variable
+of interest is continuous (again, the lead concentration), we only observe
+a discrete set of outcomes. For example, if our outcome can only reliably
+discern 6 different concentrations, the data might look like this. The table
+below also includes a coding scheme in the "Data Value" column showing how
+we might write down the data.
+
+```{r}
+colfunc <- colorRampPalette(c("white", "firebrick3"))
+conc <- c("<1 ppb", "1 ppb - 10 ppb", "10 ppb - 100 ppb", "100 ppb - 1000 ppb",
+					"1000 ppb - 5000 ppb", ">5000 ppb")
+values <- c(0, 5, 50, 500, 2500, 5000)
+table_data <-
+	tibble::tibble(
+		"Lead Concentration" = conc,
+		"Strip Color" = 1:length(conc),
+		"Data Value" = values
+	)
+lead_table <-
+	table_data |>
+	gt::gt() |>
+	gt::data_color(
+		columns = c(`Strip Color`),
+		palette = colfunc(length(conc))
+	) |>
+	gt::tab_style(
+		style = gt::cell_text(color = "#00000000"),
+		locations = gt::cells_body(columns = `Strip Color`)
+	)
+
+lead_table
+```
+
+In general there is not a unique or standardized way to write down interval
+censored data, and writing down the data model will heavily depend on the
+observation process and the coding scheme for the values. For this specific
+example, we could write down the observation model like this:
+
+$$
+y_i = \begin{cases}
+0, & 1 > y_i^* \\
+5, & 10 > y_i^* \geq 1 \\
+50, & 100 > y_i^* \geq 10 \\
+500, & 1000 > y_i^* \geq 100 \\
+2500, & 5000 > y_i^* \geq 1000 \\
+5000, & y_i^* \geq 5000
+\end{cases}; \quad i = 1, \ldots, n.
+$$
+It is possible to write the math model in a more compact form as well.
+
+[ADD SOME MORE DETAILS ABOUT THIS!]
+
+Another example of this is influenza HAI titer, which we will dedicate an
+entire case study to later on. Briefly,
 the values are typically reported as 10, 20, 40, etc., but a value of 10 does
 not mean the precise value of the measurement should be 10, it means the true
 value is between 10 and 20. If we assume our titer is measured on the log

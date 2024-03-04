@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.4.510">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -91,7 +97,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
@@ -106,13 +113,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../examples/interval-censoring-weibull/index.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Example Model 5: Interval Censoring</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../examples/simple-censored-outcome/index.html">Case studies</a></li><li class="breadcrumb-item"><a href="../../examples/interval-censoring-weibull/index.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Example Model 5: Interval Censoring</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -121,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Bayesian censoring</a> 
@@ -146,42 +153,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What are censored data?</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Case studies</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../examples/simple-censored-outcome/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Example Model 2: One censored outcome</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../examples/simple-censored-predictor/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example Model 1: One censored predictor</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../examples/censored-outcome-and-predictor/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example Model 3: Censored outcome and censored predictor</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../examples/nov-data-example/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Example Model 4: Logistic regression with censored predictors</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../examples/interval-censoring-weibull/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Example Model 5: Interval Censoring</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../examples/HAI-data-example/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Example Model 6: the HAI manifesto</span></span></a>
   </div>
 </li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../front-end/references.html" class="sidebar-item-text sidebar-link">
@@ -191,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -215,7 +233,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../examples/simple-censored-outcome/index.html">Case studies</a></li><li class="breadcrumb-item"><a href="../../examples/interval-censoring-weibull/index.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Example Model 5: Interval Censoring</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Example Model 5: Interval Censoring</span></h1>
 </div>
@@ -230,7 +248,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p>For our previous models, we’ve been concerned about data that have limits of detection, including simultaneous upper and lower limits of detection. For this example, we’ll work through the data generating model for an outcome which is <strong>interval censored</strong> with a known predictor (extending to a censored predictor follows from this example and the previous examples on censored predictors).</p>
 <p>https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3684949/#:~:text=In%20statistical%20literature%2C%20interval%20censoring,instead%20of%20being%20observed%20exactly.</p>
@@ -329,7 +349,11 @@ functions {
 </div>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">jitter</span>(sim_data<span class="sc">$</span>x), sim_data<span class="sc">$</span>t)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">group_by</span>(x) <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">eft =</span> <span class="fu">mean</span>(t))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -355,7 +379,11 @@ functions {
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> x_jitter, <span class="at">xend =</span> x, <span class="at">y =</span> t_star, <span class="at">yend =</span> t)</span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_count</span>(<span class="at">shape =</span> <span class="dv">21</span>, <span class="at">fill =</span> <span class="st">"#ffffff50"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -387,133 +415,14 @@ position_identity </code></pre>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>mod_l <span class="ot">&lt;-</span> cmdstanr<span class="sc">::</span><span class="fu">cmdstan_model</span>(mod_pth, <span class="at">compile =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>mod_l<span class="sc">$</span><span class="fu">compile</span>(<span class="at">pedantic =</span> <span class="cn">TRUE</span>, <span class="at">force_recompile =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>In file included from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array/multi_array_ref.hpp:32,
-                 from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array.hpp:34,
-                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint/algebra/multi_array_algebra.hpp:22,
-                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint.hpp:63,
-                 from stan/lib/stan_math/stan/math/prim/functor/ode_rk45.hpp:9,
-                 from stan/lib/stan_math/stan/math/prim/functor/integrate_ode_rk45.hpp:6,
-                 from stan/lib/stan_math/stan/math/prim/functor.hpp:15,
-                 from stan/lib/stan_math/stan/math/rev/fun.hpp:198,
-                 from stan/lib/stan_math/stan/math/rev.hpp:10,
-                 from stan/lib/stan_math/stan/math.hpp:19,
-                 from stan/src/stan/model/model_header.hpp:4,
-                 from C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.hpp:2:
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:180:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  180 |         : public boost::functional::detail::unary_function&lt;typename unary_traits&lt;Predicate&gt;::argument_type,bool&gt;
-      |                                             ^~~~~~~~~~~~~~</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>In file included from C:/rtools43/ucrt64/include/c++/13.2.0/string:49,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/bits/locale_classes.h:40,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/bits/ios_base.h:41,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/ios:44,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/istream:40,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/sstream:40,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/complex:45,
-                 from stan/lib/stan_math/lib/eigen_3.4.0/Eigen/Core:50,
-                 from stan/lib/stan_math/lib/eigen_3.4.0/Eigen/Dense:1,
-                 from stan/lib/stan_math/stan/math/prim/fun/Eigen.hpp:22,
-                 from stan/lib/stan_math/stan/math/rev.hpp:4:
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:214:45: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  214 |         : public boost::functional::detail::binary_function&lt;
-      |                                             ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:252:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  252 |         : public boost::functional::detail::unary_function&lt;
-      |                                             ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:299:45: warning: 'template&lt;cl</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>ass _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  299 |         : public boost::functional::detail::unary_function&lt;
-      |                                             ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:345:57: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  345 |     class mem_fun_t : public boost::functional::detail::unary_function&lt;T*, S&gt;
-      |                                                         ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:361:58: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  361 |     class mem_fun1_t : public boost::functional::detail::binary_function&lt;T*, A, S&gt;
-      |                                                          ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:377:63: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  377 |     class const_mem_fun_t : public boost::functional::detail::unary_function&lt;const T*, S&gt;
-      |                                                               ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:393:64: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  393 |     class const_mem_fun1_t : public boost::functional::detail::binary_function&lt;const T*, A, S&gt;
-      |                                                                ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:438:61: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  438 |     class mem_fun_ref_t : public boost::functional::detail::unary_function&lt;T&amp;, S&gt;
-      |                                                             ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:454:62: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  454 |     class mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;T&amp;, A, S&gt;
-      |                                                              ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:470:67: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  470 |     class const_mem_fun_ref_t : public boost::functional::detail::unary_function&lt;const T&amp;, S&gt;
-      |                                                                   ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:487:68: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  487 |     class const_mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;const T&amp;, A, S&gt;
-      |                                                                    ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:533:73: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  533 |     class pointer_to_unary_function : public boost::functional::detail::unary_function&lt;Arg,Result&gt;
-      |                                                                         ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:557:74: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  557 |     class pointer_to_binary_function : public boost::functional::detail::binary_fun</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>ction&lt;Arg1,Arg2,Result&gt;
-      |                                                                          ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
 <pre><code>In file included from stan/lib/stan_math/stan/math/prim/prob/von_mises_lccdf.hpp:5,
                  from stan/lib/stan_math/stan/math/prim/prob/von_mises_ccdf_log.hpp:4,
                  from stan/lib/stan_math/stan/math/prim/prob.hpp:356,
                  from stan/lib/stan_math/stan/math/prim.hpp:16,
-                 from stan/lib/stan_math/stan/math/rev.hpp:14:
+                 from stan/lib/stan_math/stan/math/rev.hpp:14,
+                 from stan/lib/stan_math/stan/math.hpp:19,
+                 from stan/src/stan/model/model_header.hpp:4,
+                 from C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.hpp:2:
 stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp: In function 'stan::return_type_t&lt;T_x, T_sigma, T_l&gt; stan::math::von_mises_cdf(const T_x&amp;, const T_mu&amp;, const T_k&amp;)':
 stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: '-Wmisleading-indentation' is disabled from this point onwards, since column-tracking was disabled due to the size of the code/headers
   194 |       if (cdf_n &lt; 0.0)
@@ -522,34 +431,16 @@ stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: '-Wmisleadin
 <div class="cell-output cell-output-stderr">
 <pre><code>stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: adding '-flarge-source-files' will allow for more column-tracking support, at the expense of compilation time and memory</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>In file included from stan/src/stan/model/model_header.hpp:11:
-stan/src/stan/model/model_base_crtp.hpp: At global scope:
-stan/src/stan/model/model_base_crtp.hpp:198: warning: 'void stan::model::model_base_crtp&lt;M&gt;::write_array(boost::random::ecuyer1988&amp;, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&amp;, std::vector&lt;int&gt;&amp;, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&amp;, bool, bool, std::ostream*) const [with M = Ex5a_model_namespace::Ex5a_model; boost::random::ecuyer1988 = boost::random::additive_combine_engine&lt;boost::random::linear_congruential_engine&lt;unsigned int, 40014, 0, 2147483563&gt;, boost::random::linear_congruential_engine&lt;unsigned int, 40692, 0, 2147483399&gt; &gt;; std::ostream = std::basic_ostream&lt;char&gt;]' was hidden [-Woverloaded-virtual=]
-  198 |   void write_array(boost::ecuyer1988&amp; rng, std::vector&lt;double&gt;&amp; theta,
-      | </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.hpp:350: note:   by 'Ex5a_model_namespace::Ex5a_model::write_array'
-  350 |   write_array(RNG&amp; base_rng, std::vector&lt;double&gt;&amp; params_r, std::vector&lt;int&gt;&amp;
-      | 
-stan/src/stan/model/model_base_crtp.hpp:136: warning: 'void stan::model::model_base_crtp&lt;M&gt;::write_array(boost::random::ecuyer1988&amp;, Eigen::VectorXd&amp;, Eigen::VectorXd&amp;, bool, bool, std::ostream*) const [with M = Ex5a_model_namespace::Ex5a_model; boost::random::ecuyer1988 = boost::random::additive_combine_engine&lt;boost::random::linear_congruential_engine&lt;unsigned int, 40014, 0, 2147483563&gt;, boost::random::linear_congruential_engine&lt;unsigned int, 40692, 0, 2147483399&gt; &gt;; Eigen::VectorXd = Eigen::Matrix&lt;double, -1, 1&gt;; std::ostream = std::basic_ostream&lt;char&gt;]' was hidden [-Woverloaded-virtual=]
-  136 |   void write_array(boost::ecuyer1988&amp; rng, Eigen::VectorXd&amp; theta,
-      | 
-C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.hpp:350: note:   by 'Ex5a_model_namespace::Ex5a_model::write_array'
-  350 |   write_array(RNG&amp; base_rng, std::vector&lt;double&gt;&amp; params_r, std::vector&lt;int&gt;&amp;
-      | </code></pre>
-</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fit_l <span class="ot">&lt;-</span> mod_l<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    dat_latent,</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">546465</span>,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_warmup =</span> <span class="dv">500</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_sampling =</span> <span class="dv">2500</span>,</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">show_messages =</span> T</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fit_l <span class="ot">&lt;-</span> mod_l<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    dat_latent,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">546465</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_warmup =</span> <span class="dv">500</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_sampling =</span> <span class="dv">2500</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">show_messages =</span> T</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
@@ -561,7 +452,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -576,7 +467,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -591,7 +482,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -606,7 +497,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -621,7 +512,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -641,7 +532,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -656,7 +547,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -671,7 +562,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -686,7 +577,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -701,7 +592,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -716,7 +607,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -731,7 +622,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -746,7 +637,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -761,7 +652,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -776,7 +667,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -791,7 +682,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -806,7 +697,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -821,7 +712,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -836,7 +727,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -851,7 +742,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -866,7 +757,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -881,7 +772,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -896,7 +787,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -911,7 +802,7 @@ Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -930,7 +821,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -945,7 +836,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -960,7 +851,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -975,7 +866,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -990,7 +881,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1005,7 +896,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1020,7 +911,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1035,7 +926,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1054,7 +945,7 @@ Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1069,7 +960,7 @@ Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1084,7 +975,7 @@ Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Scale parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Scale parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1099,7 +990,7 @@ Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1114,7 +1005,7 @@ Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Scale parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Scale parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1134,7 +1025,6 @@ Chain 1 Iteration:  600 / 3000 [ 20%]  (Sampling)
 Chain 1 Iteration:  700 / 3000 [ 23%]  (Sampling) 
 Chain 1 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 1 Iteration:  900 / 3000 [ 30%]  (Sampling) 
-Chain 1 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
 Chain 2 Iteration:  300 / 3000 [ 10%]  (Warmup) 
 Chain 2 Iteration:  400 / 3000 [ 13%]  (Warmup) 
 Chain 2 Iteration:  500 / 3000 [ 16%]  (Warmup) 
@@ -1142,7 +1032,6 @@ Chain 2 Iteration:  501 / 3000 [ 16%]  (Sampling)
 Chain 2 Iteration:  600 / 3000 [ 20%]  (Sampling) 
 Chain 2 Iteration:  700 / 3000 [ 23%]  (Sampling) 
 Chain 2 Iteration:  800 / 3000 [ 26%]  (Sampling) 
-Chain 2 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 3 Iteration:  200 / 3000 [  6%]  (Warmup) 
 Chain 3 Iteration:  300 / 3000 [ 10%]  (Warmup) 
 Chain 3 Iteration:  400 / 3000 [ 13%]  (Warmup) 
@@ -1159,121 +1048,123 @@ Chain 4 Iteration:  500 / 3000 [ 16%]  (Warmup)
 Chain 4 Iteration:  501 / 3000 [ 16%]  (Sampling) 
 Chain 4 Iteration:  600 / 3000 [ 20%]  (Sampling) 
 Chain 4 Iteration:  700 / 3000 [ 23%]  (Sampling) 
-Chain 4 Iteration:  800 / 3000 [ 26%]  (Sampling) 
+Chain 1 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
 Chain 1 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 1 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
-Chain 1 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
-Chain 1 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
+Chain 2 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 2 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
 Chain 2 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
-Chain 2 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
 Chain 3 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
 Chain 3 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 3 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
-Chain 3 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
+Chain 4 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 4 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 4 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
-Chain 4 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
+Chain 1 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
+Chain 1 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
 Chain 1 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
-Chain 1 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 2 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
 Chain 2 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
-Chain 2 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
+Chain 3 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
 Chain 3 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
 Chain 3 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
-Chain 3 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 4 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 4 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
-Chain 4 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
+Chain 1 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
 Chain 1 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
-Chain 1 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
-Chain 1 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
+Chain 2 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
 Chain 2 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
 Chain 2 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 3 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
 Chain 3 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
 Chain 3 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 4 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
 Chain 4 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
 Chain 4 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 1 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
-Chain 1 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 2 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
 Chain 2 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
 Chain 3 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 3 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
-Chain 3 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 4 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
 Chain 4 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
-Chain 4 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 1 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
-Chain 1 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
-Chain 1 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 2 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 2 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
-Chain 2 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 3 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
 Chain 3 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
-Chain 3 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
+Chain 4 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
 Chain 4 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
-Chain 4 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
+Chain 1 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 1 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 1 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
-Chain 1 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
-Chain 1 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 2 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
-Chain 2 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 3 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 3 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
 Chain 3 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
-Chain 3 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
+Chain 4 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
 Chain 4 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
-Chain 4 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
-Chain 1 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
-Chain 1 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 1 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
+Chain 1 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
 Chain 2 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 2 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 3 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
 Chain 3 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
-Chain 3 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
-Chain 3 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 4 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
 Chain 4 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
-Chain 4 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 1 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 1 Iteration: 3000 / 3000 [100%]  (Sampling) 
-Chain 1 finished in 1.5 seconds.
-Chain 3 finished in 1.4 seconds.
 Chain 2 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
 Chain 2 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
-Chain 2 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 3 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 3 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 4 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 4 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 1 finished in 1.3 seconds.
+Chain 3 finished in 1.3 seconds.
+Chain 2 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 2 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 4 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
 Chain 4 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
-Chain 2 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
-Chain 2 Iteration: 3000 / 3000 [100%]  (Sampling) 
 Chain 4 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 2 Iteration: 3000 / 3000 [100%]  (Sampling) 
 Chain 4 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 4 Iteration: 3000 / 3000 [100%]  (Sampling) 
-Chain 2 finished in 1.7 seconds.
-Chain 4 finished in 1.7 seconds.
+Chain 2 finished in 1.5 seconds.
+Chain 4 finished in 1.5 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 1.6 seconds.
-Total execution time: 1.9 seconds.</code></pre>
+Mean chain execution time: 1.4 seconds.
+Total execution time: 1.7 seconds.</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb216"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb216-1"><a href="#cb216-1" aria-hidden="true" tabindex="-1"></a>fit_l<span class="sc">$</span><span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb208"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb208-1"><a href="#cb208-1" aria-hidden="true" tabindex="-1"></a>fit_l<span class="sc">$</span><span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 10
   variable     mean   median     sd    mad       q5      q95  rhat ess_bulk
-  &lt;chr&gt;       &lt;num&gt;    &lt;num&gt;  &lt;num&gt;  &lt;num&gt;    &lt;num&gt;    &lt;num&gt; &lt;num&gt;    &lt;num&gt;
+  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
 1 lp__     -453.    -453.    1.21   0.970  -456.    -452.     1.00    4128.
 2 alpha       2.14     2.14  0.0997 0.101     1.98     2.30   1.00    3284.
 3 beta       -0.360   -0.360 0.0392 0.0396   -0.424   -0.296  1.00    3247.
 4 k           1.45     1.45  0.0782 0.0786    1.32     1.58   1.00    6020.
-# ℹ 1 more variable: ess_tail &lt;num&gt;</code></pre>
+# ℹ 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 </div>
 </section>
 <section id="naive-method-use-the-same-model-for-censored-data" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="naive-method-use-the-same-model-for-censored-data"><span class="header-section-number">6.4</span> Naive method – use the same model for censored data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb218"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb218-1"><a href="#cb218-1" aria-hidden="true" tabindex="-1"></a>dat_naive <span class="ot">&lt;-</span> dat_latent</span>
-<span id="cb218-2"><a href="#cb218-2" aria-hidden="true" tabindex="-1"></a>dat_naive<span class="sc">$</span>y <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>t</span>
-<span id="cb218-3"><a href="#cb218-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat_naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb210"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb210-1"><a href="#cb210-1" aria-hidden="true" tabindex="-1"></a>dat_naive <span class="ot">&lt;-</span> dat_latent</span>
+<span id="cb210-2"><a href="#cb210-2" aria-hidden="true" tabindex="-1"></a>dat_naive<span class="sc">$</span>y <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>t</span>
+<span id="cb210-3"><a href="#cb210-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat_naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 3
  $ N: int 210
@@ -1282,14 +1173,14 @@ Total execution time: 1.9 seconds.</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb220"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb220-1"><a href="#cb220-1" aria-hidden="true" tabindex="-1"></a>fit_n <span class="ot">&lt;-</span> mod_l<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb220-2"><a href="#cb220-2" aria-hidden="true" tabindex="-1"></a>    dat_naive,</span>
-<span id="cb220-3"><a href="#cb220-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">546465</span>,</span>
-<span id="cb220-4"><a href="#cb220-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb220-5"><a href="#cb220-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_warmup =</span> <span class="dv">500</span>,</span>
-<span id="cb220-6"><a href="#cb220-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_sampling =</span> <span class="dv">2500</span>,</span>
-<span id="cb220-7"><a href="#cb220-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">show_messages =</span> T</span>
-<span id="cb220-8"><a href="#cb220-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb212"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb212-1"><a href="#cb212-1" aria-hidden="true" tabindex="-1"></a>fit_n <span class="ot">&lt;-</span> mod_l<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb212-2"><a href="#cb212-2" aria-hidden="true" tabindex="-1"></a>    dat_naive,</span>
+<span id="cb212-3"><a href="#cb212-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">546465</span>,</span>
+<span id="cb212-4"><a href="#cb212-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb212-5"><a href="#cb212-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_warmup =</span> <span class="dv">500</span>,</span>
+<span id="cb212-6"><a href="#cb212-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_sampling =</span> <span class="dv">2500</span>,</span>
+<span id="cb212-7"><a href="#cb212-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">show_messages =</span> T</span>
+<span id="cb212-8"><a href="#cb212-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
@@ -1301,7 +1192,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1316,7 +1207,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1331,7 +1222,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1346,7 +1237,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1361,7 +1252,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1376,7 +1267,7 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 <pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 1 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1389,13 +1280,14 @@ Chain 1 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Chain 2 Iteration:    1 / 3000 [  0%]  (Warmup) 
-Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
+Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) 
+Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1410,7 +1302,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1425,7 +1317,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1440,7 +1332,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1455,7 +1347,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1470,7 +1362,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1485,7 +1377,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1500,7 +1392,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1515,7 +1407,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1530,7 +1422,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1545,7 +1437,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1560,7 +1452,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1575,7 +1467,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1590,7 +1482,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1605,7 +1497,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1620,7 +1512,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1635,7 +1527,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1650,7 +1542,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1665,7 +1557,7 @@ Chain 2 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 2 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1684,7 +1576,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1699,7 +1591,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1714,7 +1606,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1729,7 +1621,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1744,7 +1636,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1759,7 +1651,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1774,7 +1666,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1789,7 +1681,7 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 3 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 3 Exception: weibull_lpdf: Scale parameter is inf, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1802,13 +1694,14 @@ Chain 3 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Chain 4 Iteration:    1 / 3000 [  0%]  (Warmup) 
-Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
+Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) 
+Chain 4 Iteration:  200 / 3000 [  6%]  (Warmup) </code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1823,7 +1716,7 @@ Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1838,7 +1731,7 @@ Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Scale parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Scale parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1853,7 +1746,7 @@ Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Shape parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1868,7 +1761,7 @@ Chain 4 Iteration:  100 / 3000 [  3%]  (Warmup) </code></pre>
 <pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Chain 4 Exception: weibull_lpdf: Scale parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c03efc52a3.stan', line 38, column 2 to column 31)</code></pre>
+<pre><code>Chain 4 Exception: weibull_lpdf: Scale parameter is 0, but must be positive finite! (in 'C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f1819e036e0.stan', line 38, column 2 to column 31)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
@@ -1886,15 +1779,12 @@ Chain 1 Iteration:  500 / 3000 [ 16%]  (Warmup)
 Chain 1 Iteration:  501 / 3000 [ 16%]  (Sampling) 
 Chain 1 Iteration:  600 / 3000 [ 20%]  (Sampling) 
 Chain 1 Iteration:  700 / 3000 [ 23%]  (Sampling) 
-Chain 1 Iteration:  800 / 3000 [ 26%]  (Sampling) 
-Chain 2 Iteration:  200 / 3000 [  6%]  (Warmup) 
 Chain 2 Iteration:  300 / 3000 [ 10%]  (Warmup) 
 Chain 2 Iteration:  400 / 3000 [ 13%]  (Warmup) 
 Chain 2 Iteration:  500 / 3000 [ 16%]  (Warmup) 
 Chain 2 Iteration:  501 / 3000 [ 16%]  (Sampling) 
 Chain 2 Iteration:  600 / 3000 [ 20%]  (Sampling) 
 Chain 2 Iteration:  700 / 3000 [ 23%]  (Sampling) 
-Chain 2 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 3 Iteration:  200 / 3000 [  6%]  (Warmup) 
 Chain 3 Iteration:  300 / 3000 [ 10%]  (Warmup) 
 Chain 3 Iteration:  400 / 3000 [ 13%]  (Warmup) 
@@ -1902,7 +1792,7 @@ Chain 3 Iteration:  500 / 3000 [ 16%]  (Warmup)
 Chain 3 Iteration:  501 / 3000 [ 16%]  (Sampling) 
 Chain 3 Iteration:  600 / 3000 [ 20%]  (Sampling) 
 Chain 3 Iteration:  700 / 3000 [ 23%]  (Sampling) 
-Chain 4 Iteration:  200 / 3000 [  6%]  (Warmup) 
+Chain 3 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 4 Iteration:  300 / 3000 [ 10%]  (Warmup) 
 Chain 4 Iteration:  400 / 3000 [ 13%]  (Warmup) 
 Chain 4 Iteration:  500 / 3000 [ 16%]  (Warmup) 
@@ -1910,116 +1800,117 @@ Chain 4 Iteration:  501 / 3000 [ 16%]  (Sampling)
 Chain 4 Iteration:  600 / 3000 [ 20%]  (Sampling) 
 Chain 4 Iteration:  700 / 3000 [ 23%]  (Sampling) 
 Chain 4 Iteration:  800 / 3000 [ 26%]  (Sampling) 
+Chain 1 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 1 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 1 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
-Chain 1 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
+Chain 2 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 2 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 2 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
-Chain 3 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 3 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 3 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
 Chain 4 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 4 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
-Chain 4 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
+Chain 1 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 1 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
-Chain 1 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
 Chain 2 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 2 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
-Chain 2 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
 Chain 3 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 3 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
+Chain 4 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 4 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
 Chain 4 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
+Chain 1 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
 Chain 1 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
-Chain 1 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
 Chain 2 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
-Chain 2 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
 Chain 3 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
 Chain 3 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
 Chain 4 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
 Chain 4 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
-Chain 4 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 1 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
 Chain 1 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
-Chain 1 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
-Chain 1 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
 Chain 2 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
-Chain 2 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
 Chain 3 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
 Chain 3 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 4 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
 Chain 4 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
 Chain 4 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
-Chain 1 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
-Chain 1 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
+Chain 1 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
+Chain 1 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
 Chain 2 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
-Chain 2 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 3 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
 Chain 3 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
-Chain 3 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 4 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 4 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
-Chain 4 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
-Chain 1 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
-Chain 1 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
+Chain 1 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
+Chain 1 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
+Chain 2 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 2 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
-Chain 2 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 3 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
 Chain 3 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
+Chain 4 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 4 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
 Chain 4 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
-Chain 1 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
-Chain 1 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
+Chain 2 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 2 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
-Chain 2 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
 Chain 3 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
-Chain 3 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
 Chain 4 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 4 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 1 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 1 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 3 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 3 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 4 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
 Chain 1 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
 Chain 1 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
-Chain 1 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
 Chain 2 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 2 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
-Chain 3 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 3 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 3 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
 Chain 4 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
 Chain 4 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 4 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 1 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
 Chain 1 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
-Chain 1 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 2 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
 Chain 2 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
-Chain 3 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
 Chain 3 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
-Chain 4 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 3 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
 Chain 4 Iteration: 3000 / 3000 [100%]  (Sampling) 
-Chain 4 finished in 1.6 seconds.
-Chain 1 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 4 finished in 1.4 seconds.
+Chain 1 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 2 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
 Chain 2 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 2 Iteration: 3000 / 3000 [100%]  (Sampling) 
-Chain 3 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
 Chain 3 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
-Chain 1 finished in 1.7 seconds.
-Chain 2 finished in 1.8 seconds.
 Chain 3 Iteration: 3000 / 3000 [100%]  (Sampling) 
-Chain 3 finished in 1.8 seconds.
+Chain 2 finished in 1.6 seconds.
+Chain 3 finished in 1.6 seconds.
+Chain 1 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 1 finished in 1.6 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 1.7 seconds.
-Total execution time: 1.9 seconds.</code></pre>
+Mean chain execution time: 1.6 seconds.
+Total execution time: 1.8 seconds.</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb416"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb416-1"><a href="#cb416-1" aria-hidden="true" tabindex="-1"></a>fit_n<span class="sc">$</span><span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb408"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb408-1"><a href="#cb408-1" aria-hidden="true" tabindex="-1"></a>fit_n<span class="sc">$</span><span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 10
   variable     mean   median     sd    mad       q5      q95  rhat ess_bulk
-  &lt;chr&gt;       &lt;num&gt;    &lt;num&gt;  &lt;num&gt;  &lt;num&gt;    &lt;num&gt;    &lt;num&gt; &lt;num&gt;    &lt;num&gt;
+  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
 1 lp__     -461.    -460.    1.24   1.02   -463.    -459.     1.00    3681.
 2 alpha       2.19     2.19  0.0816 0.0820    2.06     2.33   1.00    4263.
 3 beta       -0.307   -0.307 0.0319 0.0316   -0.360   -0.254  1.00    4313.
 4 k           1.76     1.76  0.0948 0.0935    1.61     1.92   1.00    5299.
-# ℹ 1 more variable: ess_tail &lt;num&gt;</code></pre>
+# ℹ 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -2027,13 +1918,13 @@ Total execution time: 1.9 seconds.</code></pre>
 <h2 data-number="6.5" class="anchored" data-anchor-id="fitting-censored-data"><span class="header-section-number">6.5</span> Fitting censored data</h2>
 <p>In this parametrization, the outcome variable <span class="math inline">\(t_i\)</span>Note that this measurement process will generate an integer valued response. However, we know that if the value of <span class="math inline">\(t_i = t\)</span>, then in reality <span class="math inline">\(t_i \in (t - 1, t]\)</span>, and we can never know the true value of <span class="math inline">\(t_i\)</span> because we don’t do inspections more often.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb418"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb418-1"><a href="#cb418-1" aria-hidden="true" tabindex="-1"></a>dat_censored <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb418-2"><a href="#cb418-2" aria-hidden="true" tabindex="-1"></a>dat_censored<span class="sc">$</span>N <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sim_data)</span>
-<span id="cb418-3"><a href="#cb418-3" aria-hidden="true" tabindex="-1"></a>dat_censored<span class="sc">$</span>x <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>x</span>
-<span id="cb418-4"><a href="#cb418-4" aria-hidden="true" tabindex="-1"></a>dat_censored<span class="sc">$</span>y1 <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>t <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb418-5"><a href="#cb418-5" aria-hidden="true" tabindex="-1"></a>dat_censored<span class="sc">$</span>y2 <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>t</span>
-<span id="cb418-6"><a href="#cb418-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb418-7"><a href="#cb418-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat_censored)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb410"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb410-1"><a href="#cb410-1" aria-hidden="true" tabindex="-1"></a>dat_censored <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb410-2"><a href="#cb410-2" aria-hidden="true" tabindex="-1"></a>dat_censored<span class="sc">$</span>N <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sim_data)</span>
+<span id="cb410-3"><a href="#cb410-3" aria-hidden="true" tabindex="-1"></a>dat_censored<span class="sc">$</span>x <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>x</span>
+<span id="cb410-4"><a href="#cb410-4" aria-hidden="true" tabindex="-1"></a>dat_censored<span class="sc">$</span>y1 <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>t <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb410-5"><a href="#cb410-5" aria-hidden="true" tabindex="-1"></a>dat_censored<span class="sc">$</span>y2 <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>t</span>
+<span id="cb410-6"><a href="#cb410-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb410-7"><a href="#cb410-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat_censored)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 4
  $ N : int 210
@@ -2043,134 +1934,18 @@ Total execution time: 1.9 seconds.</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb420"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb420-1"><a href="#cb420-1" aria-hidden="true" tabindex="-1"></a>mod_pth <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(pth_base, <span class="st">"Ex5b.stan"</span>)</span>
-<span id="cb420-2"><a href="#cb420-2" aria-hidden="true" tabindex="-1"></a>mod_c <span class="ot">&lt;-</span> cmdstanr<span class="sc">::</span><span class="fu">cmdstan_model</span>(mod_pth, <span class="at">compile =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb420-3"><a href="#cb420-3" aria-hidden="true" tabindex="-1"></a>mod_c<span class="sc">$</span><span class="fu">compile</span>(<span class="at">pedantic =</span> <span class="cn">TRUE</span>, <span class="at">force_recompile =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>In file included from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array/multi_array_ref.hpp:32,
-                 from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array.hpp:34,
-                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint/algebra/multi_array_algebra.hpp:22,
-                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint.hpp:63,
-                 from stan/lib/stan_math/stan/math/prim/functor/ode_rk45.hpp:9,
-                 from stan/lib/stan_math/stan/math/prim/functor/integrate_ode_rk45.hpp:6,
-                 from stan/lib/stan_math/stan/math/prim/functor.hpp:15,
-                 from stan/lib/stan_math/stan/math/rev/fun.hpp:198,
-                 from stan/lib/stan_math/stan/math/rev.hpp:10,
-                 from stan/lib/stan_math/stan/math.hpp:19,
-                 from stan/src/stan/model/model_header.hpp:4,
-                 from C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c025242c9.hpp:2:
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:180:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  180 |         : public boost::functional::detail::unary_function&lt;typename unary_traits&lt;Predicate&gt;::argument_type,bool&gt;
-      |                                             ^~~~~~~~~~~~~~</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>In file included from C:/rtools43/ucrt64/include/c++/13.2.0/string:49,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/bits/locale_classes.h:40,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/bits/ios_base.h:41,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/ios:44,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/istream:40,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/sstream:40,
-                 from C:/rtools43/ucrt64/include/c++/13.2.0/complex:45,
-                 from stan/lib/stan_math/lib/eigen_3.4.0/Eigen/Core:50,
-                 from stan/lib/stan_math/lib/eigen_3.4.0/Eigen/Dense:1,
-                 from stan/lib/stan_math/stan/math/prim/fun/Eigen.hpp:22,
-                 from stan/lib/stan_math/stan/math/rev.hpp:4:
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:214:45: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  214 |         : public boost::functional::detail::binary_function&lt;
-      |                                             ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:252:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  252 |         : public boost::functional::detail::unary_function&lt;
-      |                                             ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:299:45: warning: 'template&lt;cl</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>ass _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  299 |         : public boost::functional::detail::unary_function&lt;
-      |                                             ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:345:57: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  345 |     class mem_fun_t : public boost::functional::detail::unary_function&lt;T*, S&gt;
-      |                                                         ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:361:58: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  361 |     class mem_fun1_t : public boost::functional::detail::binary_function&lt;T*, A, S&gt;
-      |                                                          ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:377:63: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  377 |     class const_mem_fun_t : public boost::functional::detail::unary_function&lt;const T*, S&gt;
-      |                                                               ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:393:64: warning: </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  393 |     class const_mem_fun1_t : public boost::functional::detail::binary_function&lt;const T*, A, S&gt;
-      |                                                                ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:438:61: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  438 |     class mem_fun_ref_t : public boost::functional::detail::unary_function&lt;T&amp;, S&gt;
-      |                                                             ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:454:62: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  454 |     class mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;T&amp;, A, S&gt;
-      |                                                              ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:470:67: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  470 |     class const_mem_fun_ref_t : public boost::functional::detail::unary_function&lt;const T&amp;, S&gt;
-      |                                                                   ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:487:68: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  487 |     class const_mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;const T&amp;, A, S&gt;
-      |                                                                    ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:533:73: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
-  533 |     class pointer_to_unary_function : public boost::functional::detail::unary_function&lt;Arg,Result&gt;
-      |                                                                         ^~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:117:12: note: declared here
-  117 |     struct unary_function
-      |            ^~~~~~~~~~~~~~
-stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:557:74: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
-  557 |     class pointer_to_binary_function : public boost::functional::detail::binary_function&lt;Arg1,Arg2,Result&gt;
-      |                                                                          ^~~~~~~~~~~~~~~
-C:/rtools43/ucrt64/include/c++/13.2.0/bits/stl_function.h:131:12: note: declared here
-  131 |     struct binary_function
-      |            ^~~~~~~~~~~~~~~</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb412"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb412-1"><a href="#cb412-1" aria-hidden="true" tabindex="-1"></a>mod_pth <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(pth_base, <span class="st">"Ex5b.stan"</span>)</span>
+<span id="cb412-2"><a href="#cb412-2" aria-hidden="true" tabindex="-1"></a>mod_c <span class="ot">&lt;-</span> cmdstanr<span class="sc">::</span><span class="fu">cmdstan_model</span>(mod_pth, <span class="at">compile =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb412-3"><a href="#cb412-3" aria-hidden="true" tabindex="-1"></a>mod_c<span class="sc">$</span><span class="fu">compile</span>(<span class="at">pedantic =</span> <span class="cn">TRUE</span>, <span class="at">force_recompile =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>In file included from stan/lib/stan_math/stan/math/prim/prob/von_mises_lccdf.hpp:5,
                  from stan/lib/stan_math/stan/math/prim/prob/von_mises_ccdf_log.hpp:4,
                  from stan/lib/stan_math/stan/math/prim/prob.hpp:356,
                  from stan/lib/stan_math/stan/math/prim.hpp:16,
-                 from stan/lib/stan_math/stan/math/rev.hpp:14:
+                 from stan/lib/stan_math/stan/math/rev.hpp:14,
+                 from stan/lib/stan_math/stan/math.hpp:19,
+                 from stan/src/stan/model/model_header.hpp:4,
+                 from C:/Users/Zane/AppData/Local/Temp/RtmpkPQFPJ/model-4f187f6c53aa.hpp:2:
 stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp: In function 'stan::return_type_t&lt;T_x, T_sigma, T_l&gt; stan::math::von_mises_cdf(const T_x&amp;, const T_mu&amp;, const T_k&amp;)':
 stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: '-Wmisleading-indentation' is disabled from this point onwards, since column-tracking was disabled due to the size of the code/headers
   194 |       if (cdf_n &lt; 0.0)
@@ -2179,34 +1954,16 @@ stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: '-Wmisleadin
 <div class="cell-output cell-output-stderr">
 <pre><code>stan/lib/stan_math/stan/math/prim/prob/von_mises_cdf.hpp:194: note: adding '-flarge-source-files' will allow for more column-tracking support, at the expense of compilation time and memory</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>In file included from stan/src/stan/model/model_header.hpp:11:
-stan/src/stan/model/model_base_crtp.hpp: At global scope:
-stan/src/stan/model/model_base_crtp.hpp:198: warning: 'void stan::model::model_base_crtp&lt;M&gt;::write_array(boost::random::ecuyer1988&amp;, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&amp;, std::vector&lt;int&gt;&amp;, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&amp;, bool, bool, std::ostream*) const [with M = Ex5b_model_namespace::Ex5b_model; boost::random::ecuyer1988 = boost::random::additive_combine_engine&lt;boost::random::linear_congruential_engine&lt;unsigned int, 40014, 0, 2147483563&gt;, boost::random::linear_congruential_engine&lt;unsigned int, 40692, 0, 2147483399&gt; &gt;; std::ostream = std::basic_ostream&lt;char&gt;]' was hidden [-Woverloaded-virtual=]
-  198 |   void write_array(boost::ecuyer1988&amp; rng, std::vector&lt;double&gt;&amp; theta,
-      | </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c025242c9.hpp:408: note:   by 'Ex5b_model_namespace::Ex5b_model::write_array'
-  408 |   write_array(RNG&amp; base_rng, std::vector&lt;double&gt;&amp; params_r, std::vector&lt;int&gt;&amp;
-      | 
-stan/src/stan/model/model_base_crtp.hpp:136: warning: 'void stan::model::model_base_crtp&lt;M&gt;::write_array(boost::random::ecuyer1988&amp;, Eigen::VectorXd&amp;, Eigen::VectorXd&amp;, bool, bool, std::ostream*) const [with M = Ex5b_model_namespace::Ex5b_model; boost::random::ecuyer1988 = boost::random::additive_combine_engine&lt;boost::random::linear_congruential_engine&lt;unsigned int, 40014, 0, 2147483563&gt;, boost::random::linear_congruential_engine&lt;unsigned int, 40692, 0, 2147483399&gt; &gt;; Eigen::VectorXd = Eigen::Matrix&lt;double, -1, 1&gt;; std::ostream = std::basic_ostream&lt;char&gt;]' was hidden [-Woverloaded-virtual=]
-  136 |   void write_array(boost::ecuyer1988&amp; rng, Eigen::VectorXd&amp; theta,
-      | 
-C:/Users/Zane/AppData/Local/Temp/Rtmpewo0xJ/model-20c025242c9.hpp:408: note:   by 'Ex5b_model_namespace::Ex5b_model::write_array'
-  408 |   write_array(RNG&amp; base_rng, std::vector&lt;double&gt;&amp; params_r, std::vector&lt;int&gt;&amp;
-      | </code></pre>
-</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb430"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb430-1"><a href="#cb430-1" aria-hidden="true" tabindex="-1"></a>fit_c <span class="ot">&lt;-</span> mod_c<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb430-2"><a href="#cb430-2" aria-hidden="true" tabindex="-1"></a>    dat_censored,</span>
-<span id="cb430-3"><a href="#cb430-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">3248315</span>,</span>
-<span id="cb430-4"><a href="#cb430-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb430-5"><a href="#cb430-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_warmup =</span> <span class="dv">500</span>,</span>
-<span id="cb430-6"><a href="#cb430-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_sampling =</span> <span class="dv">2500</span>,</span>
-<span id="cb430-7"><a href="#cb430-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">show_messages =</span> T</span>
-<span id="cb430-8"><a href="#cb430-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb415"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb415-1"><a href="#cb415-1" aria-hidden="true" tabindex="-1"></a>fit_c <span class="ot">&lt;-</span> mod_c<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb415-2"><a href="#cb415-2" aria-hidden="true" tabindex="-1"></a>    dat_censored,</span>
+<span id="cb415-3"><a href="#cb415-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">3248315</span>,</span>
+<span id="cb415-4"><a href="#cb415-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb415-5"><a href="#cb415-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_warmup =</span> <span class="dv">500</span>,</span>
+<span id="cb415-6"><a href="#cb415-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_sampling =</span> <span class="dv">2500</span>,</span>
+<span id="cb415-7"><a href="#cb415-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">show_messages =</span> T</span>
+<span id="cb415-8"><a href="#cb415-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...</code></pre>
 </div>
@@ -2244,39 +2001,39 @@ Chain 1 Iteration:  500 / 3000 [ 16%]  (Warmup)
 Chain 1 Iteration:  501 / 3000 [ 16%]  (Sampling) 
 Chain 2 Iteration:  500 / 3000 [ 16%]  (Warmup) 
 Chain 2 Iteration:  501 / 3000 [ 16%]  (Sampling) 
+Chain 3 Iteration:  500 / 3000 [ 16%]  (Warmup) 
+Chain 3 Iteration:  501 / 3000 [ 16%]  (Sampling) 
 Chain 4 Iteration:  500 / 3000 [ 16%]  (Warmup) 
 Chain 4 Iteration:  501 / 3000 [ 16%]  (Sampling) 
 Chain 1 Iteration:  600 / 3000 [ 20%]  (Sampling) 
 Chain 2 Iteration:  600 / 3000 [ 20%]  (Sampling) 
-Chain 3 Iteration:  500 / 3000 [ 16%]  (Warmup) 
-Chain 4 Iteration:  600 / 3000 [ 20%]  (Sampling) 
-Chain 2 Iteration:  700 / 3000 [ 23%]  (Sampling) 
-Chain 3 Iteration:  501 / 3000 [ 16%]  (Sampling) 
 Chain 3 Iteration:  600 / 3000 [ 20%]  (Sampling) 
+Chain 4 Iteration:  600 / 3000 [ 20%]  (Sampling) 
+Chain 1 Iteration:  700 / 3000 [ 23%]  (Sampling) 
+Chain 2 Iteration:  700 / 3000 [ 23%]  (Sampling) 
 Chain 3 Iteration:  700 / 3000 [ 23%]  (Sampling) 
 Chain 4 Iteration:  700 / 3000 [ 23%]  (Sampling) 
-Chain 1 Iteration:  700 / 3000 [ 23%]  (Sampling) 
 Chain 2 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 3 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 4 Iteration:  800 / 3000 [ 26%]  (Sampling) 
 Chain 1 Iteration:  800 / 3000 [ 26%]  (Sampling) 
+Chain 2 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 3 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 4 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 1 Iteration:  900 / 3000 [ 30%]  (Sampling) 
-Chain 2 Iteration:  900 / 3000 [ 30%]  (Sampling) 
 Chain 3 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
+Chain 3 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 4 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
 Chain 1 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
 Chain 2 Iteration: 1000 / 3000 [ 33%]  (Sampling) 
-Chain 3 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
+Chain 3 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
 Chain 4 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 1 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
 Chain 2 Iteration: 1100 / 3000 [ 36%]  (Sampling) 
-Chain 3 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
-Chain 2 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
 Chain 3 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
 Chain 4 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
 Chain 1 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
+Chain 2 Iteration: 1200 / 3000 [ 40%]  (Sampling) 
 Chain 3 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
 Chain 4 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
 Chain 1 Iteration: 1300 / 3000 [ 43%]  (Sampling) 
@@ -2286,30 +2043,30 @@ Chain 4 Iteration: 1400 / 3000 [ 46%]  (Sampling)
 Chain 1 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
 Chain 2 Iteration: 1400 / 3000 [ 46%]  (Sampling) 
 Chain 3 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
-Chain 4 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
 Chain 3 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
-Chain 4 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 4 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
 Chain 1 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
 Chain 2 Iteration: 1500 / 3000 [ 50%]  (Sampling) 
 Chain 3 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 4 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
 Chain 1 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
-Chain 2 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
 Chain 3 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 4 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
+Chain 2 Iteration: 1600 / 3000 [ 53%]  (Sampling) 
+Chain 3 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
+Chain 4 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
 Chain 1 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
 Chain 2 Iteration: 1700 / 3000 [ 56%]  (Sampling) 
-Chain 3 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
 Chain 3 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
-Chain 4 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
 Chain 1 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
 Chain 2 Iteration: 1800 / 3000 [ 60%]  (Sampling) 
-Chain 3 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
+Chain 3 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
 Chain 4 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 1 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
 Chain 2 Iteration: 1900 / 3000 [ 63%]  (Sampling) 
-Chain 3 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
-Chain 4 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
 Chain 3 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
+Chain 4 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
 Chain 4 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 1 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
 Chain 2 Iteration: 2000 / 3000 [ 66%]  (Sampling) 
@@ -2318,57 +2075,57 @@ Chain 4 Iteration: 2200 / 3000 [ 73%]  (Sampling)
 Chain 1 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 2 Iteration: 2100 / 3000 [ 70%]  (Sampling) 
 Chain 3 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
-Chain 4 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
 Chain 1 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
 Chain 2 Iteration: 2200 / 3000 [ 73%]  (Sampling) 
 Chain 3 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
-Chain 4 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 3 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
-Chain 4 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 4 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
+Chain 3 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 4 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 1 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
 Chain 2 Iteration: 2300 / 3000 [ 76%]  (Sampling) 
-Chain 3 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
+Chain 3 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 4 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
+Chain 3 finished in 3.0 seconds.
 Chain 1 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
 Chain 2 Iteration: 2400 / 3000 [ 80%]  (Sampling) 
-Chain 3 Iteration: 3000 / 3000 [100%]  (Sampling) 
 Chain 4 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
-Chain 3 finished in 3.4 seconds.
 Chain 1 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
 Chain 2 Iteration: 2500 / 3000 [ 83%]  (Sampling) 
 Chain 4 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
 Chain 1 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
 Chain 2 Iteration: 2600 / 3000 [ 86%]  (Sampling) 
 Chain 4 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
-Chain 4 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 1 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
 Chain 2 Iteration: 2700 / 3000 [ 90%]  (Sampling) 
-Chain 4 Iteration: 3000 / 3000 [100%]  (Sampling) 
-Chain 4 finished in 3.9 seconds.
+Chain 4 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 1 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
 Chain 2 Iteration: 2800 / 3000 [ 93%]  (Sampling) 
+Chain 4 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 4 finished in 3.5 seconds.
 Chain 1 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 2 Iteration: 2900 / 3000 [ 96%]  (Sampling) 
 Chain 1 Iteration: 3000 / 3000 [100%]  (Sampling) 
+Chain 1 finished in 3.8 seconds.
 Chain 2 Iteration: 3000 / 3000 [100%]  (Sampling) 
-Chain 1 finished in 4.3 seconds.
-Chain 2 finished in 4.3 seconds.
+Chain 2 finished in 3.8 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 4.0 seconds.
-Total execution time: 4.5 seconds.</code></pre>
+Mean chain execution time: 3.5 seconds.
+Total execution time: 4.0 seconds.</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb436"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb436-1"><a href="#cb436-1" aria-hidden="true" tabindex="-1"></a>fit_c<span class="sc">$</span><span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb421"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb421-1"><a href="#cb421-1" aria-hidden="true" tabindex="-1"></a>fit_c<span class="sc">$</span><span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 10
   variable     mean   median     sd    mad       q5      q95  rhat ess_bulk
-  &lt;chr&gt;       &lt;num&gt;    &lt;num&gt;  &lt;num&gt;  &lt;num&gt;    &lt;num&gt;    &lt;num&gt; &lt;num&gt;    &lt;num&gt;
+  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
 1 lp__     -458.    -457.    1.26   1.02   -460.    -456.     1.00    4046.
 2 alpha       2.12     2.12  0.101  0.0977    1.96     2.29   1.00    3599.
 3 beta       -0.355   -0.354 0.0401 0.0399   -0.421   -0.288  1.00    3669.
 4 k           1.44     1.44  0.0874 0.0859    1.30     1.59   1.00    5322.
-# ℹ 1 more variable: ess_tail &lt;num&gt;</code></pre>
+# ℹ 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -2469,10 +2226,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -2482,8 +2238,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -2496,6 +2261,135 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        typesetMath(container);
+        return container.innerHTML
+      } else {
+        typesetMath(note);
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -2539,6 +2433,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -2564,6 +2459,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2625,17 +2546,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../examples/nov-data-example/index.html" class="pagination-link">
+      <a href="../../examples/nov-data-example/index.html" class="pagination-link  aria-label=" &lt;span="" model="" 4:="" logistic="" regression="" with="" censored="" predictors&lt;="" span&gt;"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Example Model 4: Logistic regression with censored predictors</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../examples/HAI-data-example/index.html" class="pagination-link">
+      <a href="../../examples/HAI-data-example/index.html" class="pagination-link" aria-label="<span class='chapter-number'>7</span>&nbsp; <span class='chapter-title'>Example Model 6: the HAI manifesto</span>">
         <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Example Model 6: the HAI manifesto</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 
