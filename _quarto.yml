@@ -15,6 +15,7 @@ book:
         - examples/simple-censored-outcome/index.qmd
         - examples/simple-censored-predictor/index.qmd
         - examples/censored-outcome-and-predictor/index.qmd
+        - examples/censored-outcome-and-multiple-predictors/index.qmd
     - part: "Case studies"
       chapters: 
         - examples/nov-data-example/index.qmd

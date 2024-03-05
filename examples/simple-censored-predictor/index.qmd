@@ -1,58 +1,172 @@
-# Example Model 1: One censored predictor
+# One censored predictor
 
-```{r setup, include = FALSE}
-library(cmdstanr)
-# ggplot2 theme setup
-library(ggplot2)
-ggplot2::theme_set(hgp::theme_ms())
-pth_base <- here::here("examples", "simple-censored-predictor")
+```{r setup}
+# Placeholder
 ```
 
+Now we'll consider the case where our outcome is perfectly observed, but we have
+a single predictor value with a limit of detection. Most commonly used models
+consider predictor values to be completely observed, exact measurements without
+error, which makes dealing with censoring of a predictor more complicated than
+dealing with censoring of an outcome. In order to address censoring in a
+predictor, we also have to assume the predictor values are, in some way,
+unknown, like we do for the outcomes. Before we discuss methods for dealing
+with a censored predictor, let's take a look at some simulated data and the
+associated data generating process.
 
-For our first example model, we will consider an example where we have a single
-censored predictor. Other than censoring, we assume the predictor is measured
-without error. We also assume a non-censored perfectly observed outcome,
-which follows a Gaussian linear model where the only predictor is that
-censored one. (We could add additional non-censored predictors but it would
-just make this example more complicated.) The data generating process for the
-outcome, $y_i, \ i = \{1, 2, \ldots, n\}$ is
+## Data-Generating Process
+
+The data will discuss consist of $n$ observations of a predictor variable, $x$,
+and an outcome variable, $y$. To make this example simple, we'll assume there is
+a linear relationship between $x$ and $y$. So the data generating process (DGP) 
+for the outcome, $y_i, \ i = \{1, 2, \ldots, n\}$, is
 $$
 \begin{align*}
-y_i &\sim \mathrm{Normal}\left(\mu, \sigma^2\right) \\
-\mu &= \beta_0 + \beta_1 x_i^*
+y_i &\sim \mathrm{Normal}\left(\mu_i, \sigma^2\right) \\
+\mu_i &= \beta_0 + \beta_1 x_i^*
 \end{align*}
 $$
-where $x_i^*$ is the latent, true value of the predictor $x$. However, because
-of some imperfect measurement process, we can't observed $x_i^*$, instead we
-observe
+where $x_i^*$ represents the true value of our predictor. Importantly, for
+the predictor, $x$, to be censored, there also has to be a data generating
+process for $x$. If we conduct a controlled experiment where we determine the
+values for $x$, it doesn't make sense for $x$ to be censored (which is why
+this case is discussed less often than the case of a censored outcome). But if
+we are conducting an observational study, where we expect $x$ to influence $y$,
+but we cannot directly manipulate the value of $x$, then it makes sense for
+$x$ to potentially be censored. Like with a censored outcome, we can discuss
+the DGP for the *latent* or true $x_i^*$ values, and the observation process
+which generates our imperfect observation $x_i$. Of course, the most simple
+example would be a Normal distribution:
+$$x_i^* \stackrel{\Tiny{\text{i.i.d.}}}{\sim} \text{Normal}\left(\lambda, \tau^2\right).$$
+This is the part where we'll just say you can put whichever distribution here
+as well -- don't worry, we'll do another non-normal example after this. Now
+that we have a DGP for the latent $X^*$ values, we need to specify our
+observation model. For a simple case of censoring, this could include a lower
+limit of detection (LoD), an upper LoD, or both. For example, with a lower LoD,
+the observation model might look like this:
 $$
 x_i = \begin{cases}
 x_{\min}, & x_i^* \leq x_{\min} \\
 x_i^*, & x_i^* > x_{\min}
+\end{cases}; \quad x_{\min} \in \mathbb{R}.
+$$
+Here, $x_{\min}$ is a constant value representing a lower limit of detection --
+if the latent value $x_i^*$ is less than the threshold represented by $x_{\min}$,
+we just observe $x_{\min}$. If the true value is greater than this threshold,
+we observe the true value. This is not a unique observation process -- we can,
+in principle, write down any value for the censored observations. To avoid
+confusion, we should also define an indicator variable for whether the $i$th
+observation is censored:
+$$
+c_i = I\left( x_i^* \leq x_{\min} \right) =
+\begin{cases}
+1, & x_i^* \leq x_{\min} \\
+0, & \text{otherwise}
 \end{cases}.
 $$
-So if we want to correctly model $y$, we will need to take the left censoring
-of $x$ into account.
+Typically, we can observe all values of $c_i$, and we assume that *these*
+are measured perfectly (although this is not strictly necessary, as we could
+incorporate measurement error and thus misclassification models into our
+observation process, but we neglect those here for the sack of simplicity). If
+you receive a data set you know a variable is censored, but there is no way to
+determine which values are censored due to improper coding and recording, there
+is not much you can do to resolve the situation. So it is typically best to
+record censored values using some value **which could not have been observed if
+the observation were not censored**. Do not worry if this description is
+abstract -- next we will consider a concrete example which will hopefully help
+to make these concepts concrete.
+
+For reference, we can write down the entire data-generating process all
+together. Note that from this DGP, we observe $(x_i, c_i, y_i); \ i = 1, \ldots, n$.
+
+$$
+\begin{align*}
+y_i &\sim \mathrm{Normal}\left(\mu_i, \sigma^2\right) \\
+\mu_i &= \beta_0 + \beta_1 x_i^* \\
+x_i^* &\stackrel{\Tiny{\text{i.i.d.}}}{\sim} \text{Normal}\left(\lambda, \tau^2\right) \\
+x_i &= \begin{cases}
+x_{\min}, & x_i^* \leq x_{\min} \\
+x_i^*, & x_i^* > x_{\min}
+\end{cases}; \\
+c_i &= I\left( x_i^* \leq x_{\min} \right)
+\end{align*}
+$$
+Here, $\sigma$ and $\tau$ are positive real numbers, and the following are
+real-valued constants: $\beta_0$, $\beta_1$, $x_{\min}$, and $\lambda$.
+
+## Weighing cats
+
+Now that we've gone through the basics of the data-generating process, let's
+set up the DGP for an example data set. Once we've worked out the DGP, we'll
+take a look at some simulated data from this example. Then we'll finally
+discuss methods for dealing with censored predictor data.
+
+Suppose we're conducting a study on cholesterol in cats, and we want to know
+whether elevated cholesterol levels are associated with cat weight --
+presumably, heavier cats have higher overall cholesterol values. For simplicity,
+we limit our study to adult male American shorthair cats (we can recruit other
+types of cats after we finish this pilot study). According to
+[this article](https://web.archive.org/web/20240305033813/https://www.thesprucepets.com/american-shorthair-cat-breed-profile-4774399),
+the normal weight for such a cat is from 11 -- 15 pounds. So, we'll take 13 lbs.
+as the average weight of a cat, and 2 lbs. as the standard deviation. These
+correspond to the values of $\lambda$ and $\tau$ in our data generating process
+above. So, letting $w_i$ represent the weight of the $i$th cat, we would write
+$$w_i \sim \mathrm{Normal} \left(13, 2^2\right).$$
+
+Now, the problem is that we do not have a very good scale -- our scale is
+accurate to the tenth of a pound, but the highest value it can measure is 15
+lbs. **This has an upper LoD, rather than a lower LoD, but in principle the
+DGP will only look slightly different.** In terms of the DGP, we would say that
+$$w_{\max} = 15.$$
+Because we have an upper LoD instead of a lower LoD, our observation model
+will change slightly, but the overall structure is the same.
+$$
+\begin{aligned}
+w_i &= \begin{cases}
+w_{\max}, & w_i^* \geq x_{\max} \\
+w_i^*, & w_i^* < x_{\max}
+\end{cases} \\
+c_i &= I\left( w_i^* \geq w_{\max} \right)
+\end{aligned}
+$$
+Notice that the greater than and less than signs all swap, but there are no
+other changes we need to make to this part of the DGP.
+
+If your first thought is that our scale is not good enough to do this kind of
+study, that is a good instinct. We can actually estimate the probability of
+censored measurements that we'll get using the distribution we assumed for $W$.
+In `R`, we would do
+
+> `r pnorm(15, mean = 13, sd = 2, lower.tail = FALSE)`
+
+to estimate this probability, which comes out to about $`r round(pnorm(15, mean = 13, sd = 2, lower.tail = FALSE) * 100, 1)` \%$. The ideal amount of
+censored data would definitely be $0\%$, but we could also do a lot worse. For
+now, we won't worry too much about how bad this amount of censoring is, we'll
+keep working through our DGP.
+
+Now, the hard part of writing the DGP is determining the regression parameters.
+(Note that basically, we're writing down what would be our priors in a Bayesian 
+model, we just don't have any data yet.) Based on
+[this article](https://web.archive.org/web/20240305035325/https://cats.com/high-cholesterol-in-cats)
+(I have no idea how accurate it is, if at all, just like the previous one),
+the normal amount of cholesterol for a cat is 1.8 -- 3.9 mMol/liter. If
+we treat the range the same as we did previously, we can estimate that the
+overall average is around 2.85, with a standard deviation of 1.05. Now, we want
+the average to vary based on weight, but we can use this standard deviation
+as the residual SD in our data generating process. That is,
+$$\sigma^2 = 1.05^2.$$
+
+Now we need to determine appropriate values for $\beta_0$ and $\beta_1$ that
+give us normal cholesterol values for the average cat. The simple way to do
+this if we were setting priors for a Bayesian model would be to center our
+predictor values, but we'll discuss that in a later section. For now I just did
+a little messing around, and I found that $beta_0 = 2$ and $\beta_1 =$
+seem to do a decent enough job.
 
 ```{r}
-lod <- 0
-generate_data <- function(n = 1000, xmin = 2, beta0 = 1, beta1 = 2, sigma = 5,
-													seed = 83719273) {
-	l <- tibble::tibble(
-		x_star = rnorm(n, 5, 3),
-		x = ifelse(x_star <= xmin, xmin, x_star),
-		mu = beta0 + beta1 * x_star,
-		y = rnorm(n, mu, sigma)
-	)
-	
-	o <- dplyr::select(l, x, y)
-	
-	out <- list("latent" = l, "observed" = o)
-}
+# Load the data
 
-dat <- generate_data(xmin = lod)
-dat_l <- dat$latent
-dat_o <- dat$observed
+# Take a look at the data structure
 ```
 
 We can take a quick look at the data to see what the relationship looks

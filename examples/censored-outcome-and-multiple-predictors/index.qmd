@@ -1,0 +1,14 @@
+# Censored outcome and multiple predictors
+
+```{r setup, include = FALSE}
+library(cmdstanr)
+# ggplot2 theme setup
+library(ggplot2)
+ggplot2::theme_set(hgp::theme_ms())
+pth_base <- here::here("examples", "censored-outcome-and-predictor")
+```
+
+This is a placeholder
+
+
+<!-- END OF FILE -->
