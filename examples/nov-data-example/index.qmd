@@ -1,12 +1,7 @@
 # Example Model 4: Logistic regression with censored predictors
 
 ```{r setup, include = FALSE}
-library(cmdstanr)
-# ggplot2 theme setup
-library(ggplot2)
-ggplot2::theme_set(hgp::theme_ms())
-pth_base <- here::here("examples", "nov-data-example")
-library(patchwork)
+knitr::read_chunk(here::here("")
 ```
 
 For the next example model we have enough background knowledge to implement
@@ -51,16 +46,25 @@ y_i &\sim \text{Bernoulli}\left(p_i\right) \\
 \mathrm{logit}(p_i) &= \alpha + \beta \cdot x^*_i \\
 x_i^* &\sim \mathrm{Normal}\left(\mu_x, \sigma^2_x\right) \\
 x_i &= \begin{cases}
-\frac{1}{2}\mathrm{LoD}, & x^*_i < \mathrm{LoD} \\
+U, & x^*_i < \mathrm{LoD} \\
 x^*_i, & x^*_i \geq \mathrm{LoD}
 \end{cases} \\
 \end{align*}
 $$
-Here, we assume that we work with the $x$ variable on the log scale at all times,\
+where $U \in \mathbb{R}$ is some value that we write down whenever $x_i$ is
+censored.
+Here, we assume that we work with the $x$ variable on the log scale at all times,
 mostly cause it's annoying and confusing to write out all the logs every time,
 so we could also write
 $$x_i^* = \mathrm{log} \left(z^*_i\right)$$
-and say $z^*_i$ is the actual latent un-logged titer.
+and say $z^*_i$ is the actual latent un-logged titer. We also assume that we can
+write down
+$$
+c_i = I(x_i^* \geq \mathrm{LoD}) = I(x_i = U),
+$$
+as an indicator variable whether the $i$th observation of $X$ is censored. If
+we cannot write down $C$ (due, perhaps, to improper coding of the data), then
+we cannot correct for censoring in the same way.
 
 Now that we have the data generating process written out, we can simulate
 some example data. Note that in this example, we can interpret $\alpha$ as the
@@ -76,33 +80,51 @@ We then want our true $\beta$ value to be negative, indicating that
 as the number of antibodies rise, the log-odds of infection decrease. We can
 interpret $\beta$ as the change in the log-odds ratio associated with a
 one-unit change in antibody titer -- the nonlinearity here makes it a bit
-more difficult to interpret this effect. We can, however, intercept $\exp(\beta)$ as the odds ratio between individuals with titer $x_i + 1$ and 
+more difficult to interpret this effect. We can, however, interpret $\exp(\beta)$ as the odds ratio between individuals with titer $x_i + 1$ and 
 individuals with titer $x_i$. This corresponds to a nonlinear change in risk
 that depends on the value of $x_i$. However, if we want the odds of infection
 to halve for each 1 unit increase in antibody titer, we would set $\beta = -\log(2) \approx -0.7$.
 
+Finally, we need to choose the LoD, $U$, $\mu_x$ and $\sigma_x$. These can pretty
+much be whatever we want, so long as $\sigma_x$ is positive, but we want to
+choose values that give us a sensible simulation. I selected $\mathrm{LoD} = 0$,
+$U = -1$, $\mu_x = 2$, and $\sigma_x = 2$ after playing around with the
+simulation for a bit.
+
 ```{r}
-set.seed(134125)
 sim_parms <- list(
 	n = 110,
 	alpha = 2.2,
 	beta = -1.37,
 	mu_x = 2,
 	sigma_x = 2,
-	LoD = 0
+	LoD = 0,
+	U = -1,
+	seed = S
 )
 ```
 
 ```{r}
 inv_logit <- function(x) {return(1 / (1 + exp(-x)))}
 
-sim_one_group <- function(n, alpha, beta, mu_x, sigma_x, LoD) {
+sim_one_group <- function(n, alpha, beta, mu_x, sigma_x, LoD, U,
+													latent = TRUE, seed = NULL) {
+	if (!is.null(seed)) {
+		set.seed(seed)
+	}
+	
 	out <- tibble::tibble(
 		x_star = rnorm(n, mu_x, sigma_x),
-		x = ifelse(x_star < LoD, 0.5 * LoD, x_star),
+		x = ifelse(x_star < LoD, U, x_star),
 		p = inv_logit(alpha + beta * x_star),
 		y = rbinom(n, size = 1, prob = p)
 	)
+	
+	if (isFALSE(latent)) {
+		out <- dplyr::select(out, x, y)
+	}
+	
+	return(out)
 }
 
 sim_data <- do.call(sim_one_group, sim_parms)
@@ -149,10 +171,23 @@ sim_data |>
 	) +
 	scale_y_continuous(breaks = scales::breaks_pretty()) +
 	scale_fill_brewer(palette = "Dark2", name = NULL) +
-	facet_wrap(facets = vars(name))
+	facet_wrap(facets = vars(name)) +
+	geom_label(
+		data = data.frame(
+			x = -0.85,
+			y = 9,
+			label = as.character(latex2exp::TeX(paste0("$U = ", sim_parms$U, "$"))),
+			name = "Observed variable"
+		),
+		aes(x = x, y = y, label = label),
+		size = 6,
+		parse = TRUE,
+		inherit.aes = FALSE
+	) +
+	labs(y = "Count")
 ```
 
-Essentially everything below our lower threshold gets bumped up, which
+Essentially everything below our lower threshold gets bumped up, which 
 will make the summary statistics of the distribution more similar between
 groups for the observed titer values than they would have been for the latent
 titer values. However, we can still see a large difference.
@@ -278,7 +313,7 @@ y_i &\sim \text{Bernoulli}\left(p_i\right) \\
 \log\left(x_i^*\right) &\sim \mathrm{Normal}\left(\mu_x, \sigma^2_x\right) \\
 \mu_x &= \alpha_{T[i]} \\
 x_i &= \begin{cases}
-\frac{1}{2}\mathrm{LoD}, & x^*_i < \mathrm{LoD} \\
+U, & x^*_i < \mathrm{LoD} \\
 x^*_i, & x^*_i \geq \mathrm{LoD}
 \end{cases} \\
 T[i] &= \begin{cases}
