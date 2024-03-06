@@ -37,7 +37,9 @@ $x$ to potentially be censored. Like with a censored outcome, we can discuss
 the DGP for the *latent* or true $x_i^*$ values, and the observation process
 which generates our imperfect observation $x_i$. Of course, the most simple
 example would be a Normal distribution:
-$$x_i^* \stackrel{\Tiny{\text{i.i.d.}}}{\sim} \text{Normal}\left(\lambda, \tau^2\right).$$
+$$
+x_i^* \stackrel{\Tiny{\text{i.i.d.}}}{\sim} \text{Normal}\left(\lambda, \tau^2\right).
+$$
 This is the part where we'll just say you can put whichever distribution here
 as well -- don't worry, we'll do another non-normal example after this. Now
 that we have a DGP for the latent $X^*$ values, we need to specify our
@@ -135,9 +137,9 @@ other changes we need to make to this part of the DGP.
 If your first thought is that our scale is not good enough to do this kind of
 study, that is a good instinct. We can actually estimate the probability of
 censored measurements that we'll get using the distribution we assumed for $W$.
-In `R`, we would do
+In `R`, we would run
 
-> `r pnorm(15, mean = 13, sd = 2, lower.tail = FALSE)`
+> `pnorm(15, mean = 13, sd = 2, lower.tail = FALSE)`
 
 to estimate this probability, which comes out to about $`r round(pnorm(15, mean = 13, sd = 2, lower.tail = FALSE) * 100, 1)` \%$. The ideal amount of
 censored data would definitely be $0\%$, but we could also do a lot worse. For
@@ -151,16 +153,29 @@ model, we just don't have any data yet.) Based on
 (I have no idea how accurate it is, if at all, just like the previous one),
 the normal amount of cholesterol for a cat is 1.8 -- 3.9 mMol/liter. If
 we treat the range the same as we did previously, we can estimate that the
-overall average is around 2.85, with a standard deviation of 1.05. Now, we want
+overall average is around 2.85, with a spread of 1.05. That seems a little high,
+so let's assume they gave us a two standard deviation range, and cut it in half,
+and we'll round that down to $0.5$, which is probably good enough for government
+work.
+(Of course if you want to simulate the data, you can make whatever arbitrary
+assumptions like this that you prefer instead.)
+Now, we want
 the average to vary based on weight, but we can use this standard deviation
 as the residual SD in our data generating process. That is,
-$$\sigma^2 = 1.05^2.$$
+$$\sigma^2 = 0.5^2.$$
+Of course, what this parameter actually represents is the residual variance
+left over after removing the variance in the outcome due to the weight of
+each cat, so we're still just making some guesses and assumptions without a lot
+of justification, but that's often how this type of generative modeling works.
+We know that the real system we're trying to model is much more complex than
+this, but we're trying to do a good enough job to learn something, not
+perfectly describe the universe.
 
 Now we need to determine appropriate values for $\beta_0$ and $\beta_1$ that
 give us normal cholesterol values for the average cat. The simple way to do
 this if we were setting priors for a Bayesian model would be to center our
 predictor values, but we'll discuss that in a later section. For now I just did
-a little messing around, and I found that $beta_0 = 2$ and $\beta_1 =$
+a little messing around, and I found that $beta_0 = 0.5$ and $\beta_1 =0.2$
 seem to do a decent enough job.
 
 ```{r}
@@ -173,16 +188,7 @@ We can take a quick look at the data to see what the relationship looks
 like when x is censored or not.
 
 ```{r}
-dat_l |>
-	ggplot() +
-	geom_vline(xintercept = lod, linetype = "dashed", color = "gray") +
-	geom_line(
-		aes(x = x_star, y = 1 + 2 * x_star), color = "red", linetype = "dashed",
-		linewidth = 1
-	) +
-	geom_point(aes(x = x_star, y = y), color = "gray", size = 2) +
-	geom_point(aes(x = x, y = y), color = "black", size = 2) +
-	labs(x = "x", y = "y")
+
 ```
 
 Here the gray points show the true latent values of the censored points, and

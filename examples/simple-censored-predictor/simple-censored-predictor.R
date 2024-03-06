@@ -26,13 +26,13 @@ data_gen_parms <- list(
 	# Number of observations to generate
 	n = 154,
 	# Set a static constant value for the lower limit of detection (LoD)
-	ulod = 12,
+	ulod = 15,
 	# Linear model intercept
 	beta0 = 0.5,
 	# Linear model slope
-	beta1 = 0.8,
+	beta1 = 0.2,
 	# Linear model residual variance
-	sigma = 1.05,
+	sigma = 0.5,
 	# Mean of normally distributed x values
 	x_mu = 13,
 	# SD of normally distributed x values
@@ -93,3 +93,29 @@ summary(simple_model)
 
 latent_model <- lm(y ~ x_star, data = dat_l)
 summary(latent_model)
+
+# Plot the censored cat data ####
+dat_l |>
+	ggplot() +
+	geom_vline(
+		xintercept = data_gen_parms$ulod,
+		linetype = "dashed",
+		color = "gray"
+	) +
+	geom_line(
+		aes(
+			x = x_star,
+			y = data_gen_parms$beta0 + data_gen_parms$beta1 * x_star
+		), color = "red", linetype = "dashed",
+		linewidth = 1
+	) +
+	geom_segment(
+		aes(
+			x = x_star, xend = x,
+			y = y, yend = y
+		),
+		color = "gray"
+	) +
+	geom_point(aes(x = x_star, y = y), color = "gray", size = 2) +
+	geom_point(aes(x = x, y = y), color = "black", size = 2) +
+	labs(x = "Weight", y = "Cholesterol")
