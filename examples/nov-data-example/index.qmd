@@ -1,7 +1,15 @@
 # Example Model 4: Logistic regression with censored predictors
 
-```{r setup, include = FALSE}
-knitr::read_chunk(here::here("")
+```{r setup}
+base_pth <- here::here("examples", "nov-data-example")
+knitr::read_chunk(here::here(base_pth, "setup.R"))
+knitr::read_chunk(here::here(base_pth, "one-group-model.R"))
+knitr::read_chunk(here::here(base_pth, "two-group-model.R"))
+```
+
+```{r}
+#| label: Package Loading
+#| message: false
 ```
 
 For the next example model we have enough background knowledge to implement
@@ -74,7 +82,8 @@ transformation to get that $\alpha = 0$. However, let's assume that the
 inoculum dose is quite high and during our subject selection process we've
 included anyone who might have a genetic resistance to the disease (i.e.,
 FUT2- individuals for norovirus). So let's say if a person has zero antibodies,
-their probably of getting sick should be $90\%$. Then, $\log(0.9 / 0.1) \approx 2.2$.
+their probably of getting sick should be $90\%$. Then,
+$\log(0.9 / 0.1) \approx 2.2$.
 
 We then want our true $\beta$ value to be negative, indicating that
 as the number of antibodies rise, the log-odds of infection decrease. We can
@@ -83,7 +92,8 @@ one-unit change in antibody titer -- the nonlinearity here makes it a bit
 more difficult to interpret this effect. We can, however, interpret $\exp(\beta)$ as the odds ratio between individuals with titer $x_i + 1$ and 
 individuals with titer $x_i$. This corresponds to a nonlinear change in risk
 that depends on the value of $x_i$. However, if we want the odds of infection
-to halve for each 1 unit increase in antibody titer, we would set $\beta = -\log(2) \approx -0.7$.
+to halve for each 1 unit increase in antibody titer, we would set
+$\beta = -\log(2) \approx -0.7$.
 
 Finally, we need to choose the LoD, $U$, $\mu_x$ and $\sigma_x$. These can pretty
 much be whatever we want, so long as $\sigma_x$ is positive, but we want to
@@ -102,9 +112,7 @@ sim_parms <- list(
 	U = -1,
 	seed = S
 )
-```
 
-```{r}
 inv_logit <- function(x) {return(1 / (1 + exp(-x)))}
 
 sim_one_group <- function(n, alpha, beta, mu_x, sigma_x, LoD, U,
@@ -129,6 +137,8 @@ sim_one_group <- function(n, alpha, beta, mu_x, sigma_x, LoD, U,
 
 sim_data <- do.call(sim_one_group, sim_parms)
 ```
+
+Now that we've generated some data, let's take a quick look.
 
 Of course visualizing the relationship between a binary outcome and a
 continuous predictor is in some sense more complex than visualizing the
@@ -165,32 +175,124 @@ sim_data |>
 		position = "identity", alpha = 0.6,
 		color = "black"
 	) +
+	# geom_label(
+	# 	data = data.frame(
+	# 		x = -0.85,
+	# 		y = 9,
+	# 		label = as.character(latex2exp::TeX(paste0("$U = ", sim_parms$U, "$"))),
+	# 		name = "Observed variable"
+	# 	),
+	# 	aes(x = x, y = y, label = label),
+	# 	size = 6,
+	# 	parse = TRUE,
+	# 	inherit.aes = FALSE
+	# ) +
 	scale_x_continuous(
 		name = "Simulated log titer",
-		breaks = scales::breaks_pretty()
+		breaks = seq(-2, 8, 2),
+		limits = c(-3.5, 8.5),
+		guide = guide_axis(cap = "both"),
+		expand = expansion(c(0, 0), c(0.01, 0.01))
 	) +
-	scale_y_continuous(breaks = scales::breaks_pretty()) +
+	scale_y_continuous(
+		breaks = scales::breaks_pretty(),
+		guide = guide_axis(cap = "both"),
+		expand = expansion(c(0, 0), c(0, 0.1))
+	) +
 	scale_fill_brewer(palette = "Dark2", name = NULL) +
 	facet_wrap(facets = vars(name)) +
-	geom_label(
-		data = data.frame(
-			x = -0.85,
-			y = 9,
-			label = as.character(latex2exp::TeX(paste0("$U = ", sim_parms$U, "$"))),
-			name = "Observed variable"
-		),
-		aes(x = x, y = y, label = label),
-		size = 6,
-		parse = TRUE,
-		inherit.aes = FALSE
-	) +
 	labs(y = "Count")
 ```
 
-Essentially everything below our lower threshold gets bumped up, which 
-will make the summary statistics of the distribution more similar between
-groups for the observed titer values than they would have been for the latent
-titer values. However, we can still see a large difference.
+Of course with this plot, bear in mind that the simulated values of the
+observed variable are shown at -1, but this is actually not an accurate
+representation of the data, just a convenient one. Perhaps a better
+representation of the data would be like this.
+
+```{r}
+cens_plot_dat <-
+	sim_data |>
+	dplyr::mutate(
+		yf = factor(
+			y,
+			levels = c(0, 1),
+			labels = c("Not infected", "Infected")
+		),
+		x_bins = ggplot2::cut_width(
+			x,
+			width = 0.5,
+			closed = "left",
+			boundary = 0.5
+		)
+	) |>
+	dplyr::group_by(yf) |>
+	dplyr::count(x_bins) |>
+	dplyr::ungroup() |>
+	# Process the bins into numeric variables
+	tidyr::separate(x_bins, into = c("lwr", "upr"), sep = ",") |>
+	dplyr::mutate(
+		lwr = as.numeric(stringr::str_remove(lwr, "\\[|\\(")),
+		upr = as.numeric(stringr::str_remove(upr, "\\]|\\)")),
+		cens = factor(dplyr::if_else(lwr <= sim_parms$U, 1, 0))
+	)
+
+cens_plot_dat |>
+	dplyr::filter(cens == 0) |>
+	ggplot() +
+	aes(xmin = lwr, xmax = upr, ymin = 0, ymax = n, fill = yf, color = cens) +
+	geom_vline(
+		xintercept = 0,
+		linetype = "dashed",
+		color = "black",
+		linewidth = 1
+	) +
+	geom_segment(
+		data = cens_plot_dat |> dplyr::filter(cens == 1),
+		aes(x = -Inf, xend = sim_parms$LoD, y = n, yend = n, color = yf),
+		linewidth = 1,
+		show.legend = FALSE,
+		arrow = grid::arrow(
+			ends = "first",
+			length = grid::unit(0.05, "npc"),
+			angle = 45
+		)
+	) +
+	geom_rect(
+		color = "black",
+		alpha = 0.6,
+		linewidth = 1
+	) +
+	scale_x_continuous(
+		name = "Simulated log titer",
+		breaks = scales::breaks_pretty(),
+		limits = c(-3.5, 8.5),
+		guide = guide_axis(cap = "both"),
+		expand = expansion(c(0, 0), c(0.01, 0.01))
+	) +
+	scale_y_continuous(
+		breaks = scales::breaks_pretty(),
+		guide = guide_axis(cap = "both"),
+		expand = expansion(c(0, 0), c(0, 0.1))
+	) +
+	scale_fill_brewer(palette = "Dark2", name = NULL) +
+	scale_color_brewer(palette = "Dark2", name = NULL) +
+	labs(y = "Count")
+```
+
+Here, the arrow tells us a bit more about the censored data. The color of the arrow indicates which outcome group the points belong
+to (notice there were no censored data points in the Not Infected group), the
+height tells us the number of censored data points, the right endpoint shows
+us the limit of detection, and the arrow keeps going to negative infinity,
+showing our limited precision about these values. However, this plot is much
+less intuitive to understand.
+
+Essentially we can see that our choice of $U$ will strongly affect the
+summary statistics of the distribution of infected individuals, which will
+in term strongly affect the contrast between the two distributions. So we need
+to account for this uncertainty in some way.
+
+Since we have the latent data from our simulation, we can also take a look
+at how the censored data might visually impact our logistic regression estimates.
 
 ```{r}
 interp <-
@@ -208,7 +310,14 @@ interp2 <-
 
 lab1 <- latex2exp::TeX(r"($Pr(y_{i} = 1 \ | \ x_{i})$)")
 
-sim_data |>
+set.seed(S)
+logistic_plot_data <-
+	sim_data |>
+	dplyr::mutate(
+		# Manually add some jitter since ggplot apparently messes it up
+		noise = runif(dplyr::n(), -0.05, 0.05),
+		yj = y + noise
+	) |>
 	tidyr::pivot_longer(cols = c(x, x_star)) |>
 	dplyr::mutate(
 		yf = factor(
@@ -220,28 +329,91 @@ sim_data |>
 			name,
 			levels = c("x_star", "x"),
 			labels = c("Latent variable", "Observed variable")
-		)
-	) |>
+		),
+		# Censoring indicator
+		cens = (value <= sim_parms$LoD)
+	)
+
+logistic_plot_data |>
 	ggplot() +
-	aes(x = value, color = name) +
+	aes(x = value, color = name, y = yj) +
+	geom_vline(
+		xintercept = sim_parms$LoD,
+		color = "black",
+		linetype = "dashed"
+	) +
 	geom_line(
 		data = interp2, aes(y = p), color = "darkgray", linetype = 2, linewidth = 1
 	) +
 	geom_point(
-		aes(y = y), size = 3, alpha = 0.5,
-		position = position_jitter(width = 0, height = 0.05, seed = 370)
+		data = \(d) dplyr::filter(d, cens == 0 | name == "Latent variable"),
+		size = 3,
+		alpha = 0.5
+	) +
+	geom_segment(
+		data = \(d) dplyr::filter(d, cens == 1 & name == "Observed variable"),
+		aes(x = -Inf, xend = sim_parms$LoD, y = yj, yend = yj, color = name),
+		# arrow = grid::arrow(
+		# 	length = unit(0.01, "npc"),
+		# 	end = "first"
+		# ),
+		linewidth = 1,
+		show.legend = FALSE
 	) +
 	scale_x_continuous(
 		name = "Simulated log titer",
-		breaks = scales::breaks_pretty()
+		breaks = scales::breaks_pretty(),
+		limits = c(-2.5, 8)
 	) +
 	scale_y_continuous(
 		name = lab1,
-		breaks = scales::breaks_pretty()
+		breaks = c(0, 1),
+		minor_breaks = seq(0, 1, 0.25)
 	) +
-	scale_color_brewer(palette = "Accent", name = NULL) +
+	scale_color_brewer(
+		palette = "Accent",
+		name = NULL,
+		guide = guide_legend(override.aes = list(alpha = 1))
+	) +
 	facet_wrap(facets = vars(name))
 ```
+
+Again, the horizontal lines for the censored observed variable measurements
+indicate that the true latent variables could be anywhere on those lines. Here
+we can see that if we were to simply drop the censored data, or treat the
+censored values as being equal to the limit of detection, the two groups
+would look much more similar to each other. However, if we were to treat the
+censored values as being very low, we could make the two groups look arbitarily
+different from each other. So understanding the most likely censored values
+could be very important to our analysis, depending on the number of censored
+observations and their relative influence.
+
+We'll adjust for censoring in our model using the same strategy we discussed
+in the previous examples with censored predictors (LINK HERE). Unfortunately
+there is no simple model for censored predictors, we basically have to jump
+right into writing Stan code. We'll use the same approach as we did before,
+assuming a parametric model for $X$ and modeling the joint likelihood of $X$
+and the outcome (assuming they are independent).
+
+First, we can examine the Stan code. The model code is based off of the data
+generating model above. The main nonintuitive part, is the `target +=`
+statement that we need to use to construct the joint likelihood of $X$ and $Y$.
+
+```{r}
+one_group_mod_pth <- here::here(base_pth, "Ex4a.stan")
+```
+
+::: {.callout-note collapse=true}
+
+## Stan code for model
+
+```{r}
+#| class-output: stan
+#| echo: false
+cat(readLines(one_group_mod_pth), sep = "\n")
+```
+
+:::
 
 ```{r}
 data_list <-
@@ -255,15 +427,8 @@ data_list$N <- sim_parms$n
 str(data_list)
 ```
 
-<!---
-````{.stan, include = "Ex4a.stan"}
-
-```
---->
-
 ```{r}
-mod_pth <- here::here(pth_base, "Ex4a.stan")
-mod <- cmdstanr::cmdstan_model(mod_pth, compile = FALSE)
+mod <- cmdstanr::cmdstan_model(one_group_mod_pth, compile = FALSE)
 mod$compile(force_recompile = TRUE, pedantic = TRUE)
 ```
 
@@ -766,5 +931,13 @@ x_dens |>
 ## Try gamma dist. for x on non-logged scale?
 
 ## Do we want to work out a hierarchical model?
+
+## What if $X$ and $Y$ are not independent
+
+Can try a copula
+
+## What if we mis-specify the distribution of $X$?
+
+Try the normal model on gamma and the gamma model on normal
 
 <!-- END OF FILE -->

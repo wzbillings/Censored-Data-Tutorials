@@ -1,0 +1,29 @@
+---
+title: "Untitled"
+filters:
+  - include-code-files
+format: html
+---
+
+```{r}
+base_pth <- here::here("examples", "nov-data-example")
+file_pth <- here::here(base_pth, "Ex4a.stan")
+mod_pth <- here::here(base_pth, "Ex4a.stan")
+```
+
+<!--
+```{.stan include=`r file_pth`}
+```
+-->
+
+::: {.callout-note collapse=true}
+
+## Stan code for model
+
+```{r}
+#| class-output: stan
+#| echo: false
+cat(readLines(mod_pth), sep = "\n")
+```
+
+:::

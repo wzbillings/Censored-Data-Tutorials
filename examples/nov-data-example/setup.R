@@ -5,11 +5,13 @@
 ###
 
 # ---- Package Loading ----
-library(cmdstanr)
 # ggplot2 theme setup
 library(ggplot2)
 ggplot2::theme_set(hgp::theme_ms())
-pth_base <- here::here("examples", "nov-data-example")
-library(patchwork)
 
-S <- 370
+# Necessary to fully attach these packages for them to work right
+library(patchwork)
+library(cmdstanr)
+
+# Variable for random seed#
+S <- 54351231
