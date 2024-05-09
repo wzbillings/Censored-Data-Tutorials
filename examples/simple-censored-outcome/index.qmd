@@ -30,8 +30,8 @@ try to analyze some data with unknown generative processeses.
 adopted for industrial agriculture, especially after the introduction of
 genetically modified Roundup-resistant crop species in the mid-90's. Due to
 widespread agricultural use in the US, glyphosate is an increasingly common
-groundwater contaminant, with a Maximum Containment Level Goal of 0.7 parts
-per million in tap water set by the EPA.
+groundwater contaminant, with a [Maximum Containment Level Goal of 0.7 parts
+per million in tap water set by the EPA](https://web.archive.org/web/20240509003411/https://www.epa.gov/sites/default/files/2015-06/documents/epa-200.7.pdf).
 
 1. **Source population.** Our fictional source population will be $n$ randomly
 sampled households from a fictional city, indexed from $i = 1, \ldots, n$. We
@@ -127,9 +127,210 @@ percent), but not too bad either.
 Our censoring model looks like this:
 
 $$
-y_i
+y_i = \begin{cases}
+L, & y_i^* < 0.33 \text{ ppm} \\
+y_i^*, & \text{otherwise}
+\end{cases}.
 $$
+Our censoring indicator $C_i$ will look like this:
 
+$$
+c_i = \begin{cases}
+1, & y_i^* < 0.33 \text{ ppm} \\
+0, & \text{otherwise}
+\end{cases}.
+$$
+Let's first apply the censoring to our data. We'll arbitrarily choose $L = 0$.
+Then we'll take a look at the data we would actually observe.
+
+```{r}
+# Dataset including latent variables
+# Do the censoring
+L <- 0.1
+gly_data_lnt <-
+	gly_data |>
+	dplyr::mutate(
+		# Create the censoring indicator
+		c = ifelse(y_star <= 0.33, 1, 0),
+		# Create the censored outcome
+		y = ifelse(c == 1, L, y_star)
+	)
+
+# Dataset including ONLY the observed variables
+gly_data_obs <- gly_data_lnt |>
+	dplyr::select(dist_from_farm, personal_gly_use, water_filter_use, c, y)
+
+head(gly_data_obs)
+```
+
+Note that setting $y_i = 0.1$ if the value is censored is **completely arbitrary**.
+Many people will set it to a value like the LoD, or half the LoD, or some
+crazy thing with $\sqrt{2}$ in it, and then pretend those are the real values.
+**All of these arbitrary values are equally bad.** Let's look at the
+distribution of the latent and observed values just to show this.
+In real life, we can't see this, but this example should remind us that picking
+an arbitrary number is not very good.
+
+```{r}
+# Arrange the data correctly for plotting
+gly_data_lnt |>
+	dplyr::select(
+		"observed" = y,
+		"latent" = y_star
+	) |>
+	tidyr::pivot_longer(dplyr::everything()) |>
+	# Now make the plot
+	ggplot() +
+	aes(x = value) +
+	geom_histogram(
+		boundary = 0,
+		binwidth = 0.1,
+		color = "black",
+		fill = "gray"
+	) +
+	facet_wrap(vars(name)) +
+	ggtitle(paste0("Censored values coded as ", L))
+```
+
+Let's also take a look at what the data would have looked like if we set, say
+$L = 0.33$ (the LoD).
+
+```{r}
+gly_data_lnt |>
+	# Set censored values to LoD
+	dplyr::mutate(y = ifelse(y == L, 0.33, y)) |>
+	# Arrange the data for the plot
+	dplyr::select(
+		"observed" = y,
+		"latent" = y_star
+	) |>
+	tidyr::pivot_longer(dplyr::everything()) |>
+	# Make the plot
+	ggplot() +
+	aes(x = value) +
+	geom_histogram(
+		boundary = 0,
+		binwidth = 0.1,
+		color = "black",
+		fill = "gray"
+	) +
+	facet_wrap(vars(name)) +
+	ggtitle("Censored values coded as LoD")
+```
+
+We can see how this histogram makes the censored values look like actual data
+(cat screaming emoji)!! Whereas the previous set of histograms with a spike at
+zero should signal that there is something strange going on in the data. So
+substitution can cause data to be misleading. For this reason, it can sometimes
+be useful for analysts to record values as "Nondetect" or "< LoD" in the dataset
+(or some other kind of text indicating it is not a regular number),
+forcing the analyst to clean up the data before it can be statistically examined.
+The problem can be somewhat avoided if we include an explicit indicator of
+censoring in our data, like so.
+
+```{r}
+gly_data_lnt |>
+		# Set censored values to LoD
+	dplyr::mutate(y = ifelse(y == L, 0.33, y)) |>
+	dplyr::select(
+		"observed" = y,
+		"latent" = y_star,
+		c
+	) |>
+	tidyr::pivot_longer(-c) |>
+	# Now make the plot
+	ggplot() +
+	aes(x = value, fill = factor(c)) +
+	geom_histogram(
+		boundary = 0,
+		binwidth = 0.1,
+		color = "black",
+		alpha = 0.5,
+		position = "stack"
+	) +
+	facet_wrap(vars(name)) +
+	scale_fill_manual(values = c("#E69F00", "#56B4E9"), name  = "Below LoD?") +
+	ggtitle(paste0("Censored values coded as LoD"))
+```
+
+```{r}
+gly_data_lnt |>
+	dplyr::select(
+		"observed" = y,
+		"latent" = y_star,
+		c
+	) |>
+	tidyr::pivot_longer(-c) |>
+	# Now make the plot
+	ggplot() +
+	aes(x = value, fill = factor(c)) +
+	geom_histogram(
+		boundary = 0,
+		binwidth = 0.1,
+		color = "black",
+		alpha = 0.5,
+		position = "stack"
+	) +
+	facet_wrap(vars(name)) +
+	scale_fill_manual(values = c("#E69F00", "#56B4E9"), name  = "Below LoD?") +
+	ggtitle(paste0("Censored values coded as ", L))
+```
+
+Here, we can see that the histogram conflates part of the censored and
+non-censored values because of the binwidth we set. All that is to show, when
+there is a possibly of censored data, we should be extra careful as analysts to
+make sure we aren't computing incorrect statistics.
+
+As another instructive example, let us first attempt to estimate the mean and SD
+of the glyphosate concentrations. We know an unbiased estimate of marginal mean
+and CI (that is, the statistic if we ignore all of the `x` values), because we
+have the underlying latent values. So let's estimate those first.
+(Because we have a normal distribution, we could probably get the analytical
+marginal mean assuming unknown $x_i, p$ values, but we won't do that here.)
+In R, we can quickly construct the Wald-type CI based on the `t`-distribution
+using the `t.test()` function.
+
+```{r}
+latent_t_test <-
+	gly_data_lnt$y_star |>
+	# Remember we made a log-normal assumption so we take the log here
+	log() |>
+	t.test() |>
+	broom::tidy() |>
+	# Re-exponentiate the results
+	dplyr::mutate(dplyr::across(c(estimate, conf.low, conf.high), exp))
+print(latent_t_test)
+```
+
+Now, if we compute the same test using the observed values, we can see what
+happens.
+
+```{r}
+observed_t_test <-
+	gly_data_obs$y |>
+	# Remember we made a log-normal assumption so we take the log here
+	log() |>
+	t.test() |>
+	broom::tidy() |>
+	# Re-exponentiate the results
+	dplyr::mutate(dplyr::across(c(estimate, conf.low, conf.high), exp))
+print(observed_t_test)
+```
+
+The estimate is much lower! In fact, the 95% CI doesn't even cover the latent
+estimate! Of course, **we can arbitrarily change the estimate by recoding the
+censored values.** If we bumped them up to the LoD, the estimate would go up
+and if we made them lower, it would go down.
+
+So, then, what are we to do?
+
+## Integration method for censored data
+
+### Frequentist models
+
+### Bayesian models
+
+<!--
 
 ## Lower limit of detection
 
@@ -503,7 +704,7 @@ mod_2b$compile(force_recompile = TRUE)
 <!-- debug this / figure out if possible after book is working again
 ```{.stan include=mod_pth}
 ```
--->
+
 
 As you can see from the above program, the data needs to be in a different
 format for this method. Actually, it's much easier to set up the data in the
@@ -572,6 +773,10 @@ much worse naive model estimates, at least our uncertainty intervals correctly
 contain the true values this time. So we cannot fully erase the effect of the
 flawed observation process on our data, but we can do a lot better by
 taking the censored data into consideration.
+
+-->
+
+## Appendix: imputation methods {.appendix .unnumbered}
 
 ## Appendix: tobit model check {.appendix .unnumbered}
 
