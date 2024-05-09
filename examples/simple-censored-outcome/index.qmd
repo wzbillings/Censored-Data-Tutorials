@@ -1,6 +1,7 @@
-# Example Model 2: One censored outcome
+# One censored outcome
 
-```{r setup, include = FALSE}
+```{r setup}
+# Setup code
 library(cmdstanr)
 # ggplot2 theme setup
 library(ggplot2)
@@ -8,9 +9,127 @@ ggplot2::theme_set(hgp::theme_ms())
 pth_base <- here::here("examples", "simple-censored-outcome")
 ```
 
-For the second example model, we'll work on a case where there is one predictor
-(the models generalize easily to the multivariable case) and the outcome is
-censored. 
+Now that we've gone through a very broad overview of what censored data is,
+we'll discuss a simple example with a censored outcome.
+
+For this example, we'll stay on the theme of concentrations that we started
+in the last chapter. Analyzing immunological, medical, or environmental
+concentrations is a common use case of censored data that doesn't require us
+to also discuss the intricacies of time-to-event analysis. This time,
+we'll consider **the amount of glyphosate in household drinking water.**
+
+## Glyphosate data simulation
+
+In this first example, since we're trying to understand these models, we'll
+**simulate our data** from a known generative model. This allows us to be
+confident that our model for censored data is actually helping us to recover
+the correct parameters. Once we're more comfortable with the model, we can
+try to analyze some data with unknown generative processeses.
+
+[Glyphosate](https://en.wikipedia.org/wiki/Glyphosate) is an organophosphonate pesticide originally marketed as Roundup by Monsanto. Roundup was quickly
+adopted for industrial agriculture, especially after the introduction of
+genetically modified Roundup-resistant crop species in the mid-90's. Due to
+widespread agricultural use in the US, glyphosate is an increasingly common
+groundwater contaminant, with a Maximum Containment Level Goal of 0.7 parts
+per million in tap water set by the EPA.
+
+1. **Source population.** Our fictional source population will be $n$ randomly
+sampled households from a fictional city, indexed from $i = 1, \ldots, n$. We
+only have one measurement per household. For the purposes of our study,
+we'll assume that each of these houses has their own water supply (which is
+unrealistic but sufficient for a censored data tutorial).
+1. **Outcome variable.** For this example, our outcome (or dependent) variable
+is $y_i$, the log concentration of glyphosate in parts per million (ppm) detected
+from the tap in household $i$ using an analytical test.
+1. **Censoring structure.** Our investigators have decided to use [the test described in this paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6163928/), which has a lower limit of detection of 2 µM. Given a molar mass of 169.07 g/Mol
+for glyphosate, we can convert this to an LoD of 0.33 ppm, just under half of
+the MCLG. We assume there is no upper LoD or interval censoring.
+1. **Independent variables.** For the sake of this example, we will measure a
+few independent variables at the household level. Without doing any research
+on the actual patterns of glyphosate distribution in groundwater, we'll assume
+that glyphosate concentration is affected by:
+	1. distance to the nearest agriculture site (km).
+	1. whether the home uses glyphosate-based pesticides for personal gardening.
+	1. whether the home has a water filter on the primary tap.
+
+To get our data, we'll first randomly generate our covariates. Let's assume that
+our town of interest is a square, so we can normalize all of the distances so
+that each side of the square has length 1. Then (again somewhat unrealistically)
+we'll assume that home X and Y coordinates are independently drawn from a
+uniform distribution on $(0, 1)$. For convenience, we'll place the only farm
+in town at $(0.5, 0.5)$ and calculate the distances. Then since the other
+two independent variables are binary, we'll randomly sample those for each house,
+say with respective probabilities $0.2$ and $0.4$.
+
+```{r gly data independent variables}
+set.seed(370)
+N <- 147
+gly_preds <-
+	tibble::tibble(
+		house_x_coord = runif(N, 0, 1),
+		house_y_coord = runif(N, 0, 1),
+		dist_from_farm = sqrt((house_x_coord - 0.5)^2 + (house_y_coord - 0.5)^2),
+		personal_gly_use = rbinom(N, 1, 0.2),
+		water_filter_use = rbinom(N, 1, 0.4)
+	)
+head(gly_preds)
+```
+
+Now we need to describe our data generating model for the outcome. Of course,
+I am just going to randomly pick some parameters and mess around until they
+look about right -- we know that our glyphosate levels should be somewhere in
+the neighborhood of $(0, 1.4)$-ish. We'll use a linear model, which means
+we assume that:
+$$
+\begin{aligned}
+\log(y_i^*) &\sim \text{Normal}(\mu_i, \sigma^2) \\
+\mu_i &= \beta_0 + \beta_1 x_{1, i} + \beta_2 x_{2, i} + \beta_3x_{3, i}.
+\end{aligned}
+$$
+Here, $y_i$ is the concentration of glyphosate in tap water of house $i$,
+$$x_{1, i}$$ is the distance from house $i$ to the farm, $x_{2, i}$ is the
+personal glyphosate use variable, and $x_{3, i}$ is the water filter use
+variable. So we need to pick all four of those $\beta_p$ coefficients and the
+value of $\sigma^2$, the residual variance, before we can simulate our glyphosate
+levels.
+
+```{r simulating y values}
+gly_data <-
+	gly_preds |>
+	dplyr::mutate(
+		mu = 0.8 - 4 * dist_from_farm + 0.5 * personal_gly_use -
+			0.4 * water_filter_use,
+		y_star = exp(rnorm(N, mu, 0.25))
+	)
+
+summary(gly_data)
+```
+
+You can see from the above simulation code that the values I ended up choosing
+are as follows:
+
+$$
+\begin{aligned}
+\log(y_i^*) &\sim \text{Normal}(\mu_i, 0.5^2) \\
+\mu_i &= -2.5 + 2\cdot x_{1, i} + 0.5\cdot x_{2, i} -0.4\cdot x_{3, i}.
+\end{aligned}
+$$
+These values seemed to give a reasonable range of $y$ values (on the natural
+scale), and have signs that made sense to me. The intercept represents
+the concentration of glyphosate expected in tap water for a person who lives
+on the farm, no personal glyphosate use, and no water filter, and is
+about $2.23$ ppm, which is quite high and perhaps expected for the point source
+of the contaminant. With these parameters, we will have
+$`r round(mean(gly_data[['y_star']] <= 0.33) * 100, 1)`\%$ of data points below
+the limit of detection, which is not ideal (of course the ideal is zero
+percent), but not too bad either.
+
+Our censoring model looks like this:
+
+$$
+y_i
+$$
+
 
 ## Lower limit of detection
 

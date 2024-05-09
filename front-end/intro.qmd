@@ -123,9 +123,8 @@ y_i = \begin{cases}
 5000, & y_i^* \geq 5000
 \end{cases}; \quad i = 1, \ldots, n.
 $$
-It is possible to write the math model in a more compact form as well.
-
-[ADD SOME MORE DETAILS ABOUT THIS!]
+It is possible to write the math model in a more compact form as well --- we
+will discuss this further in a detailed section on interval censoring.
 
 Another example of this is influenza HAI titer, which we will dedicate an
 entire case study to later on. Briefly,
@@ -157,19 +156,24 @@ right censored value is positive infinity. Thus, we could write the data
 generating process for HAI titers with LOD as
 $$
 y_i = \begin{cases}
-y_{\text{min}}, \ y_i^* < y_{\text{min}}\\
-\lfloor y_i^* \rfloor, \ y_{\text{min}} \leq y_i^* < y_{\text{max}} \\
-y_{\text{max}}, y \leq y_{\text{max}}
+y_{l}, & \ y_i^* < y_{\text{min}}\\
+\lfloor y_i^* \rfloor, &\ y_{\text{min}} \leq y_i^* < y_{\text{max}} \\
+y_{i}, & y_i^* \leq y_{\text{max}}
 \end{cases},
 $$
 where $y_{\text{min}}$ is the lower limit of detection and $y_{\text{max}}$
-is the upper limit of detection. To express the DGP in interval
+is the upper limit of detection. Here, $y_l \leq y_{\min}$ and $y_u \geq y_{\max}$ are arbitrary constants that can be the same as the limits of detection
+or not, so long as we know which censoring category the given $y_i$ value falls
+into. We can write down the value for the censored values however we want as
+long as we know what interval the points fall into.
+
+To express the DGP in interval
 notation, we would write
 $$
 y_i \in \begin{cases}
-\left(-\infty, y_{\text{min}}\right), \ y_i^* < y_{\text{min}}\\
-\left[\lfloor y_i^* \rfloor, \lfloor y_i^* + 1 \rfloor\right), \ y_{\text{min}} \leq y_i^* < y_{\text{max}} \\
-\left[y_{\text{max}}, \infty\right), \ y \leq y_{\text{max}}
+\left(-\infty, y_{l}\right), & y_i^* < y_{\text{min}}\\
+\left[\lfloor y_i^* \rfloor, \lfloor y_i^* + 1 \rfloor\right), & y_{\text{min}} \leq y_i^* < y_{\text{max}} \\
+\left[y_{u}, \infty\right), & y_i^* \leq y_{\text{max}}
 \end{cases}.
 $$
 Note also that assuming $y^*_i$ is drawn from an absolutely continuous distribution
@@ -181,8 +185,81 @@ w.r.t. the type of censoring.
 
 The probability of each observation $y_i$ can then be expressed as the
 probability that the random variable $Y$ takes on a realization inside the
-given interval. If $F$ is the CDF for some parametric distribution which we
-assume the latent variable $y_i^*$ is drawn from, with parameter $\theta$,
+given interval. That is, if $y_i^*$ is detectable (greater than the lower LoD,
+but less than the upper LoD), we would write
+$$P(Y_i = y_i) = P\left(\lfloor y_i^* + 1 \rfloor \geq Y_i^* \geq \lfloor y_i^* \rfloor \right).$$
+Recall that every random variable $Y$ has a [cumulative density function](https://en.wikipedia.org/wiki/Cumulative_distribution_function), or **CDF**, which is defined as
+$$F_Y(y) = P(Y \leq y).$$
+Using the definitions of all these probability things, we can say (proof
+omitted) that
+$$
+\begin{aligned}
+P(Y_i = y_i) &= P\left(\lfloor y_i^* + 1 \rfloor \geq Y_i^* \geq \lfloor y_i^* \rfloor \right) \\
+&= P(Y_i^* \leq \lfloor y_i^* + 1 \rfloor) - P(Y_i \leq \lfloor y_i^* \rfloor) \\
+&= F_Y(\lfloor y_i^* + 1 \rfloor) - F_Y(\lfloor y_i^* \rfloor).
+\end{aligned}
+$$
+This applies to the nondetectable measurements as well, but we need to take
+the limit as $Y_i \to \pm \infty$.Fortunately, this is a defining property of
+the CDF as you can see on the linked wikipedia page. So we can write
+$$
+\begin{aligned}
+P(Y_i = y_\min) &= \lim_{a \to -\infty}P\left(y_{\text{min}} \geq Y_i^* \geq a \right) \\
+&= F(y_\min) - \lim_{a \to -\infty} F(a) \\
+&= F(y_\min) - 0 = F(y_\min).
+\end{aligned}
+$$
+Similarly, we get that
+$$
+\begin{aligned}
+P(Y_i = y_\max) &= \lim_{b \to \infty}P\left(b \geq Y_i^* \geq y_\max \right) \\
+&= \lim_{b \to \infty} F(b) -  F(y_\max) \\
+&= 1 - F(y_\max).
+\end{aligned}
+$$
+
+At first, it can be difficult to see how this probability calculations are
+useful for statistical data analysis. To fully make the connection, we will
+need to make use of an indicator variable, say $c_i$, which is equal to 1 when
+the observation $y_i$ is censored, and equal to 0 if $y_i$ is not censored.
+To fit some parametric model with parameter vector $\theta$, we often turn to
+the likelihood function, which is
+$$
+\mathcal{L}\left(\theta \mid y \right) = f_Y(y \mid \theta)
+$$
+if there are no censored values (here we implicitly assume that $y$ is
+absolutely continuous). The function $f_Y(y \mid \theta)$ is the [probability
+density function](https://en.wikipedia.org/wiki/Probability_density_function) of
+random variable $Y$ where we consider the parameters to be fixed at the value
+$\theta$.
+
+In constructing the likelihood for our observation $Y_i$, we run into the
+slightly tricky business^[to really get into the details of this, you need [Lebesgue's decomposition theorem](https://en.wikipedia.org/wiki/Lebesgue's_decompositon_theorem) which relies on measure theory. Writing out the likelihood in a more general form without the censoring indicators is also not possible without measure theory because it relies on the [Radon-Nikodym theorem](https://en.wikipedia.org/wiki/Radon%E2%80%93Nikodym_theorem). If this is the part you want to learn about, you will have to learn it from someone other than me!] that $Y_i$ is not always continuous -- if the $i$th
+observation is censored, $Y_i$ actually becomes discrete. We will not address
+the technicalities of combining censored and discrete data here, but suffice to
+say if the parametric model we assume for $Y_i$ is any standard (all GLM
+compatible distributions and many others beyond), we can say that
+$$
+\mathcal{L}(\theta \mid y_i) = \bigg( f(y_i \mid \theta) \bigg)^{1 - c_i} \bigg( P(Y_i = y_i)\bigg)^{c_i}.
+$$
+That is, we can use the continuous probability density $f$ when $y_i$ is
+not censored and the discrete probability of the realization $y_i$ if the
+observation is censored.
+
+We can then (assuming mutual, potentially conditional, independence of the observations) write the likelihood of the sample by multiplying together all of
+our individual $y_i$ likelihoods. With the sample likelihood in hand, we can
+proceed to do whatever kinds of torture we would normally do in modern statistics, like finding parameter values that maximize the likelihood, or adding priors and using Bayes' theorem.
+
+**In the following chapters, we'll discuss a bit more theory but primarily go
+through some examples.** Notably, we've only discussed univariate analyses here,
+so in the first example we'll walk through an actual example of dealing
+with a censored outcome variable. Dealing
+with censored predictor/independent variables is much more detailed, and will
+be explained in its own example.
+
+<!--
+Now, given that $F$ is the CDF for the parametric distribution which we
+assume the latent variable $y_i^*$ is drawn from, with parameter vector $\theta$,
 the contribution of $y_i$ to the likelihood is then
 $$\mathcal{L}(\theta \mid Y_i) = F(\text{upper limit of interval}) - F(\text{lower limit of interval}).$$
 If we call the lower limit of the interval for $y_i$ $L_i$ and the corresponding
@@ -197,5 +274,6 @@ types of HAI data that we see, all of the assay values are subject to the
 same censoring process, and thus we could neglect the density component.
 
 So now the remaining issue is to specify $F$, the CDF of the latent variables.
+-->
 
 <!-- END OF FILE -->
