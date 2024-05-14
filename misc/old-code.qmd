@@ -1,0 +1,514 @@
+---
+title: "old code"
+---
+
+# One simple outcome
+
+## Lower limit of detection
+
+For the first example, we'll work with an outcome that has a lower limit of
+detection. First we need to simulate the data, which means we need to write
+out a generative model for the data. We'll randomly sample `x` for the purposes
+of generating data, but for the purposes of our model we'll assume `x_i` is
+a completely observed covariate and thus is known and does not need a random
+component in the model.
+
+$$
+\begin{align*}
+y_i &= \begin{cases}
+\mathrm{DL}, & y^*_i \leq \mathrm{DL} \\
+y^*_i, & y^*_i > \mathrm{DL}
+\end{cases} \\
+y^*_i &\sim \mathrm{Normal}\left(\mu_i, \sigma^2\right) \\
+\mu_i &= \alpha + \beta \cdot x_i \\
+i &= 1, 2, \ldots, n
+\end{align*}
+$$
+Here, DL is the [D]{.underline}etection [L]{.underline}imit, aka the lower limit
+of detection for the variable. Of course in our generative model, we have
+set $\alpha$, $\beta$, and $\sigma^2$ to be fixed population parameters, but
+for Bayesian inference we would need to assign suitable priors. Let's set the
+values and simulate our data. The parameters I set for this example are as follows.
+
+```{r, echo = FALSE}
+set.seed(578189)
+sim_parms <- list(
+	N = 271,
+	alpha = 72,
+	beta = 3,
+	sigma = 5,
+	DL = 80
+)
+
+sim_llod <- function(N, alpha, beta, sigma, DL) {
+	return(
+		tibble::tibble(
+			x = runif(N, 0, 10),
+			y_star = rnorm(N, alpha + beta * x, sigma),
+			cens = (y_star <= DL),
+			y = dplyr::if_else(cens, DL, y_star)
+		)
+	)
+}
+
+sim_data <- do.call(sim_llod, sim_parms)
+perc <- sim_data$cens |> mean() |> round(digits = 4) |> (\(x) (x * 100))()
+```
+
+| Parameter     | Value | Meaning                       |
+|---------------|-------|-------------------------------|
+| $n$           | 271   | Sample size                   |
+| $\alpha$      | 72    | Regression intercept          |
+| $\beta$       | 3     | Regression slope              |
+| $\sigma$      | 5     | Standard deviation of outcome |
+| $\mathrm{DL}$ | 80    | Lower limit of detection      |
+
+The $x$-values were drawn from a uniform distribution on $(0, 10)$. Since we
+know the true population parameters for our simulation, we can plot the data to
+see the effect of the censoring process on our observed $y$ values.
+
+```{r, echo = FALSE}
+sim_data |>
+	ggplot() +
+	aes(x = x, y = y_star) +
+	geom_hline(
+		yintercept = sim_parms$DL,
+		alpha = 0.5,
+		linewidth = 1,
+		linetype = "dashed",
+		color = "darkgray"
+	) +
+	geom_point(
+		data = subset(sim_data, cens),
+		aes(x = x, y = y_star),
+		color = "darkgray"
+	) +
+	geom_segment(
+		data = subset(sim_data, cens),
+		aes(x = x, xend = x, y = y_star, yend = y),
+		color = "gray",
+		alpha = 0.25,
+		lwd = 1
+	) +
+	geom_point(
+		data = subset(sim_data, !cens),
+		aes(x = x, y = y),
+		color = "black"
+	) +
+	geom_point(
+		data = subset(sim_data, cens),
+		aes(x = x, y = y),
+		#shape = 21,
+		color = "black",
+		#fill = "gray"
+	) +
+	annotate(
+		geom = "text",
+		x = 9,
+		y = sim_parms$DL - 1.75,
+		size = 6,
+		label = paste0("LoD: ", sim_parms$DL)
+	) +
+	coord_cartesian(
+		expand = FALSE,
+		xlim = c(-0.1, 10.1),
+		ylim = c(60, 110)
+	) +
+	labs(
+		x = "Independent variable",
+		y = "Dependent variable"
+	)
+```
+
+In this plot, the black data points show our observed data. For those
+observations where the $y$ value was below the limit of detection and thus
+censored, the gray points show the true latent values, which we could have
+observed with a perfect measurement process. The gray line segments connect each
+latent measurement to its corresponding observed measurement.
+
+Approximatly $`r perc`\%$ of data points were below the limit of detection and
+were therefore censored. Of course in real life, we would only observe the
+black points (observed values), and the gray points would be unobservable to
+us. But for the purposes of understanding how to analyze censored data,
+visualizing how different the observed and latent datasets are is quite
+valuable and informative. Since the datasets look so different, we should not
+be surprised that our regression estimates would be incorrect if we treated all
+of the censored values as the same constant value, or ignored them entirely!
+
+So, if our standard linear regression model that we know and love (even the
+Bayesian version) would give us incorrect estimates using any of these
+naive methods, how then are we to proceed? According to the Stan manual
+[@StanManual, chap. 4], there are two main ways of handling the censoring in
+the outcome in our model. The first of these methods relies on imputation and
+the second on integration of the likelihood function and manual updating of the
+target likelihood in Stan. The imputation method is conceptually easier and
+less mathematically daunting, so we begin our treatment there.
+
+### Imputation-type method
+
+The first method for dealing with censored data treats the censored values as
+missing values where the latent value is constrained to fall within a specific
+range. For a normally distributed outcome, all values below the lower limit
+of detection are constrained to fall within $(-\infty, \mathrm{DL})$.
+
+READ THAT PART OF RETHINKING AND EXPLAIN HOW MISSING DATA WORKS HERE!!!
+
+To implement such a model in Stan, we need to pass in the number of observed
+and the number of censored values and the observed y-values in Stan. We then
+declare the censored $y$-values as a parameter in the Stan code, meaning they
+will be sampled from their constrained distribution during the fitting process,
+whereas the observed $y$ values will be used to update the parameter estimates.
+
+First, let's look at the Stan code for this model.
+
+SHOW THE STAN CODE HERE.
+
+Since the data need to be in kind of a clunky format to use this method, we
+first need to do some wrangle and get the data in the correct format for Stan.
+
+```{r}
+dat_2a <- list()
+with(
+	sim_data, {
+		dat_cens <- subset(sim_data, cens)
+		dat_obs <- subset(sim_data, !cens)
+		dat_2a$N_cens <<- nrow(dat_cens)
+		dat_2a$N_obs <<- nrow(dat_obs)
+		dat_2a$y_obs <<- dat_obs$y
+		dat_2a$x_obs <<- dat_obs$x
+		dat_2a$y_cens <<- dat_cens$y
+		dat_2a$x_cens <<- dat_cens$x
+		dat_2a$DL <<- as.integer(sim_parms$DL)
+	}
+)
+
+str(dat_2a)
+```
+
+Now we can compile the Stan program (via `cmdstanr` as usual).
+
+```{r}
+mod_pth <- here::here(pth_base, "Ex2a.stan")
+mod_2a <- cmdstanr::cmdstan_model(mod_pth, compile = FALSE)
+mod_2a$compile(pedantic = TRUE, force_recompile = TRUE)
+```
+
+And since the program compiles correctly, we can use Stan's sampling algorithm
+to generate samples from the posterior distribution. We'll run 4 chains in
+parallel with 500 warmup iterations and 5000 sampling iterations per chains,
+with all of the other control parameters (e.g. maximum treedepth and adaptive
+delta) left at the `cmdstan` defaults. This many samples is overkill for this
+problem, but it is also quite fast and thus we can do many samples just to be
+safe.
+
+```{r}
+fit_2a <- mod_2a$sample(
+	dat_2a, seed = 100, parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 5000
+)
+
+# Extract the posterior samples in a nicer format for later
+post_2a <- posterior::as_draws_df(fit_2a)
+```
+
+The first thing we should do after sampling is check for any diagnostic
+warnings. We have access to all of the individual diagnostics, but fortunately
+`cmdstan` has a built-in diagnostic checker to flag any potential problems.
+
+```{r}
+fit_2a$cmdstan_diagnose()
+```
+
+Great, no issues with the sampling procedure, that is what we like to see.
+Let's manually check the trace plots for our main three parameters of interest.
+(We could also check the plots for all of the imputed y-values, but these
+are unlikely to be interesting or useful, any problems should hopefully
+propagate through to the interesting parameters.)
+
+```{r}
+bayesplot::mcmc_combo(post_2a, pars = c('alpha', 'beta', 'sigma'))
+```
+
+Those look like nice healthy trace plots, so with that combined with our
+diagnostic check, it seems that the chains mixed well and explored the
+posterior distribution. We can also check if those parameters were correlated.
+
+```{r}
+bayesplot::mcmc_pairs(post_2a, pars = c('alpha', 'beta', 'sigma'))
+```
+
+We see that the slope and intercept estimates were strongly correlated, which
+makes sense, and the sigma parameter was slightly correlated with both of
+those but not strongly with either. We can notice here that the histograms for
+$\beta$ and $\sigma$ are not quite centered at the true values, but they
+do have some probability mass at those true values. Let's look at the median
+estimates and CIs from our samples.
+
+```{r}
+par_sum <-
+	fit_2a$summary(variables = c("alpha", "beta", "sigma"))
+par_sum |> knitr::kable()
+```
+
+We can also plot those along with the true values for reference.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show plot code (messy)"
+truth <- tibble::tibble(
+	name = c("alpha", "beta", "sigma"),
+	value = c(sim_parms$alpha, sim_parms$beta, sim_parms$sigma)
+)
+
+hd <- post_2a |>
+	tibble::as_tibble() |>
+	dplyr::select(alpha, beta, sigma) |>
+	tidyr::pivot_longer(cols = dplyr::everything())
+
+ggplot() +
+	aes(x = value) +
+	geom_histogram(
+		data = subset(hd, name == "alpha"),
+		boundary = 0,
+		binwidth = 0.25,
+		col = "black",
+		fill = "gray"
+	) +
+	geom_histogram(
+		data = subset(hd, name == "beta"),
+		boundary = 0,
+		binwidth = 0.05,
+		col = "black",
+		fill = "gray"
+	) +
+	geom_histogram(
+		data = subset(hd, name == "sigma"),
+		boundary = 0,
+		binwidth = 0.1,
+		col = "black",
+		fill = "gray"
+	) +
+	geom_vline(
+		data = truth,
+		aes(xintercept = value),
+		linetype = "dashed",
+		linewidth = 1,
+		color = "red"
+	) +
+	facet_wrap(~name, scales = "free") +
+	labs(x = NULL)
+```
+
+From these histograms, we can see that while there is a decent amount of
+samples close to the true values of alpha and beta, the posterior distributions
+are not centered around the true values. At the time of writing, I am not sure
+if that is a fixable problem or just something we have to deal with from having
+imperfectly observed data.
+
+We can also do a check of how close the imputed $y$ values were on average to
+the actual $y$ values.
+
+```{r}
+y_cens_sum <-
+	fit_2a$summary(variables = paste0('y_cens[', 1:dat_2a$N_cens, ']'))
+
+dat_comp <-
+	sim_data |>
+	subset(cens) |>
+	dplyr::select(y_star) |>
+	dplyr::bind_cols(y_cens_sum) |>
+	dplyr::mutate(
+		col = dplyr::case_when(
+			(mean >= y_star) & (q5 <= y_star) ~ TRUE,
+			(mean <= y_star) & (q95 >= y_star) ~ TRUE,
+			TRUE ~ FALSE
+		)
+	)
+
+# ggplot(dat_comp) +
+# 	aes(x = y_star, y = mean, ymin = q5, ymax = q95, color = col) +
+# 		geom_abline(
+# 			slope = 1, intercept = 0, linetype = 2, linewidth = 1,
+# 								alpha = 0.5
+# 			) +
+# 	geom_errorbar(alpha = 0.25) +
+# 	geom_point() +
+# 	coord_fixed() +
+# 	scale_color_manual(
+# 		values = c("orange", "turquoise"),
+# 		name = "CI crosses diagonal"
+# 	)
+
+ggplot(dat_comp) +
+	aes(x = (y_star - mean)) +
+	geom_histogram(boundary = 0, binwidth = 1, color = "black", fill = "gray") +
+	scale_x_continuous(breaks = seq(-10, 10, 2), limits = c(-10, 10)) +
+	labs(
+		x = "True value - mean estimated value"
+	)
+```
+
+TODO make this relative error instead to make it easier to understand.
+
+### Integration-type method
+
+The second method relies on calculating the direct contribution of the
+censored data measurements to the likelihood by integrating the density over
+the region where censored data can occur. That is, if the $i$th observation is
+below the detection limit, we know that the contribution of that observation
+to the sample likelihood is
+$$
+\mathcal{L}(\theta \mid y_i) = P(Y_i \leq \mathrm{DL}) = \int_{-\infty}^{\mathrm{DL}}f(y_i \mid \theta) \ dy = \lim_{a \to -\infty} \left[F(y_i \mid \theta)\right]_{a}^{\mathrm{DL}},
+$$
+which is why we refer to this method as "integrating out" the censored values.
+
+By adapting the Stan code from the manual [@StanManual, cp. 4] to include
+$x$ values in the calculation of the mean, we can implement this method for
+dealing with our censored $y$ values. First we'll load and compile the Stan model.
+
+```{r model 2b compilation, message=FALSE, warning=FALSE}
+mod_pth <- here::here(pth_base, "Ex2b.stan")
+mod_2b <- cmdstanr::cmdstan_model(mod_pth, compile = FALSE)
+mod_2b$compile(force_recompile = TRUE)
+```
+
+<!-- debug this / figure out if possible after book is working again
+```{.stan include=mod_pth}
+```
+
+
+As you can see from the above program, the data needs to be in a different
+format for this method. Actually, it's much easier to set up the data in the
+way this program specifies, and it's very similar to the data frame we already
+have. We just need a list and a few other components.
+
+```{r model 2b data}
+dat_2b <- list()
+dat_2b$N <- nrow(sim_data)
+dat_2b$N_cens <- sum(sim_data$cens)
+dat_2b$y <- sim_data$y
+dat_2b$cens <- as.integer(sim_data$cens)
+dat_2b$x <- sim_data$x
+dat_2b$DL <- as.integer(sim_parms$DL)
+
+str(dat_2b)
+```
+
+Now that we have the program ready and the data set up, we can give the data
+to the program and do some MCMC sampling. We'll use a similar setup
+that we did for the previous example, namely 4 parallel chains which each run
+500 warmup iterations and 1000 sampling iterations (no need for overkill like
+we did before).
+
+```{r model 2b sampling}
+fit_2b <- mod_2b$sample(
+	dat_2b, seed = 100, parallel_chains = 4,
+	iter_warmup = 500,
+	iter_sampling = 1000,
+	show_messages = FALSE
+)
+
+# Extract the posterior samples in a nicer format for later
+post_2b <- posterior::as_draws_df(fit_2b)
+```
+
+We didn't get any warnings or errors, which means that the model finished the
+sampling procedure without any major errors, and we should next check the
+diagnostics.
+
+```{r model 2b diagnose}
+fit_2b$cmdstan_diagnose()
+```
+
+Everything looks good here, but let's again look at the traceplots.
+
+```{r model 2b traceplot}
+bayesplot::mcmc_combo(post_2b, pars = c('alpha', 'beta', 'sigma'))
+```
+
+We got some nice, healthy looking fuzzy caterpillars, so now we can be
+confident in our summary results. So now let's finally look at the parameter
+estimates.
+
+```{r}
+fit_2b$summary(variables = c('alpha', 'beta', 'sigma'))
+```
+
+These estimates are pretty similar to the estimates from the other method,
+which is good in a way because it means both methods are similar. The frequentist tobit model estimate is also similar (see the appendix).
+
+Unfortunately, none of the three models to estimate the
+regression value while taking the censoring into account produce estimates that
+are exactly the same as the true simulation parameters. However, unlike the
+much worse naive model estimates, at least our uncertainty intervals correctly
+contain the true values this time. So we cannot fully erase the effect of the
+flawed observation process on our data, but we can do a lot better by
+taking the censored data into consideration.
+
+## Appendix: tobit model check {.appendix .unnumbered}
+
+Since we're dealing with one censored outcome with a known limit of detection,
+there are actually some well-developed frequentist methods for this problem.
+Namely, we can use a **tobit model**, which specificies the likelihood
+model in the same way we did for the bayesian estimation method, and works
+very similarly to the second method where we integrate out the censored data points. However,
+instead of specifying priors to get a posterior distribution via Bayes' theorem, we instead estimate the parameters by finding the parameters which maximize the sample likelihood.
+
+Many models for censored outcomes with a variety of distributions are implemented in the R core package `survival`, but the formula for specifying a tobit model with a gaussian outcome distribution correctly is very unintuitive. Thankfully, the package `AER` provides a simple `tobit()` wrapper which translates a more standard formula into the appropriate form for the `survReg()` function and fits the model. Fitting our model using `AER::tobit()` is simple.
+
+```{r tobit with AER}
+tobit_model <- AER::tobit(
+	y ~ x,
+	data = sim_data,
+	left = sim_parms$DL,
+	right = Inf,
+	dist = "gaussian"
+)
+
+summary(tobit_model)
+```
+
+If we want a lot of compatibility with standard R functions however (e.g.
+`broom::tidy()` to get the confidence intervals for the parameters), we need
+to use `survreg`. Fortunately the documentation for `AER::tobit()` explains
+how the formula is transmogrified.
+
+```{r tobit with survreg}
+U <- sim_parms$DL
+survreg_model <- survival::survreg(
+	survival::Surv(y, y > U, type = 'left') ~ x,
+	data = sim_data,
+	dist = "gaussian"
+)
+summary(survreg_model)
+```
+
+We can see that the two models are exactly the same. But since we've used
+a model from `survival`, we get the benefit of widespread compatibility with
+other `R`-ecosystem functionality. For example, we can easily get confidence
+intervals for all three estimated parameters with `broom`.
+
+```{r tobit confidence intervals}
+broom::tidy(survreg_model, conf.int = TRUE)
+```
+
+Or at least I thought we could. Apparently there is not a built-in method to
+give the CI for the scale parameter, and we have to do it ourselves.
+
+```{r tobit scale CI}
+#| code-fold: true
+#| code-summary: "Code for 95% CI for scale"
+paste0(
+	"Scale estimate: ",
+	round(exp(1.58), 2),
+	", 95% CI: ",
+	round(exp(1.58 - 1.96 * 0.0496), 2),
+	" - ",
+	round(exp(1.58 + 1.96 * 0.0496), 2),
+	"."
+)
+```
+
+Anyways, we can compare these to the Bayesian estimates above and see that they
+are quite similar.
