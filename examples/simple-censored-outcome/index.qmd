@@ -101,7 +101,7 @@ coefs <-
 		"(Intercept)", 0.8,
 		"dist_from_farm", -4,
 		"personal_gly_use", 0.5,
-		"water_filter_use", 0.4
+		"water_filter_use", -0.4
 	)
 res_sd <- 0.25
 
@@ -438,7 +438,7 @@ surv_model <- survival::survreg(
 
 surv_model |>
 	broom::tidy(conf.int = TRUE) |>
-	tibble::add_column(truth = c(coefs$estimate, log(res_var))) |>
+	tibble::add_column(truth = c(coefs$estimate, log(res_sd))) |>
 	dplyr::select(term, estimate, conf.low, conf.high, truth) |>
 	knitr::kable(digits = 3)
 ```
@@ -478,21 +478,184 @@ Now, if we want, it's also not too bad to do this in a Bayesian framework.
 
 ### Bayesian models
 
-First we need to describe some basic priors that will work. For this example,
-we know that the parameters actually have "true values" so assigning a
-degenerate prior would actually reflect our true beliefs, but it's silly. So
-we'll assign some usual weakly informative priors that will help our model
-work right.
+First we need to describe some basic priors that will work. For this example, we
+know that the parameters actually have "true values" so assigning a degenerate
+prior would actually reflect our true beliefs, but it's silly. So we'll assign
+some usual weakly informative priors that will help our model work right. If you
+want to do the priors with the variance of 10000 to be "objective" or whatever
+you can do that but I don't think it's a good idea. I'll base my priors largely
+on the advice in [Statistical Rethinking by Richard
+McElreath](https://xcelab.net/rm/) and the [Stan Prior Choice
+Guide](https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations).
 
-PRIORS HERE
+We need a prior for everything in our model that isn't observed in the data. For
+this model, that's our residual variance and the beta coefficients. We'll
+set the priors as follows:
+
+$$
+\begin{aligned}
+\beta_j &\sim \mathrm{Normal}\left(0, 3\right), \quad j = {0, 1, 2, 3}; \\
+\sigma &\sim \text{Half-t}\left(0, 3, \nu = 3\right).
+\end{aligned}
+$$
+here, we use $\mathrm{t}\left(\mu, \sigma, \nu\right)$ to denote the
+location-scale Student's $t$-dsitribution with $\nu$ degrees of freedom.
+We use normal distributions centered at 0 for the $\beta_j$ to indicate
+our skepticism about the strength of the effects (if we were to pretend we
+didn't know the generative model). Because $\sigma$ must be postive, we
+actually use the "half" version of the distribution, which has strictly
+positive support.
 
 Now, for this kind of model where only the outcome is censored, we can actually
 have the super-handy `brms` R package do the heavy lifting for us. All we have
 to do is a bit of data cleaning, and a bit of working specifying the model
 structure, but the package will handle writing, compiling, and running all of
-the Stan code, which is very conveninent.
+the Stan code, which is very conveninent. First we'll fit the naive model,
+to show the `brms` syntax, and then we'll cover the censored adjustment.
 
-BRMS CODE HERE
+#### naive model in `brms`
+
+At first glance, the `brms` syntax appears to be quite difficult to use.
+While complex, it is concise and specifying the syntax is much less difficult
+than writing Stan code for many models. Fitting a `brms` model broadly
+requires 5 things from us: the first two are the formula, in `lm()` type syntax
+with a few extras, and the data, as we expect. We also need to specify a
+distributional `family` argument for the likelihood, which we implicitly do
+when we call `lm()`. As with base `R`, the `gaussian` likelihood is the default
+in `brms`, but it's good practice to be clear. We also need to specify the
+`priors`, which are written in a specific way, and the Stan control parameters
+which control the Bayesian routine. Because `brms` is a wrapper for Stan's
+NUTS sampler, the fitting routine is much more complicated than the routine for
+`lm()` and there's a lot we can change.
+
+If we just ignore these arguments, we can still get some results. Note that
+when you run a `brms` model like this, you'll first get a compiling message,
+then several intermittant progress updates about how fitting is going.
+I have those silenced here because it generates a lot of them.
+
+```{r}
+#| message: false
+library(brms)
+basic_brms_fit <- brms::brm(
+	formula = log(y) ~ 1 + dist_from_farm + personal_gly_use + water_filter_use,
+	data = gly_data_obs
+)
+summary(basic_brms_fit)
+```
+
+Because the model is simple, we don't have to do much. The estimates here are
+very similar to the estimates from the naive frequentist model.
+Let's apply some priors and some
+Stan arguments and see what happens. First, we'll set up the priors.
+
+I recommend reading the `brms` documentation and papers to learn more about
+how this prior syntax works, but we can also take a look at the default
+priors that `brms` set for our basic model.
+
+```{r}
+prior_summary(basic_brms_fit)
+```
+
+Here, we can see that the coefficients have `(flat)` priors, which often works
+for this simple of a model, but is usually not a good choice because it can
+be difficult for the sampler. The default prior for `sigma`, the residual SD,
+is very similar to what I picked, and I think is generally a good default
+prior. Anyways, based on the `class` column from this output, we can figure
+out how to set up a prior. Note that the `lb` for sigma is the *lower bound*.
+
+```{r}
+my_priors <- c(
+	prior(normal(0, 3), class = "b"),
+	prior(normal(0, 3), class = "Intercept"),
+	prior(student_t(3, 0, 3), class = "sigma", lb = 0)
+)
+
+my_priors
+```
+
+Everything else we pass in, other than these four arguments, will be Stan
+control parameters. If you want to learn about Stan specifics, there are way
+better resources than this, so I recommend you read those. I just want to
+make it clear that these other things are telling Stan how it should run the
+fitting routine.
+
+```{r}
+#| message: false
+naive_brms_fit <- brms::brm(
+	formula = log(y) ~ dist_from_farm + personal_gly_use + water_filter_use,
+	data = gly_data_obs,
+	family = gaussian(),
+	prior = my_priors,
+	warmup = 1000,
+	iter = 2000,
+	chains = 4,
+	cores = 4,
+	seed = 32134,
+	backend = "cmdstanr"
+)
+summary(naive_brms_fit)
+```
+
+The estimates don't change that much from the previous fit. Again, that's
+because a simple linear model with data generated from a linear model is really
+easy to handle. Once you start getting into more complicated models, the
+priors and stan arguments can matter a lot. But now that we've got all
+that taken care of, we should talk about censoring.
+
+#### censored model in `brms`
+
+In `brms`, we can handle censoring by a special formula syntax that tells the
+model to do a likelihood adjustment. Notably, how to do this is kind of
+buried in the documentation. And at time of writing, it never explains that the
+likelihood adjustment is what it actually does (but it is). The best place to
+read about this functionality and other additional options for `brms` is on
+[this page](https://paul-buerkner.github.io/brms/reference/brmsformula.html) of
+the documentation. We need to do a bit of data cleaning first before we can
+handle the censoring though. As you can see on that page, we need our censoring
+indicator variable to contain `-1` for left-censored data, instead of `1` like
+we currently have. The censoring bound should be given in `y`, so we need to
+transform it again so that all censored values are written down as the actual
+LoD.
+
+```{r}
+brms_data <-
+	gly_data_obs |>
+	dplyr::mutate(
+		# Transform censoring indicator
+		censored = ifelse(c == 1, -1, 0),
+		# Transform the outcome
+		outcome = pmax(log(y), log(LoD)),
+		# Only keep the variables we plan to give to brms
+		.keep = "unused"
+	)
+
+head(brms_data)
+```
+
+Now we can fit the `brms` model with the censoring correction.
+
+```{r}
+#| message: false
+cens_brms_fit <- brms::brm(
+	formula = outcome | cens(censored) ~ dist_from_farm + personal_gly_use +
+		water_filter_use,
+	data = brms_data,
+	family = gaussian(),
+	prior = my_priors,
+	warmup = 1000,
+	iter = 2000,
+	chains = 4,
+	cores = 4,
+	seed = 32134
+)
+summary(cens_brms_fit)
+```
+
+Again, our results are similar to the frequentist model. All of the true
+values are now inside of the estimated 95% credible intervals, with the
+one exception of `sigma`, the residual SD, which had a true value of 0.25 --
+so we'll say it's inside the credible interval up to measurement/computer
+precision, there's no way that small of a difference would practically matter.
 
 Unfortunately, not every model can be handled with `brms`, even though it's
 very flexible. For example, when we talk about censored predictor values, we
@@ -500,11 +663,55 @@ won't be able to use `brms` for the approach we'll use. Instead, we'll have to
 write our own Stan code, which is even more flexible than `brms` (though it
 lacks many of the convenience features).
 
+#### Custom Stan code with `cmdstanr`
+
 STAN CODE HERE.
 
 ## Conclusions
 
 So, 
+
+## Appendix: notes on modeling {.appendix .unnumbered}
+
+Since this is a simple example focused on dealing with the censoring adjustment,
+I decided not to get into the weeds about modeling anywhere else. There are a
+few technical choices I made/didn't make, so I decided to write them down
+here for posterity, without cluttering up the main text.
+
+* You should definitely use `cmdstanr` for running Stan models. In general,
+it stays up to date much better, is a bit easier to use, and is compatible with
+almost everything `rstan` is (and the formats are interchangable). It can be
+annoying to install, but it's worth the hassle.
+* A lot of people like flat or very diffuse priors because they are "objective".
+I dislike them for a number of reasons. First of all, they often reduce the
+ability of the model to sample efficiently. Second, due to the inherent
+researcher degrees of freedom in setting up the model structure and what data
+are present, I don't think talking about the "objectivity" of priors makes any
+sense. Finally, the priors represent our prior beliefs about the parameters, and
+a flat prior means we think any possible value is equally likely. This is why
+people often think this is an "objective" prior but I think that's silly. I
+certainly don't think my beta coefficient is equally likely to be 1 vs. negative
+three billion and seven, but that's what the flat prior says. In general, I
+know the effect should be fairly weak, so we should use skeptical priors that
+allow the parameter to get larger if the data support that.
+* In general for "generic priors", I tend to prefer $t$ and half-$t$ priors
+with 3 degrees of freedom. These have thicker tails than normal/half-normal
+priors, but not as thick as Cauchy priors, which some people will recommend.
+A Cauchy prior reflects a belief that the variance of a variable is infinite,
+which is not plausible to me, and Cauchy priors also cause sampling efficiency
+to plummet in many cases without much of a benefit. So in general if I had to
+pick a "generic default prior" it would be $t$ with three degrees of freedom.
+* I didn't talk about centering and scaling here, but in general you should
+typically scale your variables (e.g. divide by the MAD) before putting them
+into Stan, simply because it helps the sampler.
+* Centering can also be helpful, and if you want to do any kind of variable
+selection or comparison between variables, you need to center them. Centering
+can make coefficient interpretations more difficult, but one of the benefits of
+Bayesian modeling is that any posterior calculation we want to make comes with
+an entire posterior distribution of estimates, so we never have to worry about
+figuring out CIs for a posteriori calculations. In general it's often better to
+do these kind of computational tricks to make the model fit efficiently, and
+then do transformations and predictions of interest afterwards.
 
 ## Appendix: imputation methods {.appendix .unnumbered}
 
