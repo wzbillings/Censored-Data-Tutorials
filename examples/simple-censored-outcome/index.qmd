@@ -7,6 +7,7 @@ library(cmdstanr)
 library(ggplot2)
 ggplot2::theme_set(hgp::theme_ms())
 pth_base <- here::here("examples", "simple-censored-outcome")
+source(here::here("utils.R"))
 ```
 
 Now that we've gone through a very broad overview of what censored data is,
@@ -425,7 +426,9 @@ surv_model <- survival::survreg(
 		# If the value is lower than LoD, replace it w/ LoD, then take the log
 		pmax(y, LoD) |> log(),
 		# The censoring indicator needs to be the opposite of what makes sense --
-		# zero for censored, one for uncensored
+		# zero for censored, one for uncensored -- it's actually an indicator of
+		# an "event" occurring, for us this is the event
+		# "getting a reliable measurement."
 		!c,
 		# Specify left censoring
 		type = 'left'
@@ -444,15 +447,15 @@ surv_model |>
 ```
 
 Despite all the finagling we have to do, we can see that the estimates are now
-much better. Although the point estimates are not as close as we would expect
-if we had the latent uncensored outcome variable, the confidence intervals
-actually contain the true values this time. (Note that `Log(scale)` is the
-estimated residual SD on the log scale, but for some reason the CI doesn't
-get calculated by any of the `survival` methods.) Notably, the CIs for
-this model are actually smaller than the the CIs for the naive model, even
-though we're assuming there is extra uncertainty in the outcome. But we have
-accounted for this uncertainty in the model, so it doesn't leak into the
-parameter estimates (of course that's a non-technical explanation).
+much better. Although the point estimates are not as close as we would expect if
+we had the latent uncensored outcome variable, the confidence intervals actually
+contain the true values this time. (Note that `Log(scale)` is the estimated
+residual SD on the log scale, but for some reason the CI doesn't get calculated
+by any of the `survival` methods.) Notably, the CIs for this model are actually
+smaller than the the CIs for the naive model, even though we're assuming there
+is extra uncertainty in the outcome. But we have accounted for this uncertainty
+in the model, so it doesn't leak into the parameter estimates (of course that's
+a non-technical explanation).
 
 The worst part here is doing all that `Surv()` stuff, but fortunately there are
 ways to avoid having to do all that. This method is commonly called the "Tobit
@@ -489,8 +492,8 @@ McElreath](https://xcelab.net/rm/) and the [Stan Prior Choice
 Guide](https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations).
 
 We need a prior for everything in our model that isn't observed in the data. For
-this model, that's our residual variance and the beta coefficients. We'll
-set the priors as follows:
+this model, that's our residual variance and the beta coefficients. We'll set
+the priors as follows:
 
 $$
 \begin{aligned}
@@ -499,39 +502,38 @@ $$
 \end{aligned}
 $$
 here, we use $\mathrm{t}\left(\mu, \sigma, \nu\right)$ to denote the
-location-scale Student's $t$-dsitribution with $\nu$ degrees of freedom.
-We use normal distributions centered at 0 for the $\beta_j$ to indicate
-our skepticism about the strength of the effects (if we were to pretend we
-didn't know the generative model). Because $\sigma$ must be postive, we
-actually use the "half" version of the distribution, which has strictly
-positive support.
+location-scale Student's $t$-dsitribution with $\nu$ degrees of freedom. We use
+normal distributions centered at 0 for the $\beta_j$ to indicate our skepticism
+about the strength of the effects (if we were to pretend we didn't know the
+generative model). Because $\sigma$ must be postive, we actually use the "half"
+version of the distribution, which has strictly positive support.
 
 Now, for this kind of model where only the outcome is censored, we can actually
 have the super-handy `brms` R package do the heavy lifting for us. All we have
 to do is a bit of data cleaning, and a bit of working specifying the model
 structure, but the package will handle writing, compiling, and running all of
-the Stan code, which is very conveninent. First we'll fit the naive model,
-to show the `brms` syntax, and then we'll cover the censored adjustment.
+the Stan code, which is very conveninent. First we'll fit the naive model, to
+show the `brms` syntax, and then we'll cover the censored adjustment.
 
 #### naive model in `brms`
 
-At first glance, the `brms` syntax appears to be quite difficult to use.
-While complex, it is concise and specifying the syntax is much less difficult
-than writing Stan code for many models. Fitting a `brms` model broadly
-requires 5 things from us: the first two are the formula, in `lm()` type syntax
-with a few extras, and the data, as we expect. We also need to specify a
-distributional `family` argument for the likelihood, which we implicitly do
-when we call `lm()`. As with base `R`, the `gaussian` likelihood is the default
-in `brms`, but it's good practice to be clear. We also need to specify the
-`priors`, which are written in a specific way, and the Stan control parameters
-which control the Bayesian routine. Because `brms` is a wrapper for Stan's
-NUTS sampler, the fitting routine is much more complicated than the routine for
-`lm()` and there's a lot we can change.
+At first glance, the `brms` syntax appears to be quite difficult to use. While
+complex, it is concise and specifying the syntax is much less difficult than
+writing Stan code for many models. Fitting a `brms` model broadly requires 5
+things from us: the first two are the formula, in `lm()` type syntax with a few
+extras, and the data, as we expect. We also need to specify a distributional
+`family` argument for the likelihood, which we implicitly do when we call
+`lm()`. As with base `R`, the `gaussian` likelihood is the default in `brms`,
+but it's good practice to be clear. We also need to specify the `priors`, which
+are written in a specific way, and the Stan control parameters which control the
+Bayesian routine. Because `brms` is a wrapper for Stan's NUTS sampler, the
+fitting routine is much more complicated than the routine for `lm()` and there's
+a lot we can change.
 
-If we just ignore these arguments, we can still get some results. Note that
-when you run a `brms` model like this, you'll first get a compiling message,
-then several intermittant progress updates about how fitting is going.
-I have those silenced here because it generates a lot of them.
+If we just ignore these arguments, we can still get some results. Note that when
+you run a `brms` model like this, you'll first get a compiling message, then
+several intermittant progress updates about how fitting is going. I have those
+silenced here because it generates a lot of them.
 
 ```{r}
 #| message: false
@@ -544,13 +546,13 @@ summary(basic_brms_fit)
 ```
 
 Because the model is simple, we don't have to do much. The estimates here are
-very similar to the estimates from the naive frequentist model.
-Let's apply some priors and some
-Stan arguments and see what happens. First, we'll set up the priors.
+very similar to the estimates from the naive frequentist model. Let's apply some
+priors and some Stan arguments and see what happens. First, we'll set up the
+priors.
 
-I recommend reading the `brms` documentation and papers to learn more about
-how this prior syntax works, but we can also take a look at the default
-priors that `brms` set for our basic model.
+I recommend reading the `brms` documentation and papers to learn more about how
+this prior syntax works, but we can also take a look at the default priors that
+`brms` set for our basic model.
 
 ```{r}
 prior_summary(basic_brms_fit)
@@ -646,7 +648,8 @@ cens_brms_fit <- brms::brm(
 	iter = 2000,
 	chains = 4,
 	cores = 4,
-	seed = 32134
+	seed = 32134,
+	backend = "cmdstanr"
 )
 summary(cens_brms_fit)
 ```
@@ -665,11 +668,138 @@ lacks many of the convenience features).
 
 #### Custom Stan code with `cmdstanr`
 
-STAN CODE HERE.
+Moving from using only `R` to writing a `Stan` program is the biggest jump we
+have to make in our quest to deal with censored data. If you don't know anything
+about Stan, I recommend the Statistical Rethinking book mentioned earlier, as
+the associated [`rethinking` package](https://github.com/rmcelreath/rethinking)
+is quite easy to use to specify a lot of basic statistical models (with
+guidance from the text), and provides a method to view the Stan code generated
+by a model. The `brms` package also provides the `stancode()` method, but the
+Stan code generated by `brms` employs many tips to make the model more efficient,
+and so can be difficult to interpret if you aren't familiar with Stan.
+
+Anyways, I don't plan to explain the details of writing Stan code here, like I
+mentioned with `brms` and the `R` language and even the statistics stuff we're
+doing, there are a lot better resources you can find with a quick google that
+are better than what I could write. So instead I already wrote the Stan code,
+and here's the code.
+
+::: {.callout-note icon=false collapse=true appearance="simple"}
+##### Model code {.unnumbered}
+
+`r here::here(pth_base, "censored-outcome-integration.stan")`
+
+:::
+
+Now we can talk about running Stan code in `R`, which I actually will talk a bit
+about. Once you have the Stan file set up, you have to figure out how to get
+Stan running. I'll use (and recommend that everyone else) use `cmdstanr`, which
+is an R package you can install. You'll need to do some extra setup if you've
+never used the package before, so follow
+[their guide](https://mc-stan.org/cmdstanr/articles/cmdstanr.html) and I
+strongly recommend following the steps outside of an R project, just open the
+base R gui and copy and paste their code.
+
+Once you have `cmdstanr` installed, the first thing we need to do is load the
+Stan file and compile the model. I almost always prefer to do this in two
+separate steps in case I need to control or force the compilation step.
+
+```{r load stan program}
+stan_pth <- here::here(pth_base, "censored-outcome-integration.stan")
+stan_mod <- cmdstanr::cmdstan_model(stan_file = stan_pth, compile = FALSE)
+```
+
+The `stan_mod` object is set up with `cmdstanr` now, so it knows where to find
+the Stan code it will need to run. If you try to print that object, it will
+print the Stan code and will also tell you if there are any syntactical errors
+in the code. Since there are no syntactical errors, we can try and *compile*
+the Stan code. This step is likely not familiar if you only use R code. Stan
+code needs to be translated into machine-level language before it can be run,
+which dramatically speeds up the run time for complex models. This creates an
+`.exe` file which can be run by `cmdstanr` without needing to compile again.
+Here I'll compile in *pedantic mode* which will give you suggestions on common
+issues that can make your model worse, without explicitly causing errors. This
+will spit out a lot of messages that I've elected to hide. They aren't very
+useful most of the time.
+
+```{r compile stan program}
+#| message: false
+stan_mod$compile(pedantic = TRUE, force_recompile = TRUE)
+```
+
+Now that the program is compiled, we need to set up our data in a specific
+format before we can run the HMC sampler. Stan accepts data in an R `list()`
+format, where each of the items can be different sizes and types. You can
+see in the `data{}` section of the printed Stan code what items you need to
+put in the list, and what their types should be. So we'll do some quick data
+cleaning.
+
+```{r organize data for stan}
+stan_data <- list(
+	# Number of data points
+	n = nrow(gly_data_obs),
+	# number of predictors
+	p = 3,
+	# vector of outcome values
+	y = log(gly_data_obs$y),
+	# Vector of censoring indicators
+	c = gly_data_obs$c,
+	# Matrix of predictor values (size n x 3)
+	X = with(
+		gly_data_obs,
+		matrix(
+			c(dist_from_farm, personal_gly_use, water_filter_use),
+			ncol = 3
+		)
+	),
+	# limit of detection -- needs to be on same scale as y vector
+	DL = log(LoD)
+)
+str(stan_data, 1)
+```
+
+With the data in this format, we can go ahead and pass it to Stan and invoke
+the sampler. Since all of the model options are specified in the actual Stan
+code file this time, everything we pass to the `sample()` method is a control
+argument for how cmdstan runs the sampler.
+
+
+```{r}
+#| message: false
+stan_fit <- stan_mod$sample(
+	data = stan_data,
+	seed = 10896,
+	chains = 4,
+	parallel_chains = 4,
+	iter_sampling = 4000,
+	iter_warmup = 1000
+)
+stan_fit
+```
+
+If you compare the numbers between this fit and the `brms` fit, they're pretty
+much exactly the same. Again, it's largely because this model is so simple.
+If we were doing a more complicated `brms`-compatible model, the `brms` fit
+would probably be a bit better cause of all the tricks it does to write the
+Stan code in an efficient way. But for models with censored predictors we'll
+have to use our own Stan code, so it's worth seeing how to do it for this
+relatively easier case.
 
 ## Conclusions
 
-So, 
+In this example, we saw how to deal with censored outcomes in regression models.
+This method of adjusting the likelihood generalizes to arbitrarily complex
+models as long as the outcome follows this kind of simple censoring pattern.
+This method also generalizes to each observaiton of the outcome having a
+different limit of detection, and we can have both upper and lower LoDs, or even
+interval censoring patterns, as long as we know and we can write down the
+censoring limits for each observation. But we'll discuss more of that kind of
+stuff in future examples.
+
+Because only the outcome is censored, there are a lot of methods available to
+us for dealing with this kind of data, including pre-built methods in
+`survival` for frequentist ML models, and `brms` for Bayesian models. But as
+we'll see in the next example, not everything can be so easy.
 
 ## Appendix: notes on modeling {.appendix .unnumbered}
 
@@ -714,6 +844,23 @@ do these kind of computational tricks to make the model fit efficiently, and
 then do transformations and predictions of interest afterwards.
 
 ## Appendix: imputation methods {.appendix .unnumbered}
+
+The other approach to dealing with censoring is to use a constrained imputation
+method. In general, multiple imputation (MI) works well with Bayesian inference,
+and you can implement MI and subsequent pooling methods to correct for censoring,
+so long as the MI method can be constrained to account for the limits on
+censored values.
+
+In addition to standard MI methods, you can also impute values within the Stan
+model -- this is a big advantages of Bayesian methods. I won't go into details
+about either of these imputation methods, but for a brief discussion you can
+read this [StackExchange
+post](https://stats.stackexchange.com/questions/482079/how-best-to-deal-with-a-left-censored-predictor-because-of-detection-limits-in).
+The [Stan
+manual](https://mc-stan.org/docs/stan-users-guide/truncation-censoring.html#censored-data)
+has an example of this as well. Similar imputation methods are covered in books
+like Bayesian Data Analysis by Gelman et al, and we can account for censoring by
+specifying constraints.
 
 
 

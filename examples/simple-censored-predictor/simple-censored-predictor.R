@@ -7,18 +7,7 @@
 
 # Setup ####
 
-# Need to load all of cmdstanr or some things act weird
-library(cmdstanr)
 
-# ggplot2 theme setup
-library(ggplot2)
-ggplot2::theme_set(hgp::theme_ms())
-
-# Set up a variable with the base path for this document
-pth_base <- here::here("examples", "simple-censored-predictor")
-
-# Set a constant value for pRNG seed
-S <- 370
 
 # Cat weight simulation ####
 # Set up the simulation parameters so we can easily display them later
