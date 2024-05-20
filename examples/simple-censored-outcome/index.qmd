@@ -3,6 +3,7 @@
 ```{r setup}
 # Setup code
 library(cmdstanr)
+library(brms)
 # ggplot2 theme setup
 library(ggplot2)
 ggplot2::theme_set(hgp::theme_ms())
@@ -536,14 +537,18 @@ several intermittant progress updates about how fitting is going. I have those
 silenced here because it generates a lot of them.
 
 ```{r}
-#| message: false
-library(brms)
+#| output: false
 basic_brms_fit <- brms::brm(
 	formula = log(y) ~ 1 + dist_from_farm + personal_gly_use + water_filter_use,
-	data = gly_data_obs
+	data = gly_data_obs,
+	silent = 2
 )
+```
+
+```{r}
 summary(basic_brms_fit)
 ```
+
 
 Because the model is simple, we don't have to do much. The estimates here are
 very similar to the estimates from the naive frequentist model. Let's apply some
@@ -582,7 +587,7 @@ make it clear that these other things are telling Stan how it should run the
 fitting routine.
 
 ```{r}
-#| message: false
+#| output: false
 naive_brms_fit <- brms::brm(
 	formula = log(y) ~ dist_from_farm + personal_gly_use + water_filter_use,
 	data = gly_data_obs,
@@ -593,10 +598,15 @@ naive_brms_fit <- brms::brm(
 	chains = 4,
 	cores = 4,
 	seed = 32134,
-	backend = "cmdstanr"
+	backend = "cmdstanr",
+	silent = 2
 )
+```
+
+```{r}
 summary(naive_brms_fit)
 ```
+
 
 The estimates don't change that much from the previous fit. Again, that's
 because a simple linear model with data generated from a linear model is really
@@ -637,7 +647,7 @@ head(brms_data)
 Now we can fit the `brms` model with the censoring correction.
 
 ```{r}
-#| message: false
+#| output: false
 cens_brms_fit <- brms::brm(
 	formula = outcome | cens(censored) ~ dist_from_farm + personal_gly_use +
 		water_filter_use,
@@ -649,10 +659,15 @@ cens_brms_fit <- brms::brm(
 	chains = 4,
 	cores = 4,
 	seed = 32134,
-	backend = "cmdstanr"
+	backend = "cmdstanr",
+	silent = 2
 )
+```
+
+```{r}
 summary(cens_brms_fit)
 ```
+
 
 Again, our results are similar to the frequentist model. All of the true
 values are now inside of the estimated 95% credible intervals, with the
@@ -687,7 +702,7 @@ and here's the code.
 ::: {.callout-note icon=false collapse=true appearance="simple"}
 ##### Model code {.unnumbered}
 
-`r here::here(pth_base, "censored-outcome-integration.stan")`
+`r include_code_file(here::here(pth_base, "censored-outcome-integration.stan"), "stan")`
 
 :::
 
@@ -741,7 +756,7 @@ stan_data <- list(
 	# number of predictors
 	p = 3,
 	# vector of outcome values
-	y = log(gly_data_obs$y),
+	y = brms_data$outcome,
 	# Vector of censoring indicators
 	c = gly_data_obs$c,
 	# Matrix of predictor values (size n x 3)
@@ -764,18 +779,23 @@ code file this time, everything we pass to the `sample()` method is a control
 argument for how cmdstan runs the sampler.
 
 
-```{r}
-#| message: false
+```{r run stan model}
+#| output: false
 stan_fit <- stan_mod$sample(
 	data = stan_data,
 	seed = 10896,
 	chains = 4,
 	parallel_chains = 4,
 	iter_sampling = 4000,
-	iter_warmup = 1000
+	iter_warmup = 1000,
+	refresh = 0
 )
-stan_fit
 ```
+
+```{r}
+stan_fit$summary()
+```
+
 
 If you compare the numbers between this fit and the `brms` fit, they're pretty
 much exactly the same. Again, it's largely because this model is so simple.
