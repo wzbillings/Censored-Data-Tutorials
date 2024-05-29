@@ -13,25 +13,25 @@ book:
     - part: "First models"
       chapters:
         - examples/simple-censored-outcome/index.qmd
-        #- examples/simple-censored-predictor/index.qmd
-        #- examples/censored-outcome-and-predictor/index.qmd
-        #- examples/censored-outcome-and-multiple-predictors/index.qmd
+        - examples/simple-censored-predictor/index.qmd
+        - examples/censored-outcome-and-predictor/index.qmd
+        - examples/censored-outcome-and-multiple-predictors/index.qmd
     - part: "Case studies"
-    #   chapters: 
-    #     - examples/nov-data-example/index.qmd
-    #     - examples/interval-censoring-weibull/index.qmd
-    #     - examples/HAI-data-example/index.qmd
-    # - part: "Implementation"
-    #   chapters:
-    #     - implementation/maximum-likelihood/index.qmd
-    #     - implementation/brms/index.qmd
-    #     - implementation/stan/index.qmd
+      chapters:
+        - examples/nov-data-example/index.qmd
+        - examples/interval-censoring-weibull/index.qmd
+        - examples/HAI-data-example/index.qmd
+    - part: "Implementation"
+      chapters:
+        - implementation/maximum-likelihood/index.qmd
+        - implementation/brms/index.qmd
+        - implementation/stan/index.qmd
     - front-end/references.qmd
 
 bibliography: references.bib
 
 execute:
-  freeze: auto
+  freeze: true
 
 filters:
   - include-code-files

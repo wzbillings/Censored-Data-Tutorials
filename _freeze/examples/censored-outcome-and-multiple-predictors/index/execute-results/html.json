@@ -1,0 +1,15 @@
+{
+  "hash": "ddab5252d9a0bb1c3f1e1f4e4777cde0",
+  "result": {
+    "engine": "knitr",
+    "markdown": "# Censored outcome and multiple predictors\n\n\n\n\n\nThis is a placeholder\n\n\n<!-- END OF FILE -->\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
