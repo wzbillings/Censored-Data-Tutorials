@@ -1,5 +1,11 @@
 # One censored outcome
 
+::: {.callout-important}
+The contents of this page might change at any time -- our lab group is still
+working on simulations and investigating other methods for dealing with
+censored data, so the content here might be buggy.
+:::
+
 ```{r setup}
 # Setup code
 library(cmdstanr)

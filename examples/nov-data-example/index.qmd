@@ -1,5 +1,10 @@
 # Example Model 4: Logistic regression with censored predictors
 
+::: {.callout-important}
+The contents of this page might change at any time -- this example is 
+**under construction**!
+:::
+
 ```{r setup}
 base_pth <- here::here("examples", "nov-data-example")
 knitr::read_chunk(here::here(base_pth, "setup.R"))

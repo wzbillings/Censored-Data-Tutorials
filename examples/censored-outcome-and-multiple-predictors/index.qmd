@@ -1,5 +1,10 @@
 # Censored outcome and multiple predictors
 
+::: {.callout-important}
+The contents of this page might change at any time -- this example is 
+**under construction**!
+:::
+
 ```{r setup, include = FALSE}
 library(cmdstanr)
 # ggplot2 theme setup

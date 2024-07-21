@@ -1,6 +1,13 @@
 # One censored predictor
 
+::: {.callout-important}
+The contents of this page might change at any time -- our lab group is still
+working on simulations and investigating other methods for dealing with
+censored predictors, so the content here might be buggy.
+:::
+
 ```{r setup}
+# Initial setup steps!
 # Need to load all of cmdstanr or some things act weird
 library(cmdstanr)
 
@@ -58,7 +65,7 @@ $$
 [^1]: There's actually a statistical issue with this Normal/Normal model: it's
 not fully identifiable without extra constraints. See the [errors-in-variables
 wikipedia page](https://en.wikipedia.org/wiki/Errors-in-variables_models) for a
-bit more info.
+bit more info. But we'll ignore that for now.
 
 This is the part where we'll just say you can put whichever distribution here
 as well -- don't worry, we'll do another non-normal example after this. Now
@@ -132,20 +139,20 @@ we limit our study to adult male American shorthair cats (we can recruit other
 types of cats after we finish this pilot study). According to
 [this article](https://web.archive.org/web/20240305033813/https://www.thesprucepets.com/american-shorthair-cat-breed-profile-4774399),
 the normal weight for such a cat is from 11 -- 15 pounds. So, we'll take 13 lbs.
-as the average weight of a cat, and 2 lbs. as the standard deviation.So, letting $w_i^*$ represent the true weight of the $i$th cat, we would write
-$$w_i^* \sim \mathrm{Normal} \left(13, 2^2\right).$$
+as the average weight of a cat, and 2 lbs. as the standard deviation.So, letting $x_i^*$ represent the true weight of the $i$th cat, we would write
+$$x_i^* \sim \mathrm{Normal} \left(13, 2^2\right).$$
 
 Now, the problem is that we do not have a very good scale -- our scale is
 accurate to the tenth of a pound, but the highest value it can measure is 14
 lbs[^Our scale could also have a lower bound, but in this case it's probably so low that we would never get any left-censored observations.]. In terms of the DGP, we would say that
-$$w_{\max} = 14.$$
+$$x_{\max} = 14.$$
 
 Using that information, we can then write out the observation model for the
 weight data.
 $$
-w_i = \begin{cases}
-w_{\max}, & w_{\max} \leq w_i^*  \\
-w_i^*, & w_i^* < w_{\max}
+x_i = \begin{cases}
+x_{\max}, & x_{\max} \leq x_i^*  \\
+x_i^*, & x_i^* < x_{\max}
 \end{cases}.
 $$
 This is not much more complicated than the abstract example we wrote out before
@@ -155,20 +162,22 @@ we call $c_i$, that tells us if our weight values are censored or not.
 
 $$
 c_i = \begin{cases}
-1, & w_i \geq w_{\max} \\
+1, & x_i \geq x_{\max} \\
 0, & \text{otherwise}
 \end{cases}.
 $$
 
 Next, we need to pick a distribution for our outcome. Since many biological
-concentration values often follow [Gamma distributions](https://en.wikipedia.org/wiki/Gamma_distribution), let's use
-that for our cholesterol levels [^This will also allow us to avoid the
-identifiability issue we briefly mentioned.]. Based on
+concentration values often follow [log-normal distributions](https://en.wikipedia.org/wiki/Log-normal_distribution), let's use
+that for our cholesterol levels. Based on
 [this article](https://web.archive.org/web/20240305035325/https://cats.com/high-cholesterol-in-cats)
 (I have no idea how accurate it is, if at all, just like the previous one),
 the normal amount of cholesterol for a cat is 1.8 -- 3.9 mMol/liter. So, we just
-need to choose Gamma distribution parameters.
+need to choose distribution parameters. Note that for log-normal outcomes, it
+is almost always easier to use a normal distribution (Gaussian) model on the
+log-scale than it is to actually fit a lognormal model, so we'll do that.
 
+<!--
 ::: {.callout-note icon=false collapse=true appearance="simple"}
 
 ### Gamma distribution parametrization {.unnumbered}
@@ -186,11 +195,12 @@ By making those substitutions in the density, we can show that
 $$E(y) = \mu \quad \text{and} \quad \mathrm{Var}(y) = \frac{\mu^2}{k}.$$
 
 When we specify $\mu = f(X)$ in the context of a linear model, we must then
-invert the transformation, and when we invoke the gamma distribution in Stan,
+convert back to Stan's parametrization, and when we invoke the gamma distribution in Stan,
 we would write
 $$y \sim \text{Gamma}\left(k, \frac{k}{\mu} \right).$$
 
 :::
+-->
 
 If we treat the range the same as we did previously, we can estimate that the
 overall average is around 2.85, with a spread of 1.05. That seems a little high,
@@ -202,61 +212,67 @@ assumptions like this that you prefer instead.)
 
 So, we would write the distribution for our cholesterol values, which we'll
 call $y$, as
+
 $$
-y_i \sim \text{Gamma}\left(k, \frac{k}{\mu_i}\right).
+\log(y_i) \sim \text{Normal}\left(\mu_i, \sigma\right).
 $$
+
 To relate this to the weight values, we would then write out our linear model
 for $\mu_i$, the mean, as
 
 $$
-\mu_i = \alpha + \beta \cdot w^*_i.
+\mu_i = \alpha + \beta \cdot x^*_i.
 $$
-Choosing values of $\alpha$, $\beta$, and $k$, that make sense together and
+
+Choosing values of $\alpha$, $\beta$, and $\sigma$, that make sense together and
 match the ranges we expect is kind of hard -- for the purposes of this
-simulation, I just messed around until I got values that I liked. Note that
-because the variance depends on the mean, we don't have a separate parameter
-for the residual variance. Instead, $\alpha$ and $\beta$ affect the
-residual variance (as does the distribution of $w_i$), and the parameter
-$k$ is independent of the mean but also has an effect on the variance. So
-for this example, I choose the simulation parameters $k=18$, $\alpha = 0.75$,
-and $\beta = 0.16$.
+simulation, I just messed around until I got values that I liked.
 
 ```{r data generation parameters}
 # List of data generating parameters / simulation parameters
 data_gen_parms <- list(
 	# Number of observations to generate
-	n = 154,
+	n = 337,
 	# Set a static constant value for the lower limit of detection (LoD)
 	ulod = 14,
 	# Linear model intercept
-	alpha = 0.75,
+	alpha = 0.35,
 	# Linear model slope
-	beta = 0.16,
+	beta = 0.06,
 	# Linear model residual variance
-	k = 18,
+	sigma = 0.15,
 	# Mean of normally distributed x values
 	w_mu = 13,
 	# SD of normally distributed x values
-	w_sd = 2
+	w_sd = 2,
+	# pRNG seed
+	seed = S
 )
 ```
 
-Now we need to simulate the data. I randomly decided that we should have 154
-cats in our stduy sample.
+So for this example, I choose the simulation parameters
+$\sigma = `r data_gen_parms$sigma`$,
+$\alpha = `r data_gen_parms$alpha`$,
+and $\beta = `r data_gen_parms$beta`$.
+We can interpret these parameters in the standard way for linear regression,
+noting that they are in terms of the log-cholesterol. Now we need to simulate
+the data. I randomly decided that we should have `r data_gen_parms$n` cats in
+our study sample.
 
-```{r}
+```{r data simulation 1}
 generate_cat_weight_data <- function(
-		n = 1000, ulod = 2, alpha = 1, beta = 2, k = 5, w_mu = 5, w_sd = 3,
-		seed = S
+		n, ulod, alpha, beta, sigma, w_mu, w_sd, seed = NULL
 ) {
-	set.seed(S)
+	# Set the seed, using the current unix time if one is not given
+	if(is.null(seed)) {set.seed(Sys.time())} else {set.seed(seed)}
 	
+	# Generate the data
 	l <- tibble::tibble(
 		w_star = rnorm(n, w_mu, w_sd),
 		w = ifelse(w_star >= ulod, ulod, w_star),
 		c = ifelse(w_star >= ulod, 1, 0),
 		mu = alpha + beta * w_star,
-		y = rgamma(n, shape = k, rate = k / mu)
+		y = exp(rnorm(n, mu, sigma))
 	)
 	
 	o <- dplyr::select(l, w, y, c)
@@ -271,10 +287,15 @@ dat_observed <- dat$observed
 dplyr::glimpse(dat_latent)
 ```
 
+You can use this function to generate similar datasets with arbitrary
+parameters if you want. Note that in this example, about
+`r round(mean(dat_latent$c), 2) * 100` percent of our predictor values are
+censored.
+
 Now let's take a quick look at the latent data so we can visualize the effect
 of censoring the predictor.
 
-```{r}
+```{r plot latent data}
 dat_latent |>
 	ggplot() +
 	geom_vline(
@@ -297,60 +318,71 @@ dat_latent |>
 Here the gray points show the true latent values of the censored points, and
 the black points show what we actually observed. You can see that we
 obviously observe a much smaller range of data when censoring happens. If we
-had the latent variables in real life, we could use a Gamma family GLM to
-estimate the coefficients of the linear model, like this.
+had the latent variables in real life, we could use a standard regression
+model to estimate them, like this.
 
 ```{r}
-latent_gamma_glm <- glm(
-	y ~ w_star,
-	family = Gamma(link = "identity"),
+latent_glm <- glm(
+	log(y) ~ w_star,
+	family = "gaussian",
 	data = dat_latent
 )
-broom::tidy(latent_gamma_glm, conf.int = TRUE)
+broom::tidy(latent_glm, conf.int = TRUE)
 ```
+
+Due to sampling error, the estimates are not perfect, but the confidence
+intervals contain the true values and the estiamtes are reasonably close.
+
+<!--
 
 Note that the dispersion estimate is an estimate of $1/k$. We can also get a
 slightly improved estimate of $k$ using a helper function from the `MASS`
-package. (The function performs another round of maximum likelihood estimation,
+package.[^The function performs another round of maximum likelihood estimation,
 the actual estimate from `glm()` is the MLE of the coefficients but not of the
-dispersion.)
+dispersion.]
 
-```{r}
+```{r, eval = FALSE}
 MASS::gamma.shape(latent_gamma_glm)
 ```
 
 The estimates are affected by sampling error, perhaps moreso than we would
 expect from a Gaussian regression model. But overall they're fairly close,
-and our CI for the coefficients includes the true values. So, the natural
+and our CI for the coefficients includes the true values.
+-->
+
+So, the natural
 next question is what happens when we fit the model with the actual observed
 data that's been censored? (I always call this the "naive" model, because we
 are naively hoping for a model that breaks our assumptions to work.)
 
 ```{r}
-naive_gamma_glm <- glm(
-	y ~ w,
-	family = Gamma(link = "identity"),
+naive_glm <- glm(
+	log(y) ~ w,
+	family = "gaussian",
 	data = dat_observed
 )
-broom::tidy(naive_gamma_glm, conf.int = TRUE)
+broom::tidy(naive_glm, conf.int = TRUE)
 ```
 
-Well, in this case, we can see that the estimates are actually not too
-different. The are a bit off and the standard errors are larger, but we could
-probably get away with using these same estimates, we just seem to have a less
-precise answer.
+In this case, we can see that the estimates are definitely biased. The CI for
+the slope doesn't even include the true value. Honestly, most models we fit
+in real life are probably more incorrect than this though, so interpreting
+this coefficient with a hefty amount of caution would probably not be
+the end of the world. However, we can do better, and censoring can also cause
+worse problems.
 
 ## More censoring!
 
 Of course, if ignoring the problem didn't make a difference, we would want to
 just ignore it, right? But let's see what happens when we increase the amount
 of data that are censored. So this time, let's say our scale has a maximum of
-12 lbs[^A good question to ask at this point is whether we should actually be doing this study if we can't get better measures. But some immunological or environmental studies actually have more than 50% censored or missing data, and sometimes the question is so important that we really want to get the most out of the data we have.]. So first let's rerun the simulation.
+12.5 lbs[^A good question to ask at this point is whether we should actually be doing this study if we can't get better measures. But some immunological or environmental studies actually have more than 50% censored or missing data, and sometimes the question is so important that we really want to get the most out of the data we have.]. So first let's rerun the simulation.
 
 ```{r}
 data_gen_parms_2 <- data_gen_parms
-data_gen_parms_2$n <- 10000
-data_gen_parms_2$ulod <- 13
+data_gen_parms_2$ulod <- 12.5
+# Resimulate the data -- note that because we used the same random seed, the
+# only that will change is the amount of censoring.
 dat2 <- do.call(generate_cat_weight_data, data_gen_parms_2)
 dat2_latent <- dat2$latent
 dat2_observed <- dat2$observed
@@ -359,44 +391,44 @@ dplyr::glimpse(dat2_latent)
 ```
 
 If we plot these new simulated data, we can see that many more data points are
-censored that before, it looks like over half of them.
+censored that before, and about `r round(mean(dat2_observed$c), 2) * 100`
+percent of the predictor values are censored; much more than the previous
+example.
 
 ```{r}
 dat2_latent |>
 	ggplot() +
-	# geom_vline(
-	# 	xintercept = data_gen_parms_2$ulod,
-	# 	linetype = "dashed",
-	# 	color = "gray"
-	# ) +
-	# geom_segment(
-	# 	aes(
-	# 		x = w_star, xend = w,
-	# 		y = y, yend = y
-	# 	),
-	# 	color = "gray"
-	# ) +
-	geom_point(aes(x = w_star, y = y), color = "black", size = 2) +
-	#geom_point(aes(x = w, y = y), color = "black", size = 2) +
+	geom_vline(
+		xintercept = data_gen_parms$ulod,
+		linetype = "dashed",
+		color = "gray"
+	) +
+	geom_segment(
+		aes(
+			x = w_star, xend = w,
+			y = y, yend = y
+		),
+		color = "gray"
+	) +
+	geom_point(aes(x = w_star, y = y), color = "gray", size = 2) +
+	geom_point(aes(x = w, y = y), color = "black", size = 2) +
 	labs(x = "Weight", y = "Cholesterol")
 ```
 
 Now let's see what happens when we fit a naive model.
 
 ```{r}
-naive_gamma_glm_2 <- glm(
-	y ~ w,
-	family = Gamma(link = "identity"),
+naive_glm_2 <- glm(
+	log(y) ~ w,
+	family = "gaussian",
 	data = dat2_observed
 )
-broom::tidy(naive_gamma_glm_2, conf.int = TRUE)
+broom::tidy(naive_glm_2, conf.int = TRUE)
 ```
 
-Now we can see that the estimates are much worse. Interestingly, the CI for
-the slope still contains the true estimate, but the whole interval is moved
-upwards, and is wider. The intercept also basically can't be estimted at all
-using this model, the model predicts that it could pretty much be anything,
-which isn't ideal. So let's see if we can fix things.
+Now we can see that the estimates are much worse. The intercept is actually
+negative, with a wide confidence interval, and the slope has been severely
+inflated. So let's see what we can do about that.
 
 ## Model for censored predictors
 
@@ -404,23 +436,24 @@ Let's first write out the entire data generating process in one place.
 
 $$
 \begin{aligned}
-y_i &\sim \text{Gamma}\left(k, \frac{k}{\mu_i}\right) \\
-\mu_i &= \alpha + \beta \cdot w^*_i \\
-w_i^* &\sim \mathrm{Normal} \left(\mu_w, \sigma_w^2 \right) \\
-w_i &= \begin{cases}
-w_{\max}, & w_{\max} \leq w_i^*  \\
-w_i^*, & w_i^* < w_{\max}
+y_i &\sim \text{Normal}\left(\mu_i, \sigma\right) \\
+\mu_i &= \alpha + \beta \cdot x^*_i \\
+x_i^* &\sim \mathrm{Normal} \left(\mu_x, \sigma_x^2 \right) \\
+x_i &= \begin{cases}
+x_{\max}, & x_{\max} \leq x_i^*  \\
+x_i^*, & x_i^* < x_{\max}
 \end{cases}
 \end{aligned}
 $$
 
-Here, we assume $w_{\max} = 12$ is a known constant. In future tutorials, we'll
+Here, we assume $x_{\max} = `r data_gen_parms_2$ulod`$ is a known constant.
+In future tutorials, we'll
 discuss what to do if this isn't a known constant, but in most situations
 that arise in a lab study, we do know the censoring limits.
 
 Now, the unfortunate thing about censored predictors like this, is that there
 are (to my knowledge) no out-of-the-box models that can adjust the likelihood.
-Most frequentist methods assume that the $w_i$ predictor variables are
+Most frequentist methods assume that the $x_i$ predictor variables are
 **known constants** which have no intrinsic error. Of course this is rarely
 true (outside of a specific type of experimental setup), and there are
 [errors-in-variables
@@ -428,6 +461,15 @@ models](https://en.wikipedia.org/wiki/Errors-in-variables_models) which can help
 to address this. But I'm not aware of any errors-in-variables implementations
 that allow for arbitrary and censored predictor distributions.
 
+Because directly modeling the likelihood of the predictor variable is quite
+difficult (we will discuss this in future tutorials), we'll use a constrained
+imputation approach in Stan. Sometimes called a "full Bayesian" approach, we
+specify a distribution for the predictor values. Then, we can use observations
+of the predicted values to estimate the parameters, and we can impute censored
+observations from a truncated distribution where the imputed value is
+guaranteed to be less than the limit of detection (for a lower limit).
+
+<!--
 So, we'll use Stan to fit a model, and we'll use an approach called **joint
 modeling**. Instead of optimizing the likelihood of $y$ conditional on $x$,
 we'll optimize the joint likelihood of $x$ and $y$, which is fairly easy to do
@@ -446,6 +488,7 @@ Once we've specified that we're optimizing the joint likelihood of $x$ and $y$,
 and we're making an independence assumption to construct that likelihood, **we
 can adjust for censoring in the predictors using the same integration method
 we used for the outcome.**
+-->
 
 This type of model is implemented in the following Stan code. To fit a Stan
 model, we'll also need to specify priors, and I decided to use the same generic
@@ -454,20 +497,26 @@ Student's (Half) $t$ priors that I discussed in the previous section.
 ::: {.callout-note icon=false collapse=true appearance="simple"}
 ##### Model code {.unnumbered}
 
-`r here::here(pth_base, "censored-predictor.stan")`
+`r include_code_file(here::here(pth_base, "censored-predictor-imputation.stan"), "stan")`
 
 :::
 
 As with last time, first we need to set up a data list that matches what the
-Stan code expects in the `data` block.
+Stan code expects in the `data` block. Note that for the imputation method,
+the data block only requires us to pass in the observed values of $x$. This
+leads to some annoying but necessary data cleaning, where we have to make sure
+that all of the censored values are together in the dataset and all of the
+observed values are together in the data set, to make sure the correct
+$(x_i, y_i)$ pairs stay together.
 
 ```{r set up stan data}
+dat2_sorted <- dat2_observed[order(dat2_observed$c), ]
 stan_data <- list(
-	n = nrow(dat2_observed),
-	y = dat2_observed$y,
-	w = dat2_latent$w_star,
-	c = dat2_observed$c,
-	ulod = data_gen_parms_2$ulod
+	N = nrow(dat2_sorted),
+	N_obs = nrow(dat2_sorted[dat2_sorted$c == 0, ]),
+	y = log(dat2_observed$y),
+	x_obs = dat2_observed$w[dat2_sorted$c == 0],
+	LoD = data_gen_parms_2$ulod
 )
 str(stan_data, 1)
 ```
@@ -475,8 +524,8 @@ str(stan_data, 1)
 Next we'll load and compile the program.
 
 ```{r load stan model}
-#| message: true
-mod_path <- here::here(pth_base, "censored-predictor.stan")
+#| message: false
+mod_path <- here::here(pth_base, "censored-predictor-imputation.stan")
 stan_mod <- cmdstanr::cmdstan_model(mod_path, compile = FALSE)
 stan_mod$compile(pedantic = TRUE, force_recompile = TRUE)
 ```
@@ -491,43 +540,40 @@ fit <- stan_mod$sample(
 	parallel_chains = 4,
 	chains = 4,
 	iter_warmup = 1000,
-	iter_sampling = 4000
+	iter_sampling = 1250,
+	# Turn off printing messages
+	refresh = 0,
+	show_messages = FALSE,
+	show_exceptions = FALSE
 )
 ```
 
-```{r}
-fit$summary() |> print(n = Inf)
-```
-
-## The other method (Bjorn method)
-
-```{r}
-mod_pth <- here::here(pth_base, 'Ex1b.stan')
-mod2 <- cmdstanr::cmdstan_model(stan_file = mod_pth)
-```
+I silenced the printout for the purposes of this vignette, but we can quickly
+quick the diagnostics to show that, while there were a few divergences in the
+warmup stage, there were no post-warmup divergent transitions and sampling went
+fairly well.
 
 ```{r}
-dat2 <- list()
-dat2$y <- df_stan$y
-dat2$x <- df_stan$x
-dat2$x_cens <- df_stan$cens
-dat2$N <- length(dat2$y)
-dat2$DL <- lod
+fit$diagnostic_summary()
 ```
 
-```{r}
-fit2 <- mod2$sample(dat2, seed = 100, parallel_chains = 4)
-```
+Now we can take a look at the posterior distributions of our parameters of
+interest. Notably, we have full posterior distributions for all of the imputed
+predictor values, but those are generally not of much interest.
 
 ```{r}
-fit2$summary() |>
-	dplyr::filter(!startsWith(variable, "x")) |>
-	print(n = Inf)
+fit$summary(variables = c('a', 'b', 'sigma', 'x_mu', 'x_sd'))
 ```
 
-```{r}
-post <- posterior::as_draws_array(fit2)
-```
+Here, we see that some of the parameter estimates are fixed, but others don't
+actually seem to be. The model basically can't tell where the intercept is,
+and the parameters for the mean and standard deviation of $x$ are not
+quite right, especially the standard deviation. But more importantly, the
+estimate of the slope appears to be corrected -- while the point estimate is
+not exactly correct, we are able to recover an accurate credible interval,
+and the slope is the main parameter of interest. So this imputation method
+manages to correct our effect estimate, although the issues with identifiability
+in this model might be harder to fix.
 
 
 <!-- END OF FILE -->
