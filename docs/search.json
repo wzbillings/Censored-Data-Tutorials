@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Bayesian censoring",
+    "title": "Modeling with Censored Data",
     "section": "",
-    "text": "Preface\nThis book is where we can store our thoughts and codes on dealing with censoring data in Bayesian models. See the README to find where everything is and how to contribute.\nContributors:\n\nZane Billings (https://wzbillings.com/)",
+    "text": "Preface\nThis book contains our notes on dealing with censored data, including methods for dealing with both censored outcomes and predictors. Where possible, we try to include both frequentist and Bayesian models.\n\nThe short link to this website is: https://tinyurl.com/hg-cens.\nThe full link is currently: https://wzbillings.github.io/Censored-Data-Tutorials/.\nFor source code, go here.\nPlease submit bug reports, typos, and comments here.\n\nContributors:\n\nZane Billings (https://wzbillings.com/)",
     "crumbs": [
       "Preface"
     ]
