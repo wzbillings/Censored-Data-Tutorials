@@ -1,5 +1,7 @@
 project:
   type: book
+  render:
+    - "!*.stan"
   output-dir: docs
 
 book:
@@ -32,6 +34,7 @@ bibliography: references.bib
 
 execute:
   freeze: true
+
 
 filters:
   - include-code-files

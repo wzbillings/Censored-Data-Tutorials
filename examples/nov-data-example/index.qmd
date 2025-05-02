@@ -594,11 +594,11 @@ This analysis is more complicated, and requires us to use a regression model.
 Fortunately we know the data generating process, so writing the Stan code
 for an accurate model is not too hard.
 
-<!-- NEED TO ADD HIDING CONTAINER and debug
-````{.stan, include = "Ex4b.stan"}
+```{.stan, include = "Ex4b.stan"}
 
 ```
---->
+
+
 
 ```{r}
 mod_pth <- here::here(pth_base, "Ex4b.stan")
@@ -787,8 +787,7 @@ fit_summary_n <- fit4b_n$summary() |>
 		)
 	)
 
-pn <-
-	ggplot(fit_summary_n) +
+pn <-	ggplot(fit_summary_n) +
 	aes(x = variable, y = median, ymin = q5, ymax = q95) +
 	geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
 	geom_pointrange() +
@@ -800,6 +799,7 @@ pn <-
 		subtitle = "Estimated using censored values without censoring correction"
 	)
 ```
+
 
 ```{r}
 po / pl / pn
