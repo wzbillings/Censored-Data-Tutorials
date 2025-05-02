@@ -4,8 +4,7 @@ This book contains our notes on dealing with censored data, including
 methods for dealing with both censored outcomes and predictors. Where possible,
 we try to include both frequentist and Bayesian models.
 
-<!-- * The short link to this website is: [https://tinyurl.com/hg-cens](https://tinyurl.com/hg-cens). -->
-* The full link is currently: [https://wzbillings.github.io/Censored-Data-Tutorials/](https://ahgroup.github.io/Censored-Data-Tutorials/).
+* The full link is currently: [https://ahgroup.github.io/Censored-Data-Tutorials/](https://ahgroup.github.io/Censored-Data-Tutorials/).
 * For source code, go [here](https://github.com/ahgroup/Censored-Data-Tutorials).
 * Please submit bug reports, typos, and comments [here](https://github.com/ahgroup/Censored-Data-Tutorials/issues).
 

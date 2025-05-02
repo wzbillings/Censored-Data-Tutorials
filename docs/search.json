@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Modeling with Censored Data",
     "section": "",
-    "text": "Preface\nThis book contains our notes on dealing with censored data, including methods for dealing with both censored outcomes and predictors. Where possible, we try to include both frequentist and Bayesian models.\n\n\nThe full link is currently: https://wzbillings.github.io/Censored-Data-Tutorials/.\nFor source code, go here.\nPlease submit bug reports, typos, and comments here.\n\nMain author:\n\nZane Billings\n\nContributors:\n\nAndreas Handel",
+    "text": "Preface\nThis book contains our notes on dealing with censored data, including methods for dealing with both censored outcomes and predictors. Where possible, we try to include both frequentist and Bayesian models.\n\nThe full link is currently: https://ahgroup.github.io/Censored-Data-Tutorials/.\nFor source code, go here.\nPlease submit bug reports, typos, and comments here.\n\nMain author:\n\nZane Billings\n\nContributors:\n\nAndreas Handel",
     "crumbs": [
       "Preface"
     ]

@@ -408,7 +408,6 @@ statement that we need to use to construct the joint likelihood of $X$ and $Y$.
 one_group_mod_pth <- here::here(base_pth, "Ex4a.stan")
 ```
 
-::: {.callout-note collapse=true}
 
 ## Stan code for model
 
@@ -418,7 +417,7 @@ one_group_mod_pth <- here::here(base_pth, "Ex4a.stan")
 cat(readLines(one_group_mod_pth), sep = "\n")
 ```
 
-:::
+
 
 ```{r}
 data_list <-
@@ -841,6 +840,7 @@ all_fits |>
 
 **these curves are implied by the model and parameters, not by the simulated
 data**
+
 ```{r}
 x_vec <- seq(-6, 12, 0.01)
 r1 <- sapply(x_vec, \(x) inv_logit(1.5 + 0.2 - 0.67 * x))
@@ -867,6 +867,7 @@ lines(x_vec, r2, lty = 1, lwd = 1.5) # vaccine
 # switch to ggplot to fix
 #legend(x = 9, y = 0.8, c('Unexposed', 'Exposed'), lty = c(2, 1), lwd = 2)
 ```
+
 
 ```{r}
 x_dens <-
