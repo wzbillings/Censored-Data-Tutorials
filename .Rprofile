@@ -1,4 +1,4 @@
-source("renv/activate.R")
+# source("renv/activate.R")
 
 ## For Linux and Windows users, we'll use RStudio Package Manager (RSPM).
 if (Sys.info()[['sysname']] %in% c('Linux', 'Windows')) {

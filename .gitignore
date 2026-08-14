@@ -10,3 +10,5 @@
 *.tmp
 
 /.quarto/
+
+**/*.quarto_ipynb
